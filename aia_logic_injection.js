@@ -99,6 +99,7 @@ function handleAnswer(id, value) {
   renderNextQuestion();
 }
 
+
 function showFinalStep() {
   const container = document.getElementById('chatMessages');
   const inputSection = document.getElementById('chatInputSection');
@@ -110,34 +111,51 @@ function showFinalStep() {
   container.appendChild(crunch);
 
   setTimeout(() => {
-    const offer = '$' + (400 + Math.floor(Math.random() * 500 + 300));
+    const offerValue = 400 + Math.floor(Math.random() * 500 + 300);
+    const offer = '$' + offerValue;
     const offerId = 'RC' + Math.floor(Math.random() * 9000 + 1000);
+
     const summary = document.createElement('div');
     summary.style.margin = '1rem 0';
-    summary.innerHTML = `<strong>AiA:</strong> Final Offer: <span style='font-size:1.5rem;color:green;font-weight:bold;'>${offer}</span><br/>Offer ID: <span style='font-weight:bold;'>#${offerId}</span><br/><br/>
-    <button onclick="acceptOffer()">Accept</button>
-    <button onclick="rejectOffer()">Reject</button>
-    <button onclick="saveOffer()">Save for Later</button>`;
+    summary.innerHTML = `
+      <strong>AiA:</strong><br/>
+      <div style="margin-top: 1rem; font-size: 1.1rem;">
+        <strong>Your AI Offer Amount:</strong> 
+        <span style="font-size: 1.5rem; color: green; font-weight: bold;">${offer}</span><br/><br/>
+        <strong>Confirmation Code:</strong> 
+        <span id="offerCode" style="font-weight: bold; font-size: 1.2rem;">#${offerId}</span><br/><br/>
+        <button onclick="copyOfferCode('${offerId}')" style="padding: 0.5rem 1rem; border-radius: 10px; background: #0074D9; color: white; border: none; font-weight: bold;">Copy Confirmation Code</button>
+        <p style="margin-top: 1rem; font-size: 0.95rem; color: #444;">
+          Save this code to check your payment status or confirm your deal.
+        </p>
+      </div>
+      <div style="margin-top: 1rem;">
+        <button onclick="acceptOffer()">Accept</button>
+        <button onclick="rejectOffer()">Reject</button>
+        <button onclick="saveOffer()">Save for Later</button>
+      </div>`;
     container.appendChild(summary);
     launchConfetti();
-    // Optional: play audio
+
     const audio = new Audio('recarra_offer_voice.mp3');
     audio.play();
+
+    setTimeout(stopConfetti, 3000);
   }, 3000);
 }
 
-function acceptOffer() {
-  alert('Offer accepted. Our team will reach out shortly.');
+function copyOfferCode(code) {
+  navigator.clipboard.writeText(code).then(() => {
+    alert("Confirmation code copied to clipboard!");
+  });
 }
 
-function rejectOffer() {
-  alert('Offer rejected. Thank you for your time!');
+function stopConfetti() {
+  const canvas = document.getElementById('confettiCanvas');
+  const context = canvas.getContext('2d');
+  context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-function saveOffer() {
-  localStorage.setItem('savedOffer', JSON.stringify(answers));
-  alert('Your offer has been saved.');
-}
 
 window.onload = () => {
   document.getElementById('chatMessages').innerHTML = '';
