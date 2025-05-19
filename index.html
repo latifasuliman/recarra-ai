@@ -271,10 +271,7 @@ function toggleMenu() {
 <a class="aia-banner-btn" href="javascript:scrollToAiA()">Start Now</a>
 </div><div id="aiaFormContainer" style="max-width:600px;margin:2rem auto;padding:1.5rem;background:#f4f4f4;border-radius:16px;box-shadow:0 0 20px rgba(0,0,0,0.1);">
 <div id="chatMessages" style="min-height:150px;margin-bottom:1rem;"></div>
-<div id="chatInputSection" style="display:flex;gap:0.5rem;">
-<input id="chatInput" onkeydown="if(event.key==='Enter')submitChat()" placeholder="Type your answer..." type="text"/>
-<button onclick="submitChat()">Next</button>
-</div>
+<div id="chatInputSection"></div>
 </div>
 <!-- removed old AiA banner -->
 <style>
@@ -571,102 +568,7 @@ function launchConfetti() {
 <div style="font-size:1.5rem;font-weight:bold;">Recarra</div>
 <div id="menuIconFooter" onclick="toggleMenu()" style="font-size:1.5rem;cursor:pointer;">☰</div>
 </footer>
-<script>
-const questions = [
-  "What is your License Plate or VIN?",
-  "What is your vehicle's Year, Make, and Model?",
-  "Please enter your Full Name.",
-  "What's your Mobile Number?",
-  "And your Email Address?"
-];
 
-let currentStep = 0;
-const answers = [];
-
-function submitChat() {
-  const input = document.getElementById('chatInput');
-  const value = input.value.trim();
-  if (!value) return;
-
-  const messages = document.getElementById('chatMessages');
-  const userMessage = document.createElement('div');
-  userMessage.style.margin = '1rem 0';
-  userMessage.innerHTML = "<strong>You:</strong> " + value;
-  messages.appendChild(userMessage);
-
-  answers.push(value);
-  currentStep++;
-  input.value = "";
-
-  if (currentStep < questions.length) {
-    const nextMessage = document.createElement('div');
-    nextMessage.style.margin = '1rem 0';
-    nextMessage.innerHTML = "<strong>AiA:</strong> " + questions[currentStep];
-    messages.appendChild(nextMessage);
-  } else {
-    const offerId = "RC" + Math.floor(Math.random() * 9000 + 1000);
-    const finalMessage = document.createElement('div');
-    finalMessage.style.margin = '1rem 0';
-    finalMessage.innerHTML = "<strong>AiA:</strong> Thank you! Your offer request has been submitted.<br/><br/><span style='font-size:1.4rem;color:#27ae60;font-weight:bold;'>Your Offer ID: #" + offerId + "</span>";
-    messages.appendChild(finalMessage);
-
-    document.getElementById('chatInputSection').style.display = 'none';
-    document.getElementById("photoUploadStep").style.display = "block";
-
-    launchConfetti();
-  }
-
-  messages.scrollTop = messages.scrollHeight;
-}
-
-window.onload = () => {
-  document.getElementById('chatMessages').innerHTML = "<strong>AiA:</strong> " + questions[0];
-};
-</script>
-<script>
-const questions = [
-  "What is your License Plate or VIN?",
-  "What is your vehicle's Year, Make, and Model?",
-  "Please enter your Full Name.",
-  "What's your Mobile Number?",
-  "And your Email Address?"
-];
-
-let currentStep = 0;
-const answers = [];
-
-function submitChat() {
-  const input = document.getElementById('chatInput');
-  const value = input.value.trim();
-  if (!value) return;
-
-  const messages = document.getElementById('chatMessages');
-  const userMessage = document.createElement('div');
-  userMessage.style.margin = '1rem 0';
-  userMessage.innerHTML = "<strong>You:</strong> " + value;
-  messages.appendChild(userMessage);
-
-  answers.push(value);
-  currentStep++;
-  input.value = "";
-
-  
-  } else {
-    const offerId = "RC" + Math.floor(Math.random() * 9000 + 1000);
-    const finalMessage = document.createElement('div');
-    finalMessage.style.margin = '1rem 0';
-    finalMessage.innerHTML = "<strong>AiA:</strong> Thank you! Your offer request has been submitted.<br/><br/><span style='font-size:1.4rem;color:#27ae60;font-weight:bold;'>Your Offer ID: #" + offerId + "</span>";
-    messages.appendChild(finalMessage);
-    document.getElementById('chatInputSection').style.display = 'none';
-
-    launchConfetti();
-  }
-
-}
-
-window.onload = () => {
-  document.getElementById('chatMessages').innerHTML = "<strong>AiA:</strong> " + questions[0];
-}
-</script><script src="aia_logic_injection.js"></script>
+<script src="aia_logic_injection.js"></script>
 </body>
 </html>
