@@ -569,6 +569,17 @@ function launchConfetti() {
 <div id="menuIconFooter" onclick="toggleMenu()" style="font-size:1.5rem;cursor:pointer;">☰</div>
 </footer>
 
+
+
 <script src="aia_logic_injection.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  if (typeof renderNextQuestion === 'function') {
+    document.getElementById('chatMessages').innerHTML = '';
+    renderNextQuestion();
+  }
+});
+</script>
 </body>
+
 </html>

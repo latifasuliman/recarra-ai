@@ -1,0 +1,21 @@
+{
+  "name": "Recarra",
+  "short_name": "Recarra",
+  "start_url": "./Recarra_Complete_Master.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#001F3F",
+  "description": "Recarra Instant Car Offer App",
+  "icons": [
+    {
+      "src": "https://recarra.com/favicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://recarra.com/favicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
