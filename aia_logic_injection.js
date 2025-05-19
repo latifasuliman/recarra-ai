@@ -114,25 +114,36 @@ function showFinalStep() {
     const offerValue = 400 + Math.floor(Math.random() * 500 + 300);
     const offer = '$' + offerValue;
     const offerId = 'RC' + Math.floor(Math.random() * 9000 + 1000);
+    const trackURL = `https://recarra.com/track?code=${offerId}`;
+    const qrImage = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(trackURL)}`;
 
     const summary = document.createElement('div');
-    summary.style.margin = '1rem 0';
+    summary.style.margin = '2rem 0';
+    summary.style.padding = '1.5rem';
+    summary.style.borderRadius = '20px';
+    summary.style.background = 'linear-gradient(to right, #ffffff, #f9f9f9)';
+    summary.style.border = '2px solid #ff4136';
+    summary.style.boxShadow = '0 0 20px rgba(255, 65, 54, 0.4)';
+    summary.style.textAlign = 'center';
+
     summary.innerHTML = `
-      <strong>AiA:</strong><br/>
+      <h2 style="color: #2ecc40; font-size: 1.5rem;">Congratulations!</h2>
+      <p style="font-size: 1.2rem;">You’ve unlocked your instant car offer.</p>
       <div style="margin-top: 1rem; font-size: 1.1rem;">
-        <strong>Your AI Offer Amount:</strong> 
-        <span style="font-size: 1.5rem; color: green; font-weight: bold;">${offer}</span><br/><br/>
-        <strong>Confirmation Code:</strong> 
-        <span id="offerCode" style="font-weight: bold; font-size: 1.2rem;">#${offerId}</span><br/><br/>
-        <button onclick="copyOfferCode('${offerId}')" style="padding: 0.5rem 1rem; border-radius: 10px; background: #0074D9; color: white; border: none; font-weight: bold;">Copy Confirmation Code</button>
+        <strong>Your AI Offer Amount:</strong><br/>
+        <span style="font-size: 2rem; color: green; font-weight: bold;">${offer}</span><br/><br/>
+        <strong>Confirmation Code:</strong><br/>
+        <span id="offerCode" style="font-weight: bold; font-size: 1.3rem; color: #001f3f;">#${offerId}</span><br/><br/>
+        <button onclick="copyOfferCode('${offerId}')" style="padding: 0.6rem 1rem; border-radius: 10px; background: #0074D9; color: white; border: none; font-weight: bold;">Copy Code</button>
         <p style="margin-top: 1rem; font-size: 0.95rem; color: #444;">
           Save this code to check your payment status or confirm your deal.
         </p>
+        <img src="${qrImage}" alt="QR Code" style="margin-top: 1rem; width: 160px; height: 160px;" />
       </div>
-      <div style="margin-top: 1rem;">
-        <button onclick="acceptOffer()">Accept</button>
-        <button onclick="rejectOffer()">Reject</button>
-        <button onclick="saveOffer()">Save for Later</button>
+      <div style="margin-top: 1.5rem;">
+        <button onclick="acceptOffer()" style="margin: 0.5rem; background: #2ecc40; color: white; padding: 0.6rem 1.2rem; border: none; border-radius: 10px;">Accept</button>
+        <button onclick="rejectOffer()" style="margin: 0.5rem; background: #ff4136; color: white; padding: 0.6rem 1.2rem; border: none; border-radius: 10px;">Reject</button>
+        <button onclick="saveOffer()" style="margin: 0.5rem; background: #ffdc00; color: black; padding: 0.6rem 1.2rem; border: none; border-radius: 10px;">Save</button>
       </div>`;
     container.appendChild(summary);
     launchConfetti();
@@ -140,6 +151,12 @@ function showFinalStep() {
     const audio = new Audio('recarra_offer_voice.mp3');
     audio.play();
 
+    setTimeout(stopConfetti, 3000);
+  }, 3000);
+}
+    setTimeout(stopConfetti, 3000);
+  }, 3000);
+}
     setTimeout(stopConfetti, 3000);
   }, 3000);
 }
