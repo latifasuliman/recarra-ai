@@ -1,585 +1,106 @@
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="robots" content="noindex, nofollow">
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>
-   Recarra AI Assistant
-  </title>
-<style>
-   body {
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recarra AiA - Instant Car Offer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #ffffff;
+      font-family: 'Poppins', sans-serif;
+      background: #f9f9f9;
+      color: #111;
     }
-    
-
-    #chatDrawer {
-      position: fixed;
-      bottom: -90%;
-      left: 0;
-      width: 100%;
-      max-height: 70%;
-      background: #fff;
-      border-top-left-radius: 18px;
-      border-top-right-radius: 18px;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
-      z-index: 9999;
-      transition: bottom 0.4s ease-in-out;
+    header {
+      background: linear-gradient(to right, #001f3f, #003366);
+      color: white;
+      padding: 1rem 2rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+    }
+    #chatContainer {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    #chatMessages {
+      max-height: 400px;
+      overflow-y: auto;
+      padding-bottom: 1rem;
+    }
+    .chat-bubble {
+      margin: 1rem 0;
+      padding: 1rem;
+      border-radius: 20px;
+      max-width: 80%;
+      display: inline-block;
+      line-height: 1.4;
+      font-size: 1rem;
+      animation: fadeIn 0.3s ease;
+    }
+    .ai-bubble {
+      background: #e8f0fe;
+      color: #111;
+      border-top-left-radius: 0;
+    }
+    .user-bubble {
+      background: #001f3f;
+      color: white;
+      float: right;
+      border-top-right-radius: 0;
+    }
+    #chatInputSection {
       display: flex;
       flex-direction: column;
-    }
-    #chatHeader {
-      background: #001F3F;
-      color: white;
-      padding: 1rem;
-      font-size: 1.2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top-left-radius: 18px;
-      border-top-right-radius: 18px;
-    }
-    #chatBody {
-      padding: 1rem;
-      overflow-y: auto;
-      font-size: 0.95rem;
-      color: #222;
-    }
-    #chatReply {
-      margin-top: 10px;
-      font-weight: bold;
-      color: green;
-    }
-    input {
-      width: 100%;
-      padding: 0.6rem;
+      gap: 0.5rem;
       margin-top: 1rem;
+    }
+    #chatInputSection input, #chatInputSection button {
+      font-size: 1rem;
+      padding: 0.75rem;
+      border-radius: 10px;
       border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 1rem;
     }
-    .btn-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 0.5rem;
-    }
-    button {
-      flex: 1;
-      padding: 0.5rem;
-      font-size: 1rem;
-      background: #001F3F;
-      color: white;
+    #chatInputSection button {
+      background: linear-gradient(to right, #ff4136, #ffdc00);
+      color: #111;
+      font-weight: bold;
       border: none;
-      border-radius: 6px;
       cursor: pointer;
+      transition: 0.3s ease;
     }
-    #voiceBtn {
-      background: orange;
+    #chatInputSection button:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 10px rgba(255, 65, 54, 0.5);
     }
-  
-@keyframes colorShift {
-  0% { color: #FF4136; }
-  20% { color: #FF851B; }
-  40% { color: #FFDC00; }
-  60% { color: #2ECC40; }
-  80% { color: #0074D9; }
-  100% { color: #FF4136; }
-}
-.headline-banner {
-  font-size: clamp(2rem, 6vw, 3.5rem);
-  font-weight: 900;
-  color: #001F3F;
-  margin-bottom: 0.5rem;
-}
-.subheadline-banner {
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: #001F3F;
-}
-.highlight {
-  color: #e74c3c;
-  font-size: 1.3rem;
-  font-weight: 900;
-  text-shadow: 0 0 10px rgba(255, 100, 100, 0.5);
-}
-  </style>
-<style>
-   #animatedBanner {
-  text-align: center;
-  font-size: 1.3rem;
-  font-weight: bold;
-  padding: 2rem 1rem;
-  max-width: 800px;
-  margin: 0 auto;
-  color: #001F3F;
-  min-height: 80px;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-}
-  </style>
-<style>
-   @keyframes recarraColors {
-  0% { color: #FF4136; }
-  10% { color: #FF851B; }
-  20% { color: #FFDC00; }
-  30% { color: #2ECC40; }
-  40% { color: #0074D9; }
-  50% { color: #B10DC9; }
-  60% { color: #7FDBFF; }
-  70% { color: #39CCCC; }
-  80% { color: #3D9970; }
-  90% { color: #85144b; }
-  100% { color: #FF4136; }
-}
-  </style>
-<style>
-   50% { box-shadow: 0 0 24px #ff0, 0 0 40px #28a745; transform: scale(1.05); }
-}
-a, button {
-  transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-}
-a:hover, button:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0 10px rgba(0,0,0,0.15);
-}
-  </style>
-<style>
-   #scrollTopBtn.shift-up {
-  bottom: 320px !important;
-}
-@media (max-height: 700px) {
-  #scrollTopBtn.shift-up {
-    bottom: 250px !important;
-  }
-}
-  </style>
-<style>
-   @media (max-width: 768px) {
-  
-  .mobile-only {
-    display: block !important;
-  }
-}
-@media (min-width: 769px) {
-  .mobile-only {
-    display: none !important;
-  }
-}
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
-<header style="background:#001F3F;padding:1.5rem;color:white;display:flex;justify-content:space-between;align-items:center;">
-<div style="font-size:1.5rem;font-weight:bold;">Recarra</div>
-<div id="menuIcon" onclick="toggleMenu()" style="font-size:1.5rem;cursor:pointer;">☰</div>
-</header>
-<nav id="dropdownMenu" style="display:none;background:#003366;color:white;text-align:center;padding:1rem;">
-<a href="index.html" style="color:white;display:block;padding:0.5rem 0;text-decoration:none;">Welcome</a>
-<a href="homepage.html" style="color:white;display:block;padding:0.5rem 0;text-decoration:none;">Get Offer</a>
-<a href="refer.html" style="color:white;display:block;padding:0.5rem 0;text-decoration:none;">Refer &amp; Earn</a>
-<a href="mailto:offers@recarra.com" style="color:white;display:block;padding:0.5rem 0;text-decoration:none;">Contact</a>
-</nav>
-<script>
-function toggleMenu() {
-  const menu = document.getElementById("dropdownMenu");
-  menu.style.display = (menu.style.display === "block") ? "none" : "block";
-}
-function scrollToAiA() {
-  const aia = document.getElementById("aiaFormContainer");
-  if (aia) {
-    aia.scrollIntoView({ behavior: 'smooth' });
-  }
-}
-</script>
-<div style="display: flex; justify-content: center; gap: 1rem; margin: 1.5rem auto; flex-wrap: wrap;">
-<button class="scan-button" onclick="scrollToAiA()">Scan Plate</button>
-<button class="scan-button" onclick="scrollToAiA()">Scan VIN</button>
-<button class="scan-button" onclick="scrollToAiA()" style="background: linear-gradient(to right, #ff6600, #ffcc00);">Scan Photos</button>
-</div>
-<script>
-function toggleMenu() {
-  const menu = document.getElementById("dropdownMenu");
-  menu.style.display = (menu.style.display === "block") ? "none" : "block";
-}
-</script>
-<style>
-.aia-banner-box {
-  max-width: 700px;
-  margin: 2rem auto;
-  padding: 2rem;
-  border-radius: 20px;
-  background: linear-gradient(to right, #001F3F, #0074D9);
-  box-shadow: 0 0 20px rgba(0, 116, 217, 0.4);
-  text-align: center;
-  color: white;
-  animation: fadeInScale 1s ease-in-out;
-}
-.aia-banner-title {
-  font-size: 2rem;
-  font-weight: 900;
-  animation: colorShift 6s infinite;
-}
-.aia-banner-subtext {
-  font-size: 1.1rem;
-  margin: 1rem 0 1.5rem;
-  line-height: 1.6;
-}
-.aia-highlight {
-  color: #FFDC00;
-  font-weight: bold;
-  animation: pulse 1.8s infinite;
-}
-.aia-banner-btn {
-  display: inline-block;
-  padding: 0.8rem 2rem;
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: #001F3F;
-  background: #FFDC00;
-  border-radius: 30px;
-  text-decoration: none;
-  box-shadow: 0 0 10px #fff000;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.aia-banner-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px #fff000;
-}
-@keyframes fadeInScale {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.85; transform: scale(1.1); }
-}
-@keyframes colorShift {
-  0% { color: #FF4136; }
-  25% { color: #FF851B; }
-  50% { color: #FFDC00; }
-  75% { color: #2ECC40; }
-  100% { color: #0074D9; }
-}
-</style>
-<div class="aia-banner-box">
-<div class="aia-banner-title">Recarra AiA Chat-Pot</div>
-<div class="aia-banner-subtext">
-    Use our intelligent assistant to get a real offer in <span class="aia-highlight">30 seconds</span> — with smart photo uploads, guaranteed pricing, and instant payout.
-  </div>
-<a class="aia-banner-btn" href="javascript:scrollToAiA()">Start Now</a>
-</div><div id="aiaFormContainer" style="max-width:600px;margin:2rem auto;padding:1.5rem;background:#f4f4f4;border-radius:16px;box-shadow:0 0 20px rgba(0,0,0,0.1);">
-<div id="chatMessages" style="min-height:150px;margin-bottom:1rem;"></div>
-<div id="chatInputSection"></div>
-</div>
-<!-- removed old AiA banner -->
-<style>
-   @keyframes fadeInScale {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-@keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.1); opacity: 0.8; }
-}
-.pulse {
-  animation: pulse 1.8s infinite;
-}
-  </style>
-<div id="animatedBanner">
-   Loading Recarra experience...
-  </div>
-<!-- Enhanced AiA Button -->
-<style>
-   @keyframes spinPulse {
-  0% { transform: rotate(0deg) scale(1); }
-  50% { transform: rotate(180deg) scale(1.1); }
-  100% { transform: rotate(360deg) scale(1); }
-}
-  </style>
-<div style="padding: 2rem; text-align: center;">
-<div style="display:flex;gap:10px;justify-content:center;align-items:center;margin-top:1rem;">
-</div>
-<!-- AiA Launcher -->
-<!-- Chat Drawer -->
-<div style="text-align:center; margin-top: 1.5rem;">
-<style>
-     @keyframes fadeSlide {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.scan-button {
-  background: linear-gradient(to right, #0044cc, #00aaff);
-  color: white;
-  padding: 0.9rem 1.5rem;
-  font-size: 1rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 50px;
-  box-shadow: 0 0 20px rgba(0, 100, 255, 0.5);
-  transition: transform 0.3s, box-shadow 0.3s;
-  cursor: pointer;
-  animation: pulseGlow 3s infinite;
-}
-.scan-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 30px rgba(0, 100, 255, 0.7);
-}
-
-  50% { box-shadow: 0 0 30px rgba(0, 100, 255, 0.9); }
-  100% { box-shadow: 0 0 20px rgba(0, 100, 255, 0.5); }
-}
-    </style>
-<style>
-     .floating-group {
-  position: relative;
-  width: 90%;
-  max-width: 280px;
-  margin: 1.2rem 0;
-  text-align: left;
-}
-.floating-group input {
-  width: 100%;
-  padding: 1.2rem 1rem 0.6rem 2.5rem;
-  font-size: 1rem;
-  border: 2px solid #001F3F;
-  border-radius: 12px;
-  background: white;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-.floating-group input:focus {
-  outline: none;
-  border-color: #0074D9;
-  box-shadow: 0 0 10px #0074D9;
-}
-.floating-group label {
-  position: absolute;
-  top: 1rem;
-  left: 2.5rem;
-  font-size: 1rem;
-  color: #555;
-  background: white;
-  padding: 0 0.25rem;
-  transition: 0.3s ease all;
-  pointer-events: none;
-}
-.floating-group input:focus + label,
-.floating-group input:not(:placeholder-shown) + label {
-  top: -0.6rem;
-  left: 2.3rem;
-  font-size: 0.8rem;
-  color: #001F3F;
-}
-.floating-group .icon {
-  position: absolute;
-  left: 0.8rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #0074D9;
-  font-size: 1.2rem;
-}
-    </style>
-</div>
-<style>
-    50% { transform: scale(1.1); box-shadow: 0 0 20px red; }
-}
-#skipButton {
-  background: red;
-  color: white;
-  font-weight: bold;
-  font-size: 1rem;
-  padding: 0.8rem 1.6rem;
-  border-radius: 30px;
-  margin-top: 2rem;
-  animation: bounceGlow 5s infinite;
-  text-decoration: none;
-  display: inline-block;
-}
-   </style>
-<style>
-    .floating-bonus {
-  position: fixed;
-  right: 20px;
-  font-weight: bold;
-  padding: 0.6rem 1rem;
-  border-radius: 20px;
-  box-shadow: 0 0 12px rgba(0,0,0,0.3);
-  font-size: 0.85rem;
-  cursor: pointer;
-  animation: floatGlow 8s infinite;
-  z-index: 9999;
-}
-#refBubble {
-  bottom: 120px;
-  background: #e74c3c;
-  color: white;
-}
-#pickupBubble {
-  bottom: 60px;
-  background: #27ae60;
-  color: white;
-}
-@keyframes floatGlow {
-  0%, 100% { box-shadow: 0 0 10px #fff; }
-  50% { box-shadow: 0 0 20px #ff0; }
-}
-   </style>
-<style>
-    #recentSlider {
-  display: none;
-  max-width: 90%;
-  margin: 2rem auto;
-  overflow: hidden;
-  border-radius: 12px;
-  box-shadow: 0 0 12px rgba(0,0,0,0.2);
-}
-#recentSlider img {
-  width: 100%;
-  border-radius: 12px;
-}
-
-footer #recentSlider { margin-top: 2rem; }
-   </style>
-<style>
-    25%  { background: #ff851b; box-shadow: 0 0 20px #ff851b; }
-  50%  { background: #ffdc00; box-shadow: 0 0 20px #ffdc00; }
-  75%  { background: #2ecc40; box-shadow: 0 0 20px #2ecc40; }
-  100% { background: #0074d9; box-shadow: 0 0 20px #0074d9; }
-}
-   </style>
-</div>
-<div style="display: flex; justify-content: center; gap: 1rem; margin: 1.5rem auto; flex-wrap: wrap;">
-<button class="scan-button" onclick="scrollToAiA()">Scan Plate</button>
-<button class="scan-button" onclick="scrollToAiA()">Scan VIN</button>
-<button class="scan-button" onclick="scrollToAiA()" style="background: linear-gradient(to right, #ff6600, #ffcc00);">Scan Photos</button>
-</div>
-<footer style="background:#001F3F;color:white;padding:2rem;text-align:center;font-family:Segoe UI, sans-serif;">
-<div style="font-size:1.3rem; font-weight:bold; margin-bottom:1rem;">
-    Quick Links:
-   </div>
-<div style="display:flex; justify-content:center; gap:2.5rem; margin-bottom:1.5rem; flex-wrap:wrap;">
-<a href="index.html" style="color:white; font-size:1.1rem; text-decoration:none;">
-     Home
-    </a>
-<a href="homepage.html" style="color:white; font-size:1.1rem; text-decoration:none;">
-     Offer
-    </a>
-<a href="refer.html" style="color:white; font-size:1.1rem; text-decoration:none;">
-     Refer
-    </a>
-<a href="mailto:offers@recarra.com" style="color:white; font-size:1.1rem; text-decoration:none;">
-     Contact
-    </a>
-</div>
-</footer>
-<canvas id="confettiCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999999;">
-</canvas>
-<script>
-function previewPhotos(event) {
-  const container = document.getElementById('photoPreview');
-  container.innerHTML = '';
-  for (const file of event.target.files) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const img = document.createElement('img');
-      img.src = e.target.result;
-      img.style.maxWidth = '100px';
-      img.style.borderRadius = '10px';
-      img.style.boxShadow = '0 0 10px rgba(0,0,0,0.1)';
-      container.appendChild(img);
-    };
-    reader.readAsDataURL(file);
-  }
-  updateOfferBar(95); // Boost estimate
-}
-
-function updateOfferBar(percent) {
-  const bar = document.getElementById("formProgressBar");
-  if (bar) bar.style.width = percent + "%";
-  const text = document.getElementById("offerPreview");
-  if (text) text.innerHTML = "Estimated Offer: $" + (500 + Math.floor(percent * 4 / 5)) + "–$900";
-}
-
-function finishOffer() {
-  alert("Thank you! Your offer request has been submitted.");
-  document.getElementById("photoUploadStep").style.display = "none";
-}
-</script>
-<div id="formProgressContainer" style="max-width:500px;margin:1rem auto;">
-</div><div id="photoUploadStep" style="display:none; margin-top:2rem; text-align:center;">
-<label for="photoInput" style="font-weight:bold; display:block; margin-bottom:0.5rem;">Upload photos of your vehicle (optional):</label>
-<input accept="image/*" id="photoInput" multiple="" onchange="previewPhotos(event)" style="margin-bottom:1rem;" type="file"/>
-<p style="font-size:0.9rem; color:#c0392b; margin-top:1rem;">Skipping may lower your estimated offer.</p>
-<button onclick="finishOffer()" style="margin-top:1rem; padding:0.6rem 1.2rem; font-weight:bold; border:none; background:#001F3F; color:white; border-radius:8px;">Submit Offer</button>
-</div>
-<script>
-function launchConfetti() {
-  const canvas = document.getElementById('confettiCanvas');
-  const context = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-
-  const confettiCount = 200;
-  const confetti = [];
-
-  for (let i = 0; i < confettiCount; i++) {
-    confetti.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height - canvas.height,
-      r: Math.random() * 6 + 4,
-      d: Math.random() * 5 + 1,
-      color: "hsl(" + Math.floor(Math.random() * 360) + ", 100%, 50%)"
-    });
-  }
-
-  function draw() {
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = 0; i < confettiCount; i++) {
-      const c = confetti[i];
-      context.beginPath();
-      context.arc(c.x, c.y, c.r, 0, Math.PI * 2, false);
-      context.fillStyle = c.color;
-      context.fill();
-    }
-    update();
-  }
-
-  function update() {
-    for (let i = 0; i < confettiCount; i++) {
-      const c = confetti[i];
-      c.y += c.d;
-      if (c.y > canvas.height) {
-        c.y = 0;
-        c.x = Math.random() * canvas.width;
+  <header>Recarra AiA — Get Your Instant Car Offer</header>
+  <main>
+    <div id="chatContainer">
+      <div id="chatMessages"></div>
+      <div id="chatInputSection"></div>
+    </div>
+  </main>
+  <script src="aia_logic_injection.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (typeof renderNextQuestion === 'function') {
+        document.getElementById('chatMessages').innerHTML = '';
+        renderNextQuestion();
       }
-    }
-  }
-
-  function loop() {
-    draw();
-    requestAnimationFrame(loop);
-  }
-
-  loop();
-}
-</script>
-<footer style="background:#001F3F;padding:1.5rem;color:white;display:flex;justify-content:space-between;align-items:center;">
-<div style="font-size:1.5rem;font-weight:bold;">Recarra</div>
-<div id="menuIconFooter" onclick="toggleMenu()" style="font-size:1.5rem;cursor:pointer;">☰</div>
-</footer>
-
-
-
-<script src="aia_logic_injection.js"></script>
-<script>
-window.addEventListener('DOMContentLoaded', () => {
-  if (typeof renderNextQuestion === 'function') {
-    document.getElementById('chatMessages').innerHTML = '';
-    renderNextQuestion();
-  }
-});
-</script>
+    });
+  </script>
 </body>
-
 </html>
