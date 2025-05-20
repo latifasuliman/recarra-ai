@@ -100,6 +100,60 @@
 }
 </style>
 
+
+<style>
+@keyframes fadeInMessage {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.rotating-message {
+  transition: all 0.5s ease;
+  animation: fadeInMessage 8s infinite;
+}
+.sticky-cta {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(to right, #ffaa00, #ff4444);
+  color: white;
+  padding: 14px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 30px;
+  font-weight: bold;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+</style>
+
+<script defer>
+window.addEventListener("load", function() {
+  const banner = document.getElementById("rotatingAdBanner");
+  if (!banner) return;
+  const messages = [
+    "We buy junk cars fast - cash in your account today",
+    "Recarra guarantees real offers - no waiting, no games",
+    "Sell your clunker in minutes - get paid before sunset",
+    "Recarra pays more - free pickup and $100 bonus",
+    "Skip the junkyard - turn your old car into instant money",
+    "Get your free Recarra offer - no pressure, no fees",
+    "Same day pickup - same day payout with Recarra",
+    "Trusted car buyer - fast, fair, and always honest",
+    "Your car has value - unlock it with Recarra today",
+    "Recarra - the smart way to sell your car fast"
+  ];
+  let index = 0;
+  banner.textContent = messages[index];
+  banner.classList.add("rotating-message");
+  setInterval(() => {
+    index = (index + 1) % messages.length;
+    banner.textContent = messages[index];
+  }, 8000);
+});
+</script>
+
 </head>
 <body>
 
@@ -533,6 +587,77 @@
         }
       }
     }
-  </script>
+  
+// Patch: Final step logic to change button text and hide form on submit
+function finishFormSubmission() {
+  const chatForm = document.getElementById('chatForm');
+  const chatMessages = document.getElementById('chatMessages');
+  chatForm.style.display = 'none';
+  chatMessages.innerHTML += '<div style="margin-top:20px; font-weight:bold; color:green;">Form submitted successfully. Thank you!</div>';
+}
+
+// Example call from your AiA logic (replace or wrap in real logic)
+function updateToFinalStep() {
+  const submitBtn = document.querySelector('#chatForm button');
+  if (submitBtn) {
+    submitBtn.textContent = 'Submit Form Now';
+  }
+}
+
+</script>
+
+<style>
+@keyframes fadeInMessage {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.rotating-message {
+  transition: all 0.5s ease;
+  animation: fadeInMessage 8s infinite;
+}
+.sticky-cta {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(to right, #ffaa00, #ff4444);
+  color: white;
+  padding: 14px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 30px;
+  font-weight: bold;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const banner = document.getElementById("rotatingAdBanner");
+  const messages = [
+    "We buy junk cars fast - cash in your account today",
+    "Recarra guarantees real offers - no waiting, no games",
+    "Sell your clunker in minutes - get paid before sunset",
+    "Recarra pays more - free pickup and $100 bonus",
+    "Skip the junkyard - turn your old car into instant money",
+    "Get your free Recarra offer - no pressure, no fees",
+    "Same day pickup - same day payout with Recarra",
+    "Trusted car buyer - fast, fair, and always honest",
+    "Your car has value - unlock it with Recarra today",
+    "Recarra - the smart way to sell your car fast"
+  ];
+  let index = 0;
+  setInterval(() => {
+    banner.textContent = messages[index];
+    banner.classList.add("rotating-message");
+    index = (index + 1) % messages.length;
+  }, 8000);
+});
+</script>
+
+<a href="#chatContainer" class="sticky-cta">Get Offer + $100 Now</a>
+
 </body>
 </html>
