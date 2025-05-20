@@ -243,37 +243,28 @@ input:valid {
 </h1>
 <div id="chatMessages">Loading...</div>
 <form id="chatForm" onsubmit="handleUserInput(event)">
+<div id="formProgress" style="height: 8px; width: 80%; margin: 1rem auto; background: #ddd; border-radius: 4px;">
+<div id="formProgressBar" style="height: 100%; width: 0%; background: linear-gradient(to right, #28a745, #00c851); border-radius: 4px;"></div>
+</div>
+
 <div id="photoUploads" style="padding: 2rem; background: #f9f9f9; border-radius: 8px;"><h3 style="text-align:center;">Upload Required Vehicle Photos</h3>
 <div style="margin-bottom:1rem; text-align:center;">
-
-
 </div>
 <div style="margin-bottom:1rem; text-align:center;">
-
-
 </div>
 <div style="margin-bottom:1rem; text-align:center;">
-
-
 </div>
 <div style="margin-bottom:1rem; text-align:center;">
-
-
 </div>
 <div style="margin-bottom:1rem; text-align:center;">
-
-
 </div>
 <div style="margin-bottom:1rem; text-align:center;">
-
-
 </div>
 <div style="margin-top:1rem; font-size:0.9rem; text-align:center; color:#444;">AiA will review photo quality and damage severity automatically after upload (future feature).</div></div>
 <div id="offerPreview" style="text-align:center; margin-top:2rem;">
 <p id="crunchingMsg" style="font-size:1.2rem; font-weight:bold; color:#555;">Crunching numbers...</p>
 <div id="finalOfferAmount" style="font-size:2rem; font-weight:bold; color:#28a745; margin-top:1rem; display:none;">Your AiA Offer: $850</div>
 </div>
-
 <div class="form-step" style="display: none;"><label for="photoFront" style="display:block; font-weight:bold;">Front View <span style="color:red">*</span></label><input accept="image/*" id="photoFront" name="photoFront" required="" style="display:block; margin: 0.5rem auto;" type="file"/></div><div class="form-step" style="display: none;"><label for="photoBack" style="display:block; font-weight:bold;">Back View <span style="color:red">*</span></label><input accept="image/*" id="photoBack" name="photoBack" required="" style="display:block; margin: 0.5rem auto;" type="file"/></div><div class="form-step" style="display: none;"><label for="photoLeft" style="display:block; font-weight:bold;">Left Side <span style="color:red">*</span></label><input accept="image/*" id="photoLeft" name="photoLeft" required="" style="display:block; margin: 0.5rem auto;" type="file"/></div><div class="form-step" style="display: none;"><label for="photoRight" style="display:block; font-weight:bold;">Right Side <span style="color:red">*</span></label><input accept="image/*" id="photoRight" name="photoRight" required="" style="display:block; margin: 0.5rem auto;" type="file"/></div><div class="form-step" style="display: none;"><label for="photoEngine" style="display:block; font-weight:bold;">Engine Compartment <span style="color:red">*</span></label><input accept="image/*" id="photoEngine" name="photoEngine" required="" style="display:block; margin: 0.5rem auto;" type="file"/></div><div class="form-step" style="display: none;"><label for="photoDash" style="display:block; font-weight:bold;">Dashboard Lit Up <span style="color:red">*</span></label><input accept="image/*" id="photoDash" name="photoDash" required="" style="display:block; margin: 0.5rem auto;" type="file"/></div><div class="form-step" style="display:none;"><button style="display:block; margin:2rem auto; padding:14px 28px; font-size:1.1rem; background:linear-gradient(to right,#ff8c00,#ffcc00); color:black; font-weight:bold; border:none; border-radius:10px; cursor:pointer;" type="submit">Submit AiA Offer Now</button></div></form>
 </div>
 <div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,58.7C960,53,1056,43,1152,48C1248,53,1344,75,1392,85.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="#f1f5fb" fill-opacity="1"></path></svg></div>
@@ -893,6 +884,77 @@ document.addEventListener("DOMContentLoaded", function () {
       step.appendChild(nextBtn.cloneNode(true));
     }
   });
+
+  showStep(currentStep);
+});
+</script><script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<div id="thankYouScreen" style="display:none; text-align:center; padding:3rem;">
+<h2 style="font-size:1.8rem; color:#28a745;">Thank you!</h2>
+<p style="font-size:1.2rem;">Your offer ID is: <strong id="offerId"></strong></p>
+<p>We’ll text and email your final offer details shortly.</p>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const steps = document.querySelectorAll(".form-step");
+  const submitButton = document.querySelector("button[type='submit']");
+  const thankYou = document.getElementById("thankYouScreen");
+  const offerIdField = document.getElementById("offerId");
+  const progressBar = document.getElementById("formProgressBar");
+
+  let currentStep = 0;
+  const stepCount = steps.length;
+
+  function showStep(index) {
+    steps.forEach((step, i) => {
+      step.style.display = i === index ? "block" : "none";
+    });
+    const percent = Math.floor(((index + 1) / stepCount) * 100);
+    if (progressBar) progressBar.style.width = percent + "%";
+  }
+
+  function goToNextStep() {
+    const currentField = steps[currentStep].querySelector("input, select");
+    if (currentField && currentField.value.trim() !== "") {
+      currentStep++;
+      if (currentStep < steps.length) {
+        showStep(currentStep);
+      }
+    } else {
+      currentField.classList.add("error");
+      setTimeout(() => currentField.classList.remove("error"), 300);
+    }
+  }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      goToNextStep();
+    }
+  });
+
+  const nextBtn = document.createElement("button");
+  nextBtn.textContent = "Next";
+  nextBtn.style = "display:block; margin:1.5rem auto; padding:10px 28px; background:#007bff; color:white; font-weight:bold; border:none; border-radius:8px;";
+  nextBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    goToNextStep();
+  });
+
+  steps.forEach((step, i) => {
+    if (i !== steps.length - 1) {
+      step.appendChild(nextBtn.cloneNode(true));
+    }
+  });
+
+  if (submitButton) {
+    submitButton.addEventListener("click", function (e) {
+      e.preventDefault();
+      document.getElementById("chatForm").style.display = "none";
+      thankYou.style.display = "block";
+      offerIdField.textContent = "RC" + Math.random().toString(36).substring(2, 7).toUpperCase();
+      confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+    });
+  }
 
   showStep(currentStep);
 });
