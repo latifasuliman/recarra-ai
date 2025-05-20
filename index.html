@@ -97,37 +97,20 @@
 }
 </style>
 <style>
-@keyframes glowBorder {
-  0% { border-color: #ff4444; box-shadow: 0 0 5px #ff4444; }
-  25% { border-color: #ffaa00; box-shadow: 0 0 5px #ffaa00; }
-  50% { border-color: #00cc99; box-shadow: 0 0 5px #00cc99; }
-  75% { border-color: #0077cc; box-shadow: 0 0 5px #0077cc; }
-  100% { border-color: #ff4444; box-shadow: 0 0 5px #ff4444; }
-}
-
-input[type="text"],
-input[type="file"],
-textarea {
-  animation: glowBorder 6s linear infinite;
-  border-width: 2px;
-}
-</style><style>#backendForm { display: none !important; }</style><style>
-@keyframes glowCode {
-  0% { box-shadow: 0 0 8px #ffc107; }
-  50% { box-shadow: 0 0 14px #ffeb3b; }
-  100% { box-shadow: 0 0 8px #ffc107; }
+section img:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
 }
 </style><style>
-#backendForm {
-  display: none !important;
+@keyframes slideIn {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
-</style><style>
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.slide-in {
+  animation: slideIn 0.6s ease both;
 }
 </style></head>
-<body><div id="bonusAnimation" style="display:none; text-align:center; font-size:1.5rem; color:green; font-weight:bold; margin:1rem;">🎉 Bonus Activated: $100 Extra Cash for Same-Day Pickup!</div>
+<body>
 <a href="#chatContainer" style="position: fixed; bottom: 20px; right: 20px; background: red; color: white; padding: 12px 16px; border-radius: 6px; font-weight: bold; font-size: 14px; z-index: 1000; text-decoration: none; box-shadow: 0 0 5px rgba(0,0,0,0.3);">Get My Offer + $100 Extra</a>
 <div style="padding-left: 1rem; margin-top: 1rem;">
 <h1 style="
@@ -150,7 +133,7 @@ textarea {
 </div>
 <!-- Hero Section -->
 <div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,58.7C960,53,1056,43,1152,48C1248,53,1344,75,1392,85.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="#f1f5fb" fill-opacity="1"></path></svg></div>
-<section style="padding: 2rem; text-align: center; background: linear-gradient(to right, #003366, #005599); color: white;">
+<section class="slide-in" style="padding: 2rem; text-align: center; background: linear-gradient(to right, #003366, #005599); color: white;">
 <h1 style="font-size: 2rem; margin-bottom: 1rem;">Sell Your Car Instantly — No Games. Just Guaranteed Offers.</h1>
 <p style="font-size: 1.2rem;">We buy any car. Free pickup. Fastest payouts. Same-day deals.</p>
 </section>
@@ -193,7 +176,7 @@ textarea {
 ">
   The Fastest Way to Get Paid for Your Car — Instantly.
 </p>
-<section style="padding: 2rem; text-align: center; background: #001f3f; color: white;">
+<section class="slide-in" style="padding: 2rem; text-align: center; background: #001f3f; color: white;">
 <h1 id="rotatingAdBanner" style="
     font-size: 2rem;
     font-weight: bold;
@@ -219,10 +202,13 @@ textarea {
   AiA Form
 </h1>
 <div id="chatMessages">Loading...</div>
-<form id="chatForm" onsubmit="handleUserInput(event)"><button onclick="alert('VIN scan function coming soon!')" style="display:inline-block; padding: 10px 20px; font-size: 1rem; border: none; border-radius: 6px; background: linear-gradient(to right, #007bff, #00c6ff); color: white; font-weight: bold; margin: 0.5rem auto; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4); display: block; text-align: center;" type="button">Scan VIN</button><button onclick="alert('License Plate scan function coming soon!')" style="display:inline-block; padding: 10px 20px; font-size: 1rem; border: none; border-radius: 6px; background: linear-gradient(to right, #007bff, #00c6ff); color: white; font-weight: bold; margin: 0.5rem auto; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4); display: block; text-align: center;" type="button">Scan License Plate</button><input id="licenseInput" placeholder="Enter your license plate or VIN..." required="True" style="display:block; margin: 1rem auto; padding: 10px; width: 90%; max-width: 320px; border-radius: 8px; border: 2px solid #e74c3c; font-size: 1rem; text-align: center;" type="text"/><input id="yearInput" placeholder="What year is your car?" required="True" style="margin-bottom: 10px; display: none;" type="text"/><input id="makeInput" list="makeInput_list" placeholder="What is the make? (e.g., Toyota)" required="True" style="margin-bottom: 10px; display: none;" type="text"/><datalist id="makeInput_list"><option value="Toyota"></option><option value="Honda"></option><option value="Ford"></option><option value="Chevrolet"></option><option value="Nissan"></option><option value="BMW"></option><option value="Mercedes-Benz"></option><option value="Hyundai"></option><option value="Kia"></option><option value="Tesla"></option></datalist><input id="modelInput" list="modelInput_list" placeholder="What is the model? (e.g., Camry)" required="True" style="margin-bottom: 10px; display: none;" type="text"/><datalist id="modelInput_list"><option value="Camry"></option><option value="Accord"></option><option value="Civic"></option><option value="F-150"></option><option value="Silverado"></option><option value="Altima"></option><option value="Model 3"></option><option value="Sonata"></option><option value="Sorento"></option><option value="CX-5"></option></datalist><input id="trimInput" list="trimInput_list" placeholder="What is the trim level? (e.g., LE, XLE, Sport)" required="True" style="margin-bottom: 10px; display: none;" type="text"/><datalist id="trimInput_list"><option value="LE"></option><option value="XLE"></option><option value="SE"></option><option value="Sport"></option><option value="Limited"></option><option value="Touring"></option><option value="EX"></option><option value="LX"></option></datalist><input id="titleStatus" placeholder="Do you have a valid title? (Yes/No)" required="True" style="margin-bottom: 10px; display: none;" type="text"/><input id="carCondition" placeholder="What’s the mechanical condition? (e.g., running, not running)" required="True" style="margin-bottom: 10px; display: none;" type="text"/><label for="photoFront" style="font-weight: bold; display: none; margin-top: 1rem; text-align: center;">Upload Front Photo *</label><input id="sameDayBonus" placeholder="Would you like same-day pickup for $100 extra? (Yes/No)" required="True" style="margin-bottom: 10px; display: none;" type="text"/><input accept="image/*" id="photoFront" name="photoFront" required="True" style="display: none;" type="file"/><textarea id="photoFront_reason" placeholder="Explain why you’re skipping this photo..." style="display:none; width:90%; max-width:300px; margin:10px auto; border-radius:6px; border:1px solid #ccc; padding:8px;"></textarea><img id="photoFront_preview" style="display:none; margin:10px auto; max-width:90%; border:1px solid #ccc; border-radius:6px;"/><label for="photoRear" style="font-weight: bold; display: none; margin-top: 1rem; text-align: center;">Upload Rear Photo *</label><input accept="image/*" id="photoRear" name="photoRear" required="True" style="display: none;" type="file"/><textarea id="photoRear_reason" placeholder="Explain why you’re skipping this photo..." style="display:none; width:90%; max-width:300px; margin:10px auto; border-radius:6px; border:1px solid #ccc; padding:8px;"></textarea><img id="photoRear_preview" style="display:none; margin:10px auto; max-width:90%; border:1px solid #ccc; border-radius:6px;"/><label for="photoLeft" style="font-weight: bold; display: none; margin-top: 1rem; text-align: center;">Upload Left Side Photo *</label><input accept="image/*" id="photoLeft" name="photoLeft" required="True" style="display: none;" type="file"/><textarea id="photoLeft_reason" placeholder="Explain why you’re skipping this photo..." style="display:none; width:90%; max-width:300px; margin:10px auto; border-radius:6px; border:1px solid #ccc; padding:8px;"></textarea><img id="photoLeft_preview" style="display:none; margin:10px auto; max-width:90%; border:1px solid #ccc; border-radius:6px;"/><label for="photoRight" style="font-weight: bold; display: none; margin-top: 1rem; text-align: center;">Upload Right Side Photo *</label><input accept="image/*" id="photoRight" name="photoRight" required="True" style="display: none;" type="file"/><textarea id="photoRight_reason" placeholder="Explain why you’re skipping this photo..." style="display:none; width:90%; max-width:300px; margin:10px auto; border-radius:6px; border:1px solid #ccc; padding:8px;"></textarea><img id="photoRight_preview" style="display:none; margin:10px auto; max-width:90%; border:1px solid #ccc; border-radius:6px;"/><label for="photoEngine" style="font-weight: bold; display: none; margin-top: 1rem; text-align: center;">Upload Engine Compartment Photo *</label><input accept="image/*" id="photoEngine" name="photoEngine" required="True" style="display: none;" type="file"/><textarea id="photoEngine_reason" placeholder="Explain why you’re skipping this photo..." style="display:none; width:90%; max-width:300px; margin:10px auto; border-radius:6px; border:1px solid #ccc; padding:8px;"></textarea><img id="photoEngine_preview" style="display:none; margin:10px auto; max-width:90%; border:1px solid #ccc; border-radius:6px;"/><label for="photoDash" style="font-weight: bold; display: none; margin-top: 1rem; text-align: center;">Upload Dashboard Lit Up Photo (if available)</label><input accept="image/*" id="photoDash" name="photoDash" style="display: none;" type="file"/><img id="photoDash_preview" style="display:none; margin:10px auto; max-width:90%; border:1px solid #ccc; border-radius:6px;"/><label for="photoDamage" style="font-weight: bold; display: none; margin-top: 1rem; text-align: center;">Upload Damage Photo *</label><input accept="image/*" id="photoDamage" name="photoDamage" required="True" style="display: none;" type="file"/><textarea id="photoDamage_reason" placeholder="Explain why you’re skipping this photo..." style="display:none; width:90%; max-width:300px; margin:10px auto; border-radius:6px; border:1px solid #ccc; padding:8px;"></textarea><img id="photoDamage_preview" style="display:none; margin:10px auto; max-width:90%; border:1px solid #ccc; border-radius:6px;"/><label for="photoExtra" style="font-weight: bold; display: none; margin-top: 1rem; text-align: center;">Upload Additional Damage Photo (optional)</label><input accept="image/*" id="photoExtra" name="photoExtra" style="display: none;" type="file"/><img id="photoExtra_preview" style="display:none; margin:10px auto; max-width:90%; border:1px solid #ccc; border-radius:6px;"/><button id="finalSubmitBtn" onclick="playSubmitSound()" onmouseout="this.style.transform='scale(1)'" onmouseover="this.style.transform='scale(1.05)'" style="display: none; margin: 1.5rem auto; padding: 14px 28px; font-size: 1.1rem; font-weight: bold; color: white;background: linear-gradient(120deg, #ff4444, #ffaa00, #00cc99); background-size: 300% 300%;border: none; border-radius: 50px; animation: pulseWave 4s ease infinite;box-shadow: 0 0 15px rgba(255, 100, 0, 0.4); transition: transform 0.3s ease;" type="submit">Submit Cash Offer Now</button></form><audio id="submitSound"><source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" type="audio/ogg"/></audio>
+<form id="chatForm" onsubmit="handleUserInput(event)">
+<input id="chatInput" placeholder="Type your answer..." required="" style="margin-bottom: 10px;" type="text"/>
+<button type="submit">Next</button>
+</form>
 </div>
 <div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,58.7C960,53,1056,43,1152,48C1248,53,1344,75,1392,85.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="#f1f5fb" fill-opacity="1"></path></svg></div>
-<section style="padding: 2rem; background: #fff;">
+<section class="slide-in" style="padding: 2rem; background: #fff;">
 <h2 style="text-align: center; color: #003366;">How It Works</h2>
 <div style="max-width: 800px; margin: auto; display: flex; flex-direction: column; gap: 1rem;">
 <div><strong>1.</strong> Enter your VIN or license plate</div>
@@ -249,7 +235,7 @@ textarea {
 </div>
 <!-- Why Choose Recarra -->
 <div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,58.7C960,53,1056,43,1152,48C1248,53,1344,75,1392,85.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="#f1f5fb" fill-opacity="1"></path></svg></div>
-<section style="padding: 2rem; background: #f9f9f9;">
+<section class="slide-in" style="padding: 2rem; background: #f9f9f9;">
 <h2 style="text-align: center; color: #003366;">Why Choose Recarra</h2>
 <ul style="max-width: 600px; margin: auto; list-style: none; padding: 0;">
 <li>• Highest payouts in your area</li>
@@ -277,7 +263,7 @@ textarea {
 </div>
 <!-- Testimonials -->
 <div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,58.7C960,53,1056,43,1152,48C1248,53,1344,75,1392,85.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="#f1f5fb" fill-opacity="1"></path></svg></div>
-<section style="padding: 2rem; background: #fff;">
+<section class="slide-in" style="padding: 2rem; background: #fff;">
 <h2 style="text-align: center; color: #003366;">Customer Testimonials</h2>
 <blockquote style="text-align: center; font-style: italic;">“I got paid the same day — super easy!”</blockquote>
 <blockquote style="text-align: center; font-style: italic;">“Recarra gave me a better offer than 3 other sites.”</blockquote>
@@ -301,7 +287,7 @@ textarea {
 </div>
 <!-- Trust Badges -->
 <div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,58.7C960,53,1056,43,1152,48C1248,53,1344,75,1392,85.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="#f1f5fb" fill-opacity="1"></path></svg></div>
-<section style="padding: 2rem; background: #f1f1f1; text-align: center;">
+<section class="slide-in" style="padding: 2rem; background: #f1f1f1; text-align: center;">
 <h3 style="color: #003366;">Trusted Nationwide</h3>
 <p>✓ 100% Secure • ✓ Licensed Buyer • ✓ Instant Cash Transfer</p>
 </section>
@@ -324,7 +310,7 @@ textarea {
 </div>
 <!-- How Recarra Generates Offers (No tech exposed) -->
 <div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L60,58.7C120,53,240,43,360,64C480,85,600,139,720,138.7C840,139,960,85,1080,85.3C1200,85,1320,139,1380,165.3L1440,192L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z" fill="#e9f3ff" fill-opacity="1"></path></svg></div>
-<section style="padding: 2rem; background: #ffffff;">
+<section class="slide-in" style="padding: 2rem; background: #ffffff;">
 <h2 style="text-align: center; color: #003366;">How Recarra Delivers Real Offers — Instantly</h2>
 <p style="max-width: 750px; margin: 0 auto 1.5rem auto; font-size: 1.1rem; color: #444; text-align: center;">
     Most websites delay, guess, or hide the truth. Recarra does none of that. Every offer we show is based on a smart, direct process built to give you a fast and confident deal — without revealing your personal details or wasting time.
@@ -366,7 +352,7 @@ textarea {
 </div>
 <!-- Recarra Advantage Comparison -->
 <div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,58.7C960,53,1056,43,1152,48C1248,53,1344,75,1392,85.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="#f1f5fb" fill-opacity="1"></path></svg></div>
-<section style="padding: 2rem; background: #ffffff; text-align: center;">
+<section class="slide-in" style="padding: 2rem; background: #ffffff; text-align: center;">
 <h2 style="color: #003366; font-size: 2rem;">Why Recarra Beats the Rest</h2>
 <p style="max-width: 700px; margin: auto; font-size: 1.1rem; color: #444;">
     Most car-buying sites offer slow forms and generic quotes. Recarra gives you the real deal — instantly, intelligently, and with no games.
@@ -437,7 +423,7 @@ textarea {
 </div>
 <!-- Footer -->
 <div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,58.7C960,53,1056,43,1152,48C1248,53,1344,75,1392,85.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="#f1f5fb" fill-opacity="1"></path></svg></div>
-<section style="padding: 2rem; background: #fffbe6; text-align: center; border-top: 2px solid #ffc107;">
+<section class="slide-in" style="padding: 2rem; background: #fffbe6; text-align: center; border-top: 2px solid #ffc107;">
 <h2 style="color: #b86e00;">Refer &amp; Earn $100</h2>
 <p>Share your VIP referral code with friends. They get a bonus — and you get <strong>$100 cash</strong> for each one who sells a car!</p>
 <p style="margin-top: 1rem;">
@@ -464,95 +450,64 @@ textarea {
     box-shadow: 0 0 12px rgba(0,0,0,0.15);
   ">Get My Offer + $100 Extra</a>
 </div>
-<section id="referralSection" style="text-align:center; background:linear-gradient(#fffbe6, #fff7cc); padding:2rem; border-radius:12px; margin:3rem auto; max-width:480px; box-shadow:0 0 15px rgba(0,0,0,0.1); font-family:sans-serif;">
-<h2 style="font-size:2rem; color:#d35400; margin-bottom:1rem;">Refer &amp; Earn <span style="color:#27ae60;">$100</span></h2>
-<p style="font-size:1.1rem;">Share your VIP referral code with friends.<br/>They get a bonus — you get <strong>$100 cash</strong> for each sale!</p>
-<div style="margin:1.5rem 0;">
-<strong style="font-size:1.2rem;">Your Code:</strong>
-<div id="referralCode" style="display:inline-block; background:#fff3cd; padding:0.5rem 1rem; font-size:1.3rem; font-weight:bold; color:#333; border-radius:8px; box-shadow:inset 0 0 6px rgba(0,0,0,0.1); animation: glowCode 3s infinite;">
-      VIP1234
-    </div>
-</div>
-<button onclick="copyReferral()" style="padding:12px 24px; font-weight:bold; font-size:1rem; border:none; border-radius:8px; background:linear-gradient(to right, #007bff, #00c6ff); color:white; cursor:pointer; box-shadow:0 4px 12px rgba(0,123,255,0.3);">
-    Copy Code
-  </button>
-<div style="margin-top:1rem;">
-<small style="color:#555;">Referral payouts are processed within 48 hours of a successful sale.</small>
-</div>
-<div style="margin-top:1.5rem; font-size:0.9rem;">
-<a href="#" onclick="shareReferral()" style="margin: 0 0.5rem;">Share via Text</a> |
-    <a href="#" onclick="shareReferral()" style="margin: 0 0.5rem;">WhatsApp</a> |
-    <a href="#" onclick="shareReferral()" style="margin: 0 0.5rem;">Email</a>
-</div>
-</section>
-<section id="liveTicker" style="background:#ffffff; padding:1rem; border-top:2px solid #e0e0e0; text-align:center; font-family:sans-serif;">
-<h3 style="font-size:1.4rem; color:#222; margin-bottom:1rem;">Live Deals Happening Now</h3>
-<div id="carouselContainer" style="position:relative; height:240px; overflow:hidden;">
-<div id="carouselCard" style="position:absolute; width:100%; transition:opacity 1s ease; opacity:0;"></div>
+<section class="slide-in" style="padding: 2rem; background: #fff;">
+<h2 style="text-align:center; color: #003366;">Frequently Asked Questions</h2>
+<div style="max-width: 800px; margin: auto;">
+<details style="margin-bottom: 1rem;">
+<summary style="font-weight:bold;">What types of cars do you buy?</summary>
+<p>We buy all makes, models, and conditions — running or not, with or without a title.</p>
+</details>
+<details style="margin-bottom: 1rem;">
+<summary style="font-weight:bold;">How fast can I get paid?</summary>
+<p>We offer same-day payment in most cities. Cash, Zelle, or direct deposit.</p>
+</details>
+<details style="margin-bottom: 1rem;">
+<summary style="font-weight:bold;">Do I need to bring the car anywhere?</summary>
+<p>Nope. We pick it up for free — even if it’s not running.</p>
+</details>
+<details>
+<summary style="font-weight:bold;">What if I still owe money on the car?</summary>
+<p>We’ll help you settle your loan and get you paid fast. Just let us know.</p>
+</details>
 </div>
 </section>
-<section id="recentOffers" style="background:#f7f7f7; padding:2rem; text-align:center; font-family:sans-serif;">
-<h2 style="font-size:2rem; color:#222;">Recently Completed Offers</h2>
-<p style="margin-bottom:2rem; color:#666;">Real deals, fast payouts, happy sellers.</p>
-<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1rem; max-width:1100px; margin:auto;">
-<!-- Cards injected here -->
-<div style="background:white; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); padding:1rem; animation:fadeIn 1s ease; display:flex; flex-direction:column; align-items:center;">
-<img alt="car" src="https://picsum.photos/id/1025/300/200" style="width:100%; max-height:160px; object-fit:cover; border-radius:8px;"/>
-<div style="margin-top:0.75rem; font-size:1.1rem; font-weight:bold; color:#333;">2015 Honda Civic</div>
-<div style="font-size:0.9rem; color:#777;">Houston, TX • 3 mins ago</div>
-<div style="margin-top:0.5rem; font-size:1rem; color:#27ae60; font-weight:bold;">$$825 via Zelle</div>
+<section class="slide-in" style="padding: 2rem; background: #f9f9f9; text-align: center;">
+<h2 style="color: #003366;">We Pay Your Way</h2>
+<p style="margin-bottom: 1.5rem;">Choose how you get paid: fast, easy, and secure.</p>
+<div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem;">
+<img alt="Zelle" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Zelle_logo.svg/2560px-Zelle_logo.svg.png" style="height: 40px;"/>
+<img alt="Cash App" src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Cash_App_logo.svg" style="height: 40px;"/>
+<img alt="Venmo" src="https://upload.wikimedia.org/wikipedia/commons/5/58/Venmo_Logo_2021.svg" style="height: 40px;"/>
+<img alt="Bank Deposit" src="https://upload.wikimedia.org/wikipedia/commons/b/bb/Bank_Icon.svg" style="height: 40px;"/>
+<img alt="Cash" src="https://upload.wikimedia.org/wikipedia/commons/7/72/Cash_icon.svg" style="height: 40px;"/>
 </div>
-<div style="background:white; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); padding:1rem; animation:fadeIn 1s ease; display:flex; flex-direction:column; align-items:center;">
-<img alt="car" src="https://picsum.photos/id/1050/300/200" style="width:100%; max-height:160px; object-fit:cover; border-radius:8px;"/>
-<div style="margin-top:0.75rem; font-size:1.1rem; font-weight:bold; color:#333;">2012 Ford Escape</div>
-<div style="font-size:0.9rem; color:#777;">Atlanta, GA • 12 mins ago</div>
-<div style="margin-top:0.5rem; font-size:1rem; color:#27ae60; font-weight:bold;">$$680 via Cash App</div>
+</section>
+<section class="slide-in" style="padding: 2rem; background: #fff;">
+<h2 style="text-align:center; color: #003366;">Where We Operate</h2>
+<p style="text-align: center;">Recarra covers most U.S. cities with fast service &amp; free towing.</p>
+<div style="text-align:center; margin-top: 1rem;">
+<img alt="Service Area" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Blank_US_Map_%28states_only%29.svg/1280px-Blank_US_Map_%28states_only%29.svg.png" style="max-width:90%; height:auto; border: 2px solid #ccc; border-radius: 8px;"/>
 </div>
-<div style="background:white; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); padding:1rem; animation:fadeIn 1s ease; display:flex; flex-direction:column; align-items:center;">
-<img alt="car" src="https://picsum.photos/id/1062/300/200" style="width:100%; max-height:160px; object-fit:cover; border-radius:8px;"/>
-<div style="margin-top:0.75rem; font-size:1.1rem; font-weight:bold; color:#333;">2017 Toyota Corolla</div>
-<div style="font-size:0.9rem; color:#777;">Chicago, IL • 20 mins ago</div>
-<div style="margin-top:0.5rem; font-size:1rem; color:#27ae60; font-weight:bold;">$$910 via Cash</div>
+</section>
+<section class="slide-in" style="padding: 2rem; background: #f9f9f9; text-align: center;">
+<h2 style="color: #003366;">We Pay Your Way</h2>
+<p style="margin-bottom: 1.5rem;">Choose how to get paid instantly — fast, easy, and secure.</p>
+<div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem;">
+<div style="display:flex; flex-direction:column; align-items:center;">
+<img alt="Debit Card" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Generic_debit_card_icon.svg/120px-Generic_debit_card_icon.svg.png" style="height: 50px;"/>
+<span>Instant to Debit</span>
 </div>
-<div style="background:white; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); padding:1rem; animation:fadeIn 1s ease; display:flex; flex-direction:column; align-items:center;">
-<img alt="car" src="https://picsum.photos/id/1084/300/200" style="width:100%; max-height:160px; object-fit:cover; border-radius:8px;"/>
-<div style="margin-top:0.75rem; font-size:1.1rem; font-weight:bold; color:#333;">2014 Nissan Altima</div>
-<div style="font-size:0.9rem; color:#777;">Dallas, TX • 35 mins ago</div>
-<div style="margin-top:0.5rem; font-size:1rem; color:#27ae60; font-weight:bold;">$$745 via Zelle</div>
+<div style="display:flex; flex-direction:column; align-items:center;">
+<img alt="Bank" src="https://upload.wikimedia.org/wikipedia/commons/b/bb/Bank_Icon.svg" style="height: 50px;"/>
+<span>Direct to Bank</span>
 </div>
-<div style="background:white; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); padding:1rem; animation:fadeIn 1s ease; display:flex; flex-direction:column; align-items:center;">
-<img alt="car" src="https://picsum.photos/id/1044/300/200" style="width:100%; max-height:160px; object-fit:cover; border-radius:8px;"/>
-<div style="margin-top:0.75rem; font-size:1.1rem; font-weight:bold; color:#333;">2013 Chevy Impala</div>
-<div style="font-size:0.9rem; color:#777;">Miami, FL • 1 hour ago</div>
-<div style="margin-top:0.5rem; font-size:1rem; color:#27ae60; font-weight:bold;">$$695 via Cash App</div>
-</div>
-<div style="background:white; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); padding:1rem; animation:fadeIn 1s ease; display:flex; flex-direction:column; align-items:center;">
-<img alt="car" src="https://picsum.photos/id/1011/300/200" style="width:100%; max-height:160px; object-fit:cover; border-radius:8px;"/>
-<div style="margin-top:0.75rem; font-size:1.1rem; font-weight:bold; color:#333;">2019 Hyundai Elantra</div>
-<div style="font-size:0.9rem; color:#777;">Phoenix, AZ • Today</div>
-<div style="margin-top:0.5rem; font-size:1rem; color:#27ae60; font-weight:bold;">$$975 via Cash</div>
-</div>
-<div style="background:white; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); padding:1rem; animation:fadeIn 1s ease; display:flex; flex-direction:column; align-items:center;">
-<img alt="car" src="https://picsum.photos/id/1023/300/200" style="width:100%; max-height:160px; object-fit:cover; border-radius:8px;"/>
-<div style="margin-top:0.75rem; font-size:1.1rem; font-weight:bold; color:#333;">2010 BMW 328i</div>
-<div style="font-size:0.9rem; color:#777;">Las Vegas, NV • Today</div>
-<div style="margin-top:0.5rem; font-size:1rem; color:#27ae60; font-weight:bold;">$$850 via Zelle</div>
-</div>
-<div style="background:white; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); padding:1rem; animation:fadeIn 1s ease; display:flex; flex-direction:column; align-items:center;">
-<img alt="car" src="https://picsum.photos/id/1060/300/200" style="width:100%; max-height:160px; object-fit:cover; border-radius:8px;"/>
-<div style="margin-top:0.75rem; font-size:1.1rem; font-weight:bold; color:#333;">2016 Kia Optima</div>
-<div style="font-size:0.9rem; color:#777;">Los Angeles, CA • Today</div>
-<div style="margin-top:0.5rem; font-size:1rem; color:#27ae60; font-weight:bold;">$$770 via Cash</div>
-</div>
-<div style="background:white; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); padding:1rem; animation:fadeIn 1s ease; display:flex; flex-direction:column; align-items:center;">
-<img alt="car" src="https://picsum.photos/id/1033/300/200" style="width:100%; max-height:160px; object-fit:cover; border-radius:8px;"/>
-<div style="margin-top:0.75rem; font-size:1.1rem; font-weight:bold; color:#333;">2018 Mazda CX-5</div>
-<div style="font-size:0.9rem; color:#777;">New York, NY • Today</div>
-<div style="margin-top:0.5rem; font-size:1rem; color:#27ae60; font-weight:bold;">$$905 via Cash App</div>
+<div style="display:flex; flex-direction:column; align-items:center;">
+<img alt="Cash" src="https://upload.wikimedia.org/wikipedia/commons/7/72/Cash_icon.svg" style="height: 50px;"/>
+<span>Cash on Pickup</span>
 </div>
 </div>
 </section>
-<footer style="padding: 2rem; background: #001f3f; color: white; text-align: center;">
+<footer style="padding: 2rem; background: #001f3f; color: white; text-align: center; padding-bottom: 5rem; margin-bottom: 5rem;">
 <div style="max-width: 800px; margin: auto;">
 <p><strong>Quick Links:</strong></p>
 <p>
@@ -647,315 +602,58 @@ window.addEventListener("load", function() {
 });
 </script>
 <script>
-    const steps = [
-      'licenseInput', 'yearInput', 'makeInput', 'modelInput', 'trimInput', 'titleStatus', 'carCondition',
-      'photoFront', 'photoRear', 'photoLeft', 'photoRight', 'photoEngine', 'photoDash', 'photoDamage', 'photoExtra'
-    ];
-    let currentStep = 0;
-
-    function showNextStep() {
-      const currentId = steps[currentStep];
-      const currentEl = document.getElementById(currentId);
-      const label = document.querySelector(`label[for="${currentId}"]`);
-      if (currentEl && currentEl.value) {
-        currentEl.style.display = 'none';
-        if (label) label.style.display = 'none';
-        currentStep++;
-        if (currentStep < steps.length) {
-          const nextId = steps[currentStep];
-          const nextEl = document.getElementById(nextId);
-          const nextLabel = document.querySelector(`label[for="${nextId}"]`);
-          if (nextEl) nextEl.style.display = 'block';
-          if (nextLabel) nextLabel.style.display = 'block';
-        } else {
-          document.getElementById('finalSubmitBtn').style.display = 'block';
-        }
-      }
-    }
-
-    document.getElementById("chatForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      showNextStep();
-    });
-
-    function playSubmitSound() {
-      var sound = document.getElementById('submitSound');
-      if (sound) sound.play();
-    }
-    </script><script>
-const photoFields = [
-  'photoFront','photoRear','photoLeft','photoRight','photoEngine','photoDash','photoDamage','photoExtra'
-];
-photoFields.forEach(id => {
-  const input = document.getElementById(id);
-  const preview = document.getElementById(id + "_preview");
-  const reason = document.getElementById(id + "_reason");
-  if (input) {
-    input.addEventListener("change", function() {
-      if (this.files && this.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          if (preview) {
-            preview.src = e.target.result;
-            preview.style.display = "block";
-          }
-        };
-        reader.readAsDataURL(this.files[0]);
-        if (reason) reason.style.display = "none";
-      } else {
-        if (reason) reason.style.display = "block";
-      }
-    });
-  }
-});
-
-// Bonus animation logic
-document.getElementById("sameDayBonus").addEventListener("input", function() {
-  if (this.value.trim().toLowerCase() === "yes") {
-    document.getElementById("bonusAnimation").style.display = "block";
-  } else {
-    document.getElementById("bonusAnimation").style.display = "none";
-  }
-});
-
-// Final submission override with offer ID
-document.getElementById("chatForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-  const currentId = steps[currentStep];
-  const currentEl = document.getElementById(currentId);
-  const label = document.querySelector(`label[for="${currentId}"]`);
-  if (currentEl && (currentEl.value || currentEl.files.length > 0)) {
-    currentEl.style.display = 'none';
-    if (label) label.style.display = 'none';
-    currentStep++;
-    if (currentStep < steps.length) {
-      const nextId = steps[currentStep];
-      const nextEl = document.getElementById(nextId);
-      const nextLabel = document.querySelector(`label[for="${nextId}"]`);
-      if (nextEl) nextEl.style.display = 'block';
-      if (nextLabel) nextLabel.style.display = 'block';
-    } else {
-      document.getElementById('chatForm').style.display = 'none';
-      const id = 'RC' + Math.floor(1000 + Math.random() * 9000);
-      document.getElementById('offerId').textContent = id;
-      finalizeThankYou();
-      playSubmitSound();
-    }
-  }
-});
-
-// Placeholder VIN/Plate scanner logic (to be replaced with real API)
-document.querySelectorAll('button').forEach(btn => {
-  if (btn.textContent.includes("Scan VIN")) {
-    btn.onclick = () => alert("Launching VIN scanner (camera integration coming soon)...");
-  }
-  if (btn.textContent.includes("Scan License Plate")) {
-    btn.onclick = () => alert("Launching License Plate scanner (camera integration coming soon)...");
-  }
-});
-
-// Use file input capture for real camera scan (mobile support)
-const vinButton = [...document.querySelectorAll("button")].find(b => b.textContent.includes("Scan VIN"));
-const plateButton = [...document.querySelectorAll("button")].find(b => b.textContent.includes("Scan License Plate"));
-
-if (vinButton) {
-  const vinInput = document.createElement('input');
-  vinInput.type = 'file';
-  vinInput.accept = 'image/*';
-  vinInput.capture = 'environment';
-  vinInput.style.display = 'none';
-  vinInput.onchange = () => alert("VIN image selected. Future backend will decode it.");
-  document.body.appendChild(vinInput);
-  vinButton.onclick = () => vinInput.click();
-}
-
-if (plateButton) {
-  const plateInput = document.createElement('input');
-  plateInput.type = 'file';
-  plateInput.accept = 'image/*';
-  plateInput.capture = 'environment';
-  plateInput.style.display = 'none';
-  plateInput.onchange = () => alert("Plate image selected. Future backend will decode it.");
-  document.body.appendChild(plateInput);
-  plateButton.onclick = () => plateInput.click();
-}
-
-// Fill hidden backend form
-function fillBackendForm() {
-  const ids = ['licenseInput', 'yearInput', 'makeInput', 'modelInput', 'trimInput', 'titleStatus', 'carCondition', 'sameDayBonus'];
-  ids.forEach(id => {
-    const visible = document.getElementById(id);
-    const hidden = document.getElementById(id + '_hidden');
-    if (visible && hidden) hidden.value = visible.value;
-  });
-}
-
-// Final thank-you behavior
-function finalizeThankYou() {
-  document.getElementById('chatForm').style.display = 'none';
-  const id = 'RC' + Math.floor(1000 + Math.random() * 9000);
-  document.getElementById('offerId').textContent = id;
-  fillBackendForm();
-  finalizeThankYou();
-  playSubmitSound();
-}
-
-// Sample frontend offer calculation logic (to be refined on backend)
-function calculateOffer() {
-  let base = 500;
-  const year = parseInt(document.getElementById("yearInput").value);
-  const condition = document.getElementById("carCondition").value.toLowerCase();
-  const sameDay = document.getElementById("sameDayBonus").value.toLowerCase() === "yes";
-
-  if (year >= 2018) base += 200;
-  else if (year >= 2012) base += 100;
-  else base += 50;
-
-  if (condition.includes("not running")) base -= 75;
-  if (condition.includes("excellent") || condition.includes("good")) base += 100;
-
-  if (sameDay) base += 100;
-
-  return Math.max(base, 300);
-}
-
-// Replace static offer amount with calculated value
-function finalizeThankYou() {
-  document.getElementById('chatForm').style.display = 'none';
-  const id = 'RC' + Math.floor(1000 + Math.random() * 9000);
-  document.getElementById('offerId').textContent = id;
-  fillBackendForm();
-
-  const amount = calculateOffer();
-  document.getElementById('offerAmount').textContent = 'Estimated Offer: $' + amount;
-
-  document.getElementById('thankYouScreen').style.display = 'block';
-  playSubmitSound();
-}
-</script><div id="thankYouScreen" style="display:none; text-align:center; padding:2rem;"><h2>Thank You!</h2><p>Your request has been submitted. Your Offer ID is:</p><code id="offerId" style="font-size: 1.5rem; display:block; margin-top:1rem;"></code><div id="offerAmount" style="font-size:2rem; margin-top:1rem; color:#28a745; font-weight:bold; animation: pulseWave 2s infinite;">Estimated Offer: $865</div><form action="/submit-offer" id="backendForm" method="POST" style="display:none;"><input id="licenseInput_hidden" name="licenseInput" type="hidden"/><input id="yearInput_hidden" name="yearInput" type="hidden"/><input id="makeInput_hidden" name="makeInput" type="hidden"/><input id="modelInput_hidden" name="modelInput" type="hidden"/><input id="trimInput_hidden" name="trimInput" type="hidden"/><input id="titleStatus_hidden" name="titleStatus" type="hidden"/><input id="carCondition_hidden" name="carCondition" type="hidden"/><input id="sameDayBonus_hidden" name="sameDayBonus" type="hidden"/><input id="referralCode_hidden" name="referralCode" type="hidden"/><input id="photoFront_hidden" name="photoFront" type="hidden"/><input id="photoRear_hidden" name="photoRear" type="hidden"/><input id="photoLeft_hidden" name="photoLeft" type="hidden"/><input id="photoRight_hidden" name="photoRight" type="hidden"/><input id="photoEngine_hidden" name="photoEngine" type="hidden"/><input id="photoDash_hidden" name="photoDash" type="hidden"/><input id="photoDamage_hidden" name="photoDamage" type="hidden"/><input id="photoExtra_hidden" name="photoExtra" type="hidden"/><input id="offerAmount_hidden" name="offerAmount" type="hidden"/><input id="offerId_hidden" name="offerId" type="hidden"/><input id="bonusEligible_hidden" name="bonusEligible" type="hidden"/><input id="referrerEarned_hidden" name="referrerEarned" type="hidden"/></form></div><script>
-function copyReferral() {
-  const code = document.getElementById("referralCode").innerText.trim();
-  navigator.clipboard.writeText(code).then(() => {
-    alert("Referral code copied: " + code);
-  });
-}
-function shareReferral() {
-  const link = window.location.origin + "?ref=VIP1234";
-  alert("Share this link with your friends:
-" + link);
-}
-
-// Store referral code from URL (e.g., ?ref=VIP1234)
 (function() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const refCode = urlParams.get('ref');
-  if (refCode) {
-    localStorage.setItem('referralCode', refCode);
+  const display = document.getElementById("bonusTimer");
+  const countdownKey = "bonusCountdownStart";
+  const duration = 24 * 60 * 60 * 1000; // 24 hours in ms
+
+  function formatTime(ms) {
+    const totalSec = Math.floor(ms / 1000);
+    const hrs = String(Math.floor(totalSec / 3600)).padStart(2, '0');
+    const mins = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0');
+    const secs = String(totalSec % 60).padStart(2, '0');
+    return `${hrs}:${mins}:${secs}`;
   }
+
+  let start = localStorage.getItem(countdownKey);
+  if (!start) {
+    start = Date.now();
+    localStorage.setItem(countdownKey, start);
+  } else {
+    start = parseInt(start, 10);
+  }
+
+  const end = start + duration;
+
+  function updateCountdown() {
+    const now = Date.now();
+    const remaining = end - now;
+    if (remaining <= 0) {
+      display.textContent = "Expired";
+      display.style.color = "#999";
+      
+      document.getElementById("renewBonusBtn").style.display = "inline-block";
+      const audio = document.getElementById("bonusSound");
+      if (audio) audio.play();
+      // TODO: Send timestamp to backend here
+      return clearInterval(interval);
+    
+    }
+    display.textContent = formatTime(remaining);
+  }
+
+  updateCountdown();
+  const interval = setInterval(updateCountdown, 1000);
 })();
 
-// Update backend form to include referral code
-function fillBackendForm() {
-  const ids = ['licenseInput', 'yearInput', 'makeInput', 'modelInput', 'trimInput', 'titleStatus', 'carCondition', 'sameDayBonus'];
-  ids.forEach(id => {
-    const visible = document.getElementById(id);
-    const hidden = document.getElementById(id + '_hidden');
-    if (visible && hidden) hidden.value = visible.value;
-  });
-
-  const referral = localStorage.getItem('referralCode');
-  const refField = document.getElementById('referralCode_hidden');
-  if (refField && referral) {
-    refField.value = referral;
-  }
+function renewBonus() {
+  const newStart = Date.now();
+  localStorage.setItem("bonusCountdownStart", newStart);
+  location.reload();
 }
-</script><script>
-const carouselOffers = [
-  {
-    img: "https://picsum.photos/id/1015/600/300",
-    car: "2014 Toyota Camry",
-    location: "Houston, TX",
-    price: "$785",
-    method: "Cash",
-    time: "3 mins ago"
-  },
-  {
-    img: "https://picsum.photos/id/1011/600/300",
-    car: "2019 Hyundai Elantra",
-    location: "Miami, FL",
-    price: "$925",
-    method: "Zelle",
-    time: "10 mins ago"
-  },
-  {
-    img: "https://picsum.photos/id/1023/600/300",
-    car: "2012 Ford Focus",
-    location: "Dallas, TX",
-    price: "$690",
-    method: "Cash App",
-    time: "15 mins ago"
-  },
-  {
-    img: "https://picsum.photos/id/1035/600/300",
-    car: "2016 Nissan Altima",
-    location: "Atlanta, GA",
-    price: "$845",
-    method: "Cash",
-    time: "25 mins ago"
-  },
-  {
-    img: "https://picsum.photos/id/1044/600/300",
-    car: "2017 Kia Optima",
-    location: "Chicago, IL",
-    price: "$880",
-    method: "Zelle",
-    time: "30 mins ago"
-  }
-];
-
-let index = 0;
-function updateCarousel() {
-  const card = document.getElementById("carouselCard");
-  const data = carouselOffers[index];
-  card.style.opacity = 0;
-  setTimeout(() => {
-    card.innerHTML = `
-      <img src="${data.img}" alt="car" style="width:100%; max-height:150px; object-fit:cover; border-radius:10px;"/>
-      <h4 style="margin-top:0.75rem; font-size:1.2rem; color:#333;">${data.car}</h4>
-      <p style="color:#777;">${data.location} • ${data.time}</p>
-      <div style="color:#27ae60; font-weight:bold;">${data.price} via ${data.method}</div>
-    `;
-    card.style.opacity = 1;
-  }, 500);
-
-  index = (index + 1) % carouselOffers.length;
-}
-setInterval(updateCarousel, 8000);
-window.onload = updateCarousel;
-</script><script>
-document.addEventListener("DOMContentLoaded", () => {
-  const licenseInput = document.getElementById("licenseInput");
-
-  const fakeVin = "1HGCM82633A123456";
-  const fakePlate = "TXR-8457";
-
-  const vinButton = document.querySelector("button:contains('Scan VIN')");
-  const plateButton = document.querySelector("button:contains('Scan License Plate')");
-
-  // Fallback for compatibility
-  document.querySelectorAll("button").forEach(btn => {
-    if (btn.textContent.includes("Scan VIN")) {
-      btn.onclick = () => {
-        alert("Fake VIN scan complete. Auto-filled.");
-        licenseInput.value = fakeVin;
-      };
-    } else if (btn.textContent.includes("Scan License Plate")) {
-      btn.onclick = () => {
-        alert("Fake Plate scan complete. Auto-filled.");
-        licenseInput.value = fakePlate;
-      };
-    }
-  });
-});
-</script></body>
+</script>
+<audio id="bonusSound">
+<source src="https://cdn.pixabay.com/audio/2022/03/15/audio_131a4cd6e2.mp3" type="audio/mp3"/>
+</audio>
+</body>
 </html>
