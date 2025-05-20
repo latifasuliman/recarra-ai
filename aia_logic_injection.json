@@ -95,37 +95,37 @@
   },
   {
     "id": "photo_front",
-    "question": "Please upload a clear Front View of your car.",
+    "question": "Upload Front View",
     "type": "file",
     "required": true
   },
   {
     "id": "photo_back",
-    "question": "Now upload the Rear View.",
+    "question": "Upload Rear View",
     "type": "file",
     "required": true
   },
   {
     "id": "photo_left",
-    "question": "Left Side View?",
+    "question": "Upload Left Side",
     "type": "file",
     "required": true
   },
   {
     "id": "photo_right",
-    "question": "Right Side View?",
+    "question": "Upload Right Side",
     "type": "file",
     "required": true
   },
   {
     "id": "photo_engine",
-    "question": "Engine Compartment Photo.",
+    "question": "Upload Engine Compartment",
     "type": "file",
     "required": true
   },
   {
     "id": "photo_dashboard",
-    "question": "Dashboard Lit-Up View.",
+    "question": "Upload Dashboard (Lit Up)",
     "type": "file",
     "required": true
   }

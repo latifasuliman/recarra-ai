@@ -1042,5 +1042,101 @@ function fetchDecodedInfo(code) {
 <button onclick="capturePhoto()" style="margin-top:1rem; padding:10px 20px; background:#28a745; color:white; font-weight:bold; border:none; border-radius:6px;">Capture</button>
 <button onclick="closeCameraModal()" style="margin-top:1rem; background:none; color:#ccc; text-decoration:underline;">Cancel</button>
 </div>
-<canvas id="canvasCapture" style="display:none;"></canvas><script defer="True" src="camera_scan_script.js"></script></body>
+<canvas id="canvasCapture" style="display:none;"></canvas><script defer="True" src="camera_scan_script.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const steps = document.querySelectorAll(".form-step");
+  let currentStep = 0;
+
+  function showStep(index) {
+    steps.forEach((step, i) => {
+      step.classList.remove("active");
+      step.style.display = "none";
+    });
+    steps[index].classList.add("active");
+  }
+
+  function createReasonInput(fieldId) {
+    let reasonInput = document.createElement("textarea");
+    reasonInput.placeholder = "Enter reason for skipping...";
+    reasonInput.style.width = "80%";
+    reasonInput.style.margin = "1rem auto";
+    reasonInput.style.display = "block";
+    reasonInput.id = fieldId + "_reason";
+    return reasonInput;
+  }
+
+  function createContinueButton(reasonInput, nextFunc) {
+    let continueBtn = document.createElement("button");
+    continueBtn.textContent = "Continue Without Photo";
+    continueBtn.style.marginTop = "1rem";
+    continueBtn.onclick = () => {
+      const reasonText = reasonInput.value.trim();
+      if (reasonText.length >= 5) {
+        window.formData = window.formData || {};
+        window.formData[reasonInput.id] = reasonText;
+        nextFunc();
+      } else {
+        reasonInput.classList.add("error");
+        setTimeout(() => reasonInput.classList.remove("error"), 300);
+      }
+    };
+    return continueBtn;
+  }
+
+  function goToNextStep() {
+    const step = steps[currentStep];
+    const currentField = step.querySelector("input[type='file'], input, select");
+    if (!currentField) return;
+
+    if (
+      currentField.type === "file" &&
+      (!currentField.files || currentField.files.length === 0)
+    ) {
+      if (!step.querySelector("textarea")) {
+        const reasonInput = createReasonInput(currentField.id);
+        const continueBtn = createContinueButton(reasonInput, () => {
+          currentStep++;
+          if (currentStep < steps.length) {
+            showStep(currentStep);
+          }
+        });
+        step.appendChild(reasonInput);
+        step.appendChild(continueBtn);
+      }
+      return;
+    }
+
+    if (currentField.value.trim() !== "") {
+      currentStep++;
+      if (currentStep < steps.length) {
+        showStep(currentStep);
+      }
+    } else {
+      currentField.classList.add("error");
+      setTimeout(() => currentField.classList.remove("error"), 300);
+    }
+  }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      goToNextStep();
+    }
+  });
+
+  const nextBtns = document.querySelectorAll("button");
+  nextBtns.forEach(btn => {
+    if (btn.textContent === "Next") {
+      btn.addEventListener("click", e => {
+        e.preventDefault();
+        goToNextStep();
+      });
+    }
+  });
+
+  showStep(currentStep);
+});
+</script>
+</body>
 </html>
