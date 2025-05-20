@@ -1,129 +1,80 @@
 
-let currentStep = 0;
-let questions = [];
-let formData = {};
+document.addEventListener("DOMContentLoaded", function () {
+  const steps = document.querySelectorAll(".form-step");
+  const progressBar = document.getElementById("formProgressBar");
+  const stepCounter = document.createElement("div");
 
-async function fetchQuestions() {
-  try {
-    const response = await fetch('aia_question_flow.json');
-    questions = await response.json();
-    renderNextQuestion();
-  } catch (error) {
-    document.getElementById('chatMessages').innerText = 'Error loading form.';
-    console.error('Failed to load questions:', error);
-  }
-}
+  stepCounter.id = "stepCounter";
+  stepCounter.style.textAlign = "center";
+  stepCounter.style.fontSize = "0.9rem";
+  stepCounter.style.marginBottom = "0.5rem";
+  progressBar.parentElement.insertAdjacentElement("beforebegin", stepCounter);
 
-function renderNextQuestion() {
-  const chat = document.getElementById('chatMessages');
-  chat.innerHTML = '';
-  if (currentStep >= questions.length) {
-    document.getElementById('formProgressBar').style.width = '100%';
-    document.getElementById('finalOfferAmount').innerText = 'Crunching your AiA Offer...';
-    document.getElementById('finalOfferAmount').style.display = 'block';
-    submitToBackend();
-    return;
+  let currentStep = 0;
+
+  function updateProgress() {
+    const percent = Math.round(((currentStep + 1) / steps.length) * 100);
+    progressBar.style.width = percent + "%";
+    stepCounter.textContent = "Step " + (currentStep + 1) + " of " + steps.length;
   }
 
-  const q = questions[currentStep];
-  const label = document.createElement('label');
-  label.textContent = q.question;
-  label.setAttribute('for', 'chatInput');
-  chat.appendChild(label);
-
-  const input = document.createElement('input');
-  input.type = q.type === 'file' ? 'file' : 'text';
-  input.id = 'chatInput';
-  input.name = q.id;
-  if (q.type === 'file' && q.multiple) input.multiple = true;
-  input.required = q.required || false;
-  input.style.marginTop = '10px';
-  chat.appendChild(input);
-
-  const nextBtn = document.createElement('button');
-  nextBtn.textContent = 'Next';
-  nextBtn.type = 'button';
-  nextBtn.style.marginTop = '1rem';
-  nextBtn.onclick = handleAnswer;
-  chat.appendChild(nextBtn);
-
-  // Show scan buttons on the first question
-  const scanDiv = document.getElementById('scanButtons');
-  if (scanDiv) {
-    scanDiv.style.display = (q.id === 'plate_or_vin') ? 'block' : 'none';
+  function showStep(index) {
+    steps.forEach((step, i) => {
+      step.classList.remove("active");
+      step.style.display = "none";
+    });
+    steps[index].classList.add("active");
+    steps[index].style.display = "block";
+    updateProgress();
   }
 
-  const progress = Math.floor((currentStep / questions.length) * 100);
-  document.getElementById('formProgressBar').style.width = progress + '%';
-}
-
-function handleAnswer() {
-  const input = document.getElementById('chatInput');
-  const value = input.type === 'file' ? input.files : input.value.trim();
-  if ((input.type !== 'file' && value === '') || (input.type === 'file' && value.length === 0)) {
-    input.classList.add('error');
-    setTimeout(() => input.classList.remove('error'), 300);
-    return;
-  }
-
-  const q = questions[currentStep];
-  formData[q.id] = value;
-  currentStep++;
-  renderNextQuestion();
-}
-
-function submitToBackend() {
-  fetch('/api/submit-offer', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(formData)
-  })
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById('finalOfferAmount').innerHTML = `Your AiA Offer: $${data.offer}`;
-    document.getElementById('finalOfferAmount').style.display = 'block';
-    if (window.confetti) confetti();
-    if (data.offerId) {
-      document.getElementById('offerId').innerText = data.offerId;
-      document.getElementById('thankYouScreen').style.display = 'block';
-    }
-  })
-  .catch(error => {
-    document.getElementById('finalOfferAmount').innerHTML = "Error generating offer. Please try again.";
-    document.getElementById('finalOfferAmount').style.color = "#cc0000";
-    document.getElementById('finalOfferAmount').style.display = 'block';
-  });
-}
-
-function scanVIN() {
-  alert("Opening VIN scanner...");
-  const fakeVIN = "1HGCM82633A004352";
-  const input = document.getElementById("chatInput");
-  if (input) {
-    input.value = fakeVIN;
-    fetchDecodedInfo(fakeVIN);
-  }
-}
-
-function scanPlate() {
-  alert("Opening Plate scanner...");
-  const fakePlate = "TX1234XYZ";
-  const input = document.getElementById("chatInput");
-  if (input) {
-    input.value = fakePlate;
-    fetchDecodedInfo(fakePlate);
-  }
-}
-
-function fetchDecodedInfo(code) {
-  fetch(`/api/decode?code=${encodeURIComponent(code)}`)
-    .then(res => res.json())
-    .then(data => {
-      if (data.year && data.make && data.model) {
-        formData["vehicle_info"] = `${data.year} ${data.make} ${data.model}`;
+  function validateStep() {
+    const input = steps[currentStep].querySelector("input, select");
+    if (!input) return true;
+    if (input.type === "file") {
+      if (input.files.length > 0) return true;
+      const skipReason = prompt("No photo uploaded. Enter a reason to skip or click Cancel:");
+      if (skipReason && skipReason.length > 2) {
+        input.setAttribute("data-skip-reason", skipReason);
+        return true;
+      } else {
+        return false;
       }
-    })
-    .catch(err => console.error("Decoding error:", err));
-}
+    }
+    return input.value.trim() !== "";
+  }
 
-window.addEventListener('DOMContentLoaded', fetchQuestions);
+  function goToNextStep() {
+    if (!validateStep()) {
+      const input = steps[currentStep].querySelector("input, select");
+      if (input) {
+        input.classList.add("error");
+        setTimeout(() => input.classList.remove("error"), 300);
+      }
+      return;
+    }
+
+    currentStep++;
+    if (currentStep < steps.length) {
+      showStep(currentStep);
+    }
+  }
+
+  document.querySelectorAll("button").forEach((btn) => {
+    if (btn.textContent.trim().toLowerCase() === "next") {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        goToNextStep();
+      });
+    }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      goToNextStep();
+    }
+  });
+
+  showStep(currentStep);
+});
