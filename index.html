@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Recarra AiA - Instant Car Offer</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f9f9f9;
+    color: #111;
+  }
+  header {
+    background: linear-gradient(to right, #001f3f, #003366);
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+  }
+  #chatContainer {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  }
+  #chatMessages {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-bottom: 1rem;
+  }
+  .chat-bubble {
+    margin: 1rem 0;
+    padding: 1rem;
+    border-radius: 20px;
+    max-width: 80%;
+    display: inline-block;
+    line-height: 1.4;
+    font-size: 1rem;
+    animation: fadeIn 0.3s ease;
+  }
+  .ai-bubble {
+    background: #e8f0fe;
+    color: #111;
+    border-top-left-radius: 0;
+  }
+  .user-bubble {
+    background: #001f3f;
+    color: white;
+    float: right;
+    border-top-right-radius: 0;
+  }
+  #chatInputSection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  #chatInputSection input, #chatInputSection button {
+    font-size: 1rem;
+    padding: 0.75rem;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+  #chatInputSection button {
+    background: linear-gradient(to right, #ff4136, #ffdc00);
+    color: #111;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  #chatInputSection button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 10px rgba(255, 65, 54, 0.5);
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<header>Recarra AiA — Get Your Instant Car Offer</header>
+<main>
+  <div id="chatContainer">
+    <div id="chatMessages"></div>
+    <div id="chatInputSection"></div>
+  </div>
+</main>
+<script src="aia_logic_injection.js?v=6" defer></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const tryInit = setInterval(() => {
+      if (typeof renderNextQuestion === 'function') {
+        clearInterval(tryInit);
+        document.getElementById('chatMessages').innerHTML = '';
+        renderNextQuestion();
+      }
+    }, 100);
+  });
+</script>
+</body>
+</html>
