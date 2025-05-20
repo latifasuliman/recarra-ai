@@ -18,7 +18,6 @@ function renderNextQuestion() {
   const chat = document.getElementById('chatMessages');
   chat.innerHTML = '';
   if (currentStep >= questions.length) {
-    document.querySelectorAll('.form-step').forEach(s => s.style.display = 'none');
     document.getElementById('formProgressBar').style.width = '100%';
     document.getElementById('finalOfferAmount').innerText = 'Crunching your AiA Offer...';
     document.getElementById('finalOfferAmount').style.display = 'block';
@@ -47,6 +46,12 @@ function renderNextQuestion() {
   nextBtn.style.marginTop = '1rem';
   nextBtn.onclick = handleAnswer;
   chat.appendChild(nextBtn);
+
+  // Show scan buttons on the first question
+  const scanDiv = document.getElementById('scanButtons');
+  if (scanDiv) {
+    scanDiv.style.display = (q.id === 'plate_or_vin') ? 'block' : 'none';
+  }
 
   const progress = Math.floor((currentStep / questions.length) * 100);
   document.getElementById('formProgressBar').style.width = progress + '%';
@@ -77,7 +82,7 @@ function submitToBackend() {
   .then(data => {
     document.getElementById('finalOfferAmount').innerHTML = `Your AiA Offer: $${data.offer}`;
     document.getElementById('finalOfferAmount').style.display = 'block';
-    if (window.confetti) confetti(); // Optional
+    if (window.confetti) confetti();
     if (data.offerId) {
       document.getElementById('offerId').innerText = data.offerId;
       document.getElementById('thankYouScreen').style.display = 'block';
@@ -88,6 +93,37 @@ function submitToBackend() {
     document.getElementById('finalOfferAmount').style.color = "#cc0000";
     document.getElementById('finalOfferAmount').style.display = 'block';
   });
+}
+
+function scanVIN() {
+  alert("Opening VIN scanner...");
+  const fakeVIN = "1HGCM82633A004352";
+  const input = document.getElementById("chatInput");
+  if (input) {
+    input.value = fakeVIN;
+    fetchDecodedInfo(fakeVIN);
+  }
+}
+
+function scanPlate() {
+  alert("Opening Plate scanner...");
+  const fakePlate = "TX1234XYZ";
+  const input = document.getElementById("chatInput");
+  if (input) {
+    input.value = fakePlate;
+    fetchDecodedInfo(fakePlate);
+  }
+}
+
+function fetchDecodedInfo(code) {
+  fetch(`/api/decode?code=${encodeURIComponent(code)}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.year && data.make && data.model) {
+        formData["vehicle_info"] = `${data.year} ${data.make} ${data.model}`;
+      }
+    })
+    .catch(err => console.error("Decoding error:", err));
 }
 
 window.addEventListener('DOMContentLoaded', fetchQuestions);
