@@ -31,15 +31,65 @@
       min-height: 100px;
       font-size: 1.2rem;
     }
-  </style>
+    #chatForm {
+      margin-top: 1rem;
+    }
+    #chatInput {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+  
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    input[type="file"] {
+      width: 90%;
+      max-width: 300px;
+      box-sizing: border-box;
+      padding: 10px;
+      margin-top: 6px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    button {
+      display: block;
+      margin: 1rem auto;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background: linear-gradient(to right, #0077cc, #00aaff);
+      color: white;
+      border: none;
+      border-radius: 6px;
+    }
+    </style>
 </head>
 <body>
   <header>Recarra AiA — Get Your Instant Car Offer</header>
+
   <div id="chatContainer">
     <div id="chatMessages">Loading...</div>
+
+    <form id="chatForm" onsubmit="handleUserInput(event)">
+      <input
+        id="chatInput"
+        type="text"
+        placeholder="Type your answer..."
+        required
+      />
+    </form>
   </div>
 
-  <script src="aia_logic_injection.js?v=9" defer></script>
+  <!-- Load AiA logic -->
+  <script src="aia_logic_injection.js?v=10" defer></script>
+
+  <!-- Init AiA after script is ready -->
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       const tryInit = setInterval(() => {
@@ -50,6 +100,30 @@
         }
       }, 100);
     });
+
+    function handleUserInput(event) {
+      event.preventDefault();
+      const input = document.getElementById('chatInput');
+      const userAnswer = input.value.trim();
+
+      if (userAnswer) {
+        const chatMessages = document.getElementById('chatMessages');
+        const userDiv = document.createElement('div');
+        userDiv.textContent = `You: ${userAnswer}`;
+        userDiv.style.marginTop = '10px';
+        userDiv.style.fontWeight = 'bold';
+        chatMessages.appendChild(userDiv);
+
+        input.value = '';
+
+        // Call AiA logic with user input
+        if (typeof handleAnswer === 'function') {
+          handleAnswer(userAnswer);
+        } else {
+          console.warn('handleAnswer function not yet available.');
+        }
+      }
+    }
   </script>
 </body>
 </html>
