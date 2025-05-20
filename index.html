@@ -118,6 +118,18 @@ select:focus {
   outline: none;
   box-shadow: 0 0 12px 2px rgba(0, 153, 255, 0.5);
 }
+
+.form-step {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+  display: none;
+}
+.form-step.active {
+  opacity: 1;
+  transform: translateY(0);
+  display: block;
+}
 </style>
 <style>
 @keyframes pulseWave {
@@ -246,7 +258,6 @@ input:valid {
 <div id="formProgress" style="height: 8px; width: 80%; margin: 1rem auto; background: #ddd; border-radius: 4px;">
 <div id="formProgressBar" style="height: 100%; width: 0%; background: linear-gradient(to right, #28a745, #00c851); border-radius: 4px;"></div>
 </div>
-
 <div id="photoUploads" style="padding: 2rem; background: #f9f9f9; border-radius: 8px;"><h3 style="text-align:center;">Upload Required Vehicle Photos</h3>
 <div style="margin-bottom:1rem; text-align:center;">
 </div>
@@ -840,53 +851,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-</script><script>
-document.addEventListener("DOMContentLoaded", function () {
-  const steps = document.querySelectorAll(".form-step");
-  let currentStep = 0;
-
-  function showStep(index) {
-    steps.forEach((step, i) => {
-      step.style.display = i === index ? "block" : "none";
-    });
-  }
-
-  function goToNextStep() {
-    const currentInput = steps[currentStep].querySelector("input, select");
-    if (currentInput && currentInput.value.trim() !== "") {
-      currentStep++;
-      if (currentStep < steps.length) {
-        showStep(currentStep);
-      }
-    } else {
-      currentInput.classList.add("error");
-      setTimeout(() => currentInput.classList.remove("error"), 300);
-    }
-  }
-
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      goToNextStep();
-    }
-  });
-
-  const nextBtn = document.createElement("button");
-  nextBtn.textContent = "Next";
-  nextBtn.style = "display:block; margin:1.5rem auto; padding:10px 28px; background:#007bff; color:white; font-weight:bold; border:none; border-radius:8px;";
-  nextBtn.addEventListener("click", function (e) {
-    e.preventDefault();
-    goToNextStep();
-  });
-
-  steps.forEach((step, i) => {
-    if (i !== steps.length - 1) {
-      step.appendChild(nextBtn.cloneNode(true));
-    }
-  });
-
-  showStep(currentStep);
-});
 </script><script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <div id="thankYouScreen" style="display:none; text-align:center; padding:3rem;">
 <h2 style="font-size:1.8rem; color:#28a745;">Thank you!</h2>
@@ -894,22 +858,44 @@ document.addEventListener("DOMContentLoaded", function () {
 <p>We’ll text and email your final offer details shortly.</p>
 </div>
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+  const countdownDisplay = document.getElementById("bonusCountdown");
+  const countdownKey = "bonusStartTime";
+  const duration = 24 * 60 * 60 * 1000;
+  let start = localStorage.getItem(countdownKey);
+  if (!start) {
+    start = Date.now();
+    localStorage.setItem(countdownKey, start);
+  } else {
+    start = parseInt(start);
+  }
+  const end = start + duration;
+  function updateCountdown() {
+    const now = Date.now();
+    const remaining = end - now;
+    if (remaining <= 0) {
+      countdownDisplay.textContent = "⏳ Bonus expired. Submit to restart.";
+      return;
+    }
+    const h = String(Math.floor(remaining / (1000 * 60 * 60))).padStart(2, '0');
+    const m = String(Math.floor((remaining / (1000 * 60)) % 60)).padStart(2, '0');
+    const s = String(Math.floor((remaining / 1000) % 60)).padStart(2, '0');
+    countdownDisplay.textContent = `⏳ Submit within ${h}:${m}:${s} to claim $100 bonus!`;
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+});
+</script><script>
 document.addEventListener("DOMContentLoaded", function () {
   const steps = document.querySelectorAll(".form-step");
-  const submitButton = document.querySelector("button[type='submit']");
-  const thankYou = document.getElementById("thankYouScreen");
-  const offerIdField = document.getElementById("offerId");
-  const progressBar = document.getElementById("formProgressBar");
-
   let currentStep = 0;
-  const stepCount = steps.length;
 
   function showStep(index) {
     steps.forEach((step, i) => {
-      step.style.display = i === index ? "block" : "none";
+      step.classList.remove("active");
+      step.style.display = "none";
     });
-    const percent = Math.floor(((index + 1) / stepCount) * 100);
-    if (progressBar) progressBar.style.width = percent + "%";
+    steps[index].classList.add("active");
   }
 
   function goToNextStep() {
@@ -932,31 +918,43 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  const nextBtn = document.createElement("button");
-  nextBtn.textContent = "Next";
-  nextBtn.style = "display:block; margin:1.5rem auto; padding:10px 28px; background:#007bff; color:white; font-weight:bold; border:none; border-radius:8px;";
-  nextBtn.addEventListener("click", function (e) {
-    e.preventDefault();
-    goToNextStep();
-  });
-
-  steps.forEach((step, i) => {
-    if (i !== steps.length - 1) {
-      step.appendChild(nextBtn.cloneNode(true));
+  const nextBtns = document.querySelectorAll("button");
+  nextBtns.forEach(btn => {
+    if (btn.textContent === "Next") {
+      btn.addEventListener("click", e => {
+        e.preventDefault();
+        goToNextStep();
+      });
     }
   });
 
-  if (submitButton) {
-    submitButton.addEventListener("click", function (e) {
-      e.preventDefault();
-      document.getElementById("chatForm").style.display = "none";
-      thankYou.style.display = "block";
-      offerIdField.textContent = "RC" + Math.random().toString(36).substring(2, 7).toUpperCase();
-      confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-    });
-  }
-
   showStep(currentStep);
+
+  // Image preview logic
+  const photoInputs = document.querySelectorAll("input[type='file']");
+  photoInputs.forEach(input => {
+    input.addEventListener("change", function () {
+      const previewId = input.id + "_preview";
+      let preview = document.getElementById(previewId);
+      if (!preview) {
+        preview = document.createElement("img");
+        preview.id = previewId;
+        preview.style.maxWidth = "200px";
+        preview.style.display = "block";
+        preview.style.margin = "10px auto";
+        input.insertAdjacentElement("afterend", preview);
+      }
+
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          preview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  });
 });
 </script></body>
 </html>
