@@ -1262,5 +1262,32 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script><script src="aia_progressbar_with_stepcount.js"></script>
   <script src="aia_final_logic_enhanced.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const faqBtn = document.getElementById("faqMiniBtn");
+  const faqPanel = document.getElementById("faqSlideshow");
+  const faqClose = document.getElementById("closeFAQBtn");
+
+  if (faqBtn && faqPanel) {
+    faqBtn.onclick = () => {
+      faqPanel.style.display = "flex";
+    };
+  }
+
+  if (faqClose && faqPanel) {
+    faqClose.onclick = () => {
+      faqPanel.style.display = "none";
+    };
+  }
+
+  faqPanel.addEventListener("click", (e) => {
+    if (e.target === faqPanel) {
+      faqPanel.style.display = "none";
+    }
+  });
+});
+</script>
+
 </body>
 </html>
