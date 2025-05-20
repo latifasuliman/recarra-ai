@@ -37,6 +37,15 @@ function renderNextQuestion() {
   } else if (step === 4) {
     question.textContent = "AiA: Please upload the front, back, engine and dashboard photos:";
     chat.appendChild(question);
+
+  // Focus the main input after rendering the question
+  setTimeout(() => {
+    const inputBox = document.getElementById('chatInput');
+    if (inputBox) {
+      inputBox.focus();
+      inputBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 100);
     renderPhotoUpload(chat);
     return;
   } else if (step === 5) {
@@ -57,16 +66,43 @@ function renderNextQuestion() {
     formDiv.style.borderRadius = "8px";
     formDiv.style.marginTop = "1rem";
     chat.appendChild(question);
+
+  // Focus the main input after rendering the question
+  setTimeout(() => {
+    const inputBox = document.getElementById('chatInput');
+    if (inputBox) {
+      inputBox.focus();
+      inputBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 100);
     chat.appendChild(formDiv);
     return;
   } else {
     question.innerHTML = `<strong>Calculating your offer...</strong>`;
     chat.appendChild(question);
+
+  // Focus the main input after rendering the question
+  setTimeout(() => {
+    const inputBox = document.getElementById('chatInput');
+    if (inputBox) {
+      inputBox.focus();
+      inputBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 100);
     setTimeout(showOffer, 2000);
     return;
   }
 
   chat.appendChild(question);
+
+  // Focus the main input after rendering the question
+  setTimeout(() => {
+    const inputBox = document.getElementById('chatInput');
+    if (inputBox) {
+      inputBox.focus();
+      inputBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 100);
 }
 
 function handleAnswer(userInput) {
@@ -139,6 +175,15 @@ function showOffer() {
   result.style.borderRadius = "10px";
   result.style.background = "#eaffea";
   chat.appendChild(result);
+
+  // Final Confirm button
+  const confirmBtn = document.createElement("button");
+  confirmBtn.textContent = "Confirm My Offer";
+  confirmBtn.style.marginTop = "1rem";
+  confirmBtn.onclick = () => {
+    alert("Your offer has been confirmed and saved. We’ll contact you shortly!");
+  };
+  result.appendChild(confirmBtn);
 }
 
 function copyOfferID() {
