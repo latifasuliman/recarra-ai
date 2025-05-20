@@ -69,7 +69,28 @@
       border: none;
       border-radius: 6px;
     }
-    </style>
+    
+<style>
+@keyframes waveColorCycle {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.aia-color-wave {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(270deg, #0077cc, #00cc99, #ffaa00, #ff4444);
+  background-size: 600% 600%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: waveColorCycle 8s ease infinite;
+  margin-bottom: 1.5rem;
+}
+</style>
+
+</style>
 
 <style>
 @keyframes pulseWave {
@@ -110,7 +131,49 @@
 </div>
 
 <!-- How It Works -->
+
+<h1 id="recarraTitle" style="
+  font-family: Impact, Haettenschweiler, 'Arial Black', sans-serif;
+  font-size: 3.2rem;
+  background: linear-gradient(to right, #ff3c3c, #ffaa00, #ffee00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+">
+  Recarra
+</h1>
+<p style="
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 500;
+  margin-top: -0.5rem;
+  margin-bottom: 2rem;
+">
+  The Fastest Way to Get Paid for Your Car — Instantly.
+</p>
+
 <div id="chatContainer">
+
+
+
+
+<h1 id="aiaFormHeader" style="
+  font-family: Impact, Haettenschweiler, 'Arial Black', sans-serif;
+  font-size: 3.2rem;
+  background: linear-gradient(to right, #ff3c3c, #ffaa00, #ffee00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+">
+  AiA Form
+</h1>
+
+
+
+
 <div id="chatMessages">Loading...</div>
 <form id="chatForm" onsubmit="handleUserInput(event)">
 <input id="chatInput" placeholder="Type your answer..." required="" style="margin-bottom: 10px;" type="text"/>
