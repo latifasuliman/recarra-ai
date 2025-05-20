@@ -130,6 +130,42 @@ select:focus {
   transform: translateY(0);
   display: block;
 }
+
+#faqMiniBtn {
+  transition: all 0.3s ease;
+  background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff);
+  background-size: 600% 600%;
+  animation: faqColorShift 8s ease infinite;
+  border: 2px solid transparent;
+  box-shadow: 0 0 10px rgba(255, 0, 128, 0.6);
+}
+#faqMiniBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 18px rgba(0, 255, 204, 0.8), 0 0 8px rgba(255, 170, 0, 0.6);
+  border-color: white;
+}
+
+@keyframes faqColorShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animated-offer-btn {
+  transition: all 0.3s ease;
+  background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff);
+  background-size: 600% 600%;
+  animation: faqColorShift 8s ease infinite;
+  border: 2px solid transparent;
+  box-shadow: 0 0 10px rgba(255, 0, 128, 0.6);
+  font-weight: bold;
+}
+
+.animated-offer-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 18px rgba(0, 255, 204, 0.8), 0 0 8px rgba(255, 170, 0, 0.6);
+  border-color: white;
+}
 </style>
 <style>
 @keyframes pulseWave {
@@ -196,9 +232,15 @@ input:valid {
   50%  { box-shadow: 0 0 20px #00cc99; }
   100% { box-shadow: 0 0 10px #0077cc; }
 }
+</style><style>
+@keyframes colorShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 </style></head>
-<body>
-<a href="#chatContainer" style="position: fixed; bottom: 20px; right: 20px; background: red; color: white; padding: 12px 16px; border-radius: 6px; font-weight: bold; font-size: 14px; z-index: 1000; text-decoration: none; box-shadow: 0 0 5px rgba(0,0,0,0.3);">Get My Offer + $100 Extra</a>
+<body style="padding-top: 80px;"><div id="topHeaderBar" style="width: 100%; display: flex; justify-content: space-between; align-items: center; background: #001f3f; padding: 1rem 2rem; position: fixed; top: 0; left: 0; z-index: 10000; gap: 10px; flex-wrap: wrap; padding: 1rem 1rem; gap: 0.5rem; box-sizing: border-box;"><div id="animatedRecarra" style="font-size: 2.8rem; font-weight: bold; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 800% 800%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: colorShift 8s ease infinite;">Recarra</div><div style="display: flex; align-items: center; margin-left: auto; gap: 10px; flex-wrap: wrap; justify-content: flex-end; flex-shrink: 1; max-width: 100%; gap: 0.5rem;"><div id="faqMiniBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">FAQ</div><div id="chatBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Chat</div><div id="callBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Call</div><div id="referBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Refer</div></div></div><div id="faqHelpBtn" style="position: fixed; bottom: 20px; left: 20px; z-index: 10000; background: #0077cc; color: white; font-weight: bold; padding: 10px 18px; border-radius: 25px; font-size: 14px; box-shadow: 0 0 10px rgba(0,0,0,0.2); cursor: pointer;">Need Help? FAQ</div>
+<a class="animated-offer-btn" href="#chatContainer" style="position: fixed; bottom: 20px; right: 20px; background: red; color: white; padding: 12px 16px; border-radius: 6px; font-weight: bold; font-size: 14px; z-index: 1000; text-decoration: none; box-shadow: 0 0 5px rgba(0,0,0,0.3);">Get My Offer + $100 Extra</a>
 <div style="padding-left: 1rem; margin-top: 1rem;">
 <h1 style="
     font-family: Impact, Haettenschweiler, 'Arial Black', sans-serif;
@@ -208,7 +250,7 @@ input:valid {
     -webkit-text-fill-color: transparent;
     display: inline-block;
     margin: 0;
-  ">Recarra AiA</h1>
+   margin-top: 80px;">Recarra AiA</h1>
 <p style="
     font-size: 1.1rem;
     color: #333;
@@ -327,7 +369,7 @@ input:valid {
 </section>
 <div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
 <p style="font-size: 1.1rem; color: #003366; font-weight: 500;">Get paid directly to your bank card today. Let’s begin your instant offer!</p>
-<a href="#chatContainer" style="
+<a class="animated-offer-btn" href="#chatContainer" style="
     display: inline-block;
     padding: 14px 28px;
     font-size: 1rem;
@@ -355,7 +397,7 @@ input:valid {
 </section>
 <div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
 <p style="font-size: 1.1rem; color: #003366; font-weight: 500;">Don’t let your car sit. Claim your guaranteed offer and bonus now.</p>
-<a href="#chatContainer" style="
+<a class="animated-offer-btn" href="#chatContainer" style="
     display: inline-block;
     padding: 14px 28px;
     font-size: 1rem;
@@ -379,7 +421,7 @@ input:valid {
 </section>
 <div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
 <p style="font-size: 1.1rem; color: #003366; font-weight: 500;">Start your free quote. Instant cash. No pressure. All digital.</p>
-<a href="#chatContainer" style="
+<a class="animated-offer-btn" href="#chatContainer" style="
     display: inline-block;
     padding: 14px 28px;
     font-size: 1rem;
@@ -402,7 +444,7 @@ input:valid {
 </section>
 <div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
 <p style="font-size: 1.1rem; color: #003366; font-weight: 500;">Want to skip the games? Get a real offer with free pickup today.</p>
-<a href="#chatContainer" style="
+<a class="animated-offer-btn" href="#chatContainer" style="
     display: inline-block;
     padding: 14px 28px;
     font-size: 1rem;
@@ -444,7 +486,7 @@ input:valid {
 </section>
 <div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
 <p style="font-size: 1.1rem; color: #003366; font-weight: 500;">Your $100 pickup bonus is one click away. Let’s value your car.</p>
-<a href="#chatContainer" style="
+<a class="animated-offer-btn" href="#chatContainer" style="
     display: inline-block;
     padding: 14px 28px;
     font-size: 1rem;
@@ -515,7 +557,7 @@ input:valid {
 </section>
 <div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
 <p style="font-size: 1.1rem; color: #003366; font-weight: 500;">Want same-day pickup and $100 cash? Start now — it takes seconds.</p>
-<a href="#chatContainer" style="
+<a class="animated-offer-btn" href="#chatContainer" style="
     display: inline-block;
     padding: 14px 28px;
     font-size: 1rem;
@@ -544,7 +586,7 @@ input:valid {
 </section>
 <div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
 <p style="font-size: 1.1rem; color: #003366; font-weight: 500;">Get paid directly to your bank card today. Let’s begin your instant offer!</p>
-<a href="#chatContainer" style="
+<a class="animated-offer-btn" href="#chatContainer" style="
     display: inline-block;
     padding: 14px 28px;
     font-size: 1rem;
@@ -559,7 +601,6 @@ input:valid {
     box-shadow: 0 0 12px rgba(0,0,0,0.15);
   ">Get My Offer + $100 Extra</a>
 </div>
-
 <section class="slide-in" style="padding: 2rem; background: #fff;">
 <h2 style="text-align:center; color: #003366;">Where We Operate</h2>
 <p style="text-align: center;">Recarra covers most U.S. cities with fast service &amp; free towing.</p>
@@ -585,7 +626,7 @@ input:valid {
 </div>
 </div>
 </section>
-<section id="faqSlideshow" style="padding:2rem; text-align:center; background:#fff;"><h2 style="color:#003366;">Frequently Asked Questions</h2><div id="faqDisplay" style="max-width:700px; margin:auto; font-size:1.2rem; font-weight:bold; padding:1.5rem; border:4px solid #0077cc; border-radius:12px; transition:all 0.4s ease; animation:glowBorder 3s infinite;">Loading...</div></section><footer style="padding: 2rem; background: #001f3f; color: white; text-align: center; padding-bottom: 5rem; margin-bottom: 5rem;">
+<section id="faqSlideshow" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 9999; overflow-y: auto; display: none; flex-direction: column; justify-content: center; align-items: center;"><h2 style="color:#003366;">Frequently Asked Questions</h2><button id="closeFAQBtn" style="position: absolute; top: 20px; right: 30px; font-size: 1.5rem; background: none; border: none; color: #003366; font-weight: bold; cursor: pointer;">× Close FAQ</button><div id="faqDisplay" style="max-width:700px; margin:auto; font-size:1.2rem; font-weight:bold; padding:1.5rem; border:4px solid #0077cc; border-radius:12px; transition:all 0.4s ease; animation:glowBorder 3s infinite;">Loading...</div></section><footer style="padding: 2rem; background: #001f3f; color: white; text-align: center; padding-bottom: 5rem; margin-bottom: 5rem;">
 <div style="max-width: 800px; margin: auto;">
 <p><strong>Quick Links:</strong></p>
 <p>
@@ -1149,5 +1190,63 @@ document.addEventListener("DOMContentLoaded", () => {
 
   updateFAQ();
   setInterval(updateFAQ, 8000);
-});</script></body>
+});</script><script>
+document.addEventListener("DOMContentLoaded", () => {
+  const faqModal = document.getElementById("faqSlideshow");
+  const closeBtn = document.getElementById("closeFAQBtn");
+
+  // Open modal if URL has #faq
+  if (window.location.hash === "#faq") {
+    faqModal.style.display = "flex";
+  } else {
+    faqModal.style.display = "none";
+  }
+
+  closeBtn.addEventListener("click", () => {
+    faqModal.style.display = "none";
+    history.replaceState(null, null, " ");
+  });
+
+  // Optional: Trigger via link
+  const faqLinks = document.querySelectorAll("a[href='#faq']");
+  faqLinks.forEach(link => {
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      faqModal.style.display = "flex";
+    });
+  });
+});
+</script><script>
+document.addEventListener("DOMContentLoaded", () => {
+  const faqModal = document.getElementById("faqSlideshow");
+  const closeBtn = document.getElementById("closeFAQBtn");
+  const faqHelpBtn = document.getElementById("faqHelpBtn");
+
+  faqHelpBtn.addEventListener("click", () => {
+    faqModal.style.display = "flex";
+  });
+
+  closeBtn.addEventListener("click", () => {
+    faqModal.style.display = "none";
+  });
+});
+</script><script>
+document.addEventListener("DOMContentLoaded", () => {
+  const topFAQLink = document.getElementById("topFAQLink");
+  const faqModal = document.getElementById("faqSlideshow");
+
+  topFAQLink.addEventListener("click", () => {
+    faqModal.style.display = "flex";
+  });
+});
+</script><script>
+document.addEventListener("DOMContentLoaded", () => {
+  const miniBtn = document.getElementById("faqMiniBtn");
+  const faqModal = document.getElementById("faqSlideshow");
+
+  miniBtn.addEventListener("click", () => {
+    faqModal.style.display = "flex";
+  });
+});
+</script></body>
 </html>
