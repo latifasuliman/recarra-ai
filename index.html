@@ -1248,5 +1248,23 @@ document.addEventListener("DOMContentLoaded", () => {
     faqModal.style.display = "flex";
   });
 });
+</script><script>
+document.addEventListener("DOMContentLoaded", function () {
+  const faqBtn = document.getElementById("faqMiniBtn");
+  const faqOverlay = document.getElementById("faqSlideshow");
+  const closeBtn = document.getElementById("closeFAQBtn");
+
+  if (faqBtn && faqOverlay) {
+    faqBtn.addEventListener("click", () => {
+      faqOverlay.style.display = "flex";
+    });
+  }
+
+  if (closeBtn && faqOverlay) {
+    closeBtn.addEventListener("click", () => {
+      faqOverlay.style.display = "none";
+    });
+  }
+});
 </script></body>
 </html>
