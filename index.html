@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Recarra AiA - Instant Car Offer</title>
+<style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #f9f9f9;
+      color: #111;
+    }
+    header {
+      background: linear-gradient(to right, #001f3f, #003366);
+      color: white;
+      padding: 1.5rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+    }
+    #chatContainer {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    #chatMessages {
+      min-height: 100px;
+      font-size: 1.2rem;
+    }
+    #chatForm {
+      margin-top: 1rem;
+    }
+    #chatInput {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+  
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    input[type="file"] {
+      width: 90%;
+      max-width: 300px;
+      box-sizing: border-box;
+      padding: 10px;
+      margin-top: 6px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    button {
+      display: block;
+      margin: 1rem auto;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background: linear-gradient(to right, #0077cc, #00aaff);
+      color: white;
+      border: none;
+      border-radius: 6px;
+    }
+    
+<style>
+@keyframes waveColorCycle {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.aia-color-wave {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(270deg, #0077cc, #00cc99, #ffaa00, #ff4444);
+  background-size: 600% 600%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: waveColorCycle 8s ease infinite;
+  margin-bottom: 1.5rem;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+input.error {
+  animation: shake 0.3s;
+  border: 2px solid #e74c3c;
+}
+
+input[type="text"],
+input[type="file"],
+input[type="number"],
+select {
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 80%;
+  margin: 0.5rem auto;
+  display: block;
+  transition: box-shadow 0.3s ease;
+  box-shadow: 0 0 5px rgba(0, 153, 255, 0.3);
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 12px 2px rgba(0, 153, 255, 0.5);
+}
+
+.form-step {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+  display: none;
+}
+.form-step.active {
+  opacity: 1;
+  transform: translateY(0);
+  display: block;
+}
+
+#faqMiniBtn {
+  transition: all 0.3s ease;
+  background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff);
+  background-size: 600% 600%;
+  animation: faqColorShift 8s ease infinite;
+  border: 2px solid transparent;
+  box-shadow: 0 0 10px rgba(255, 0, 128, 0.6);
+}
+#faqMiniBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 18px rgba(0, 255, 204, 0.8), 0 0 8px rgba(255, 170, 0, 0.6);
+  border-color: white;
+}
+
+@keyframes faqColorShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animated-offer-btn {
+  transition: all 0.3s ease;
+  background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff);
+  background-size: 600% 600%;
+  animation: faqColorShift 8s ease infinite;
+  border: 2px solid transparent;
+  box-shadow: 0 0 10px rgba(255, 0, 128, 0.6);
+  font-weight: bold;
+}
+
+.animated-offer-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 18px rgba(0, 255, 204, 0.8), 0 0 8px rgba(255, 170, 0, 0.6);
+  border-color: white;
+}
+</style>
+<style>
+@keyframes pulseWave {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+</style>
+<style>
+section img:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+</style><style>
+@keyframes slideIn {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.slide-in {
+  animation: slideIn 0.6s ease both;
+}
+</style><style>
+input:valid {
+  box-shadow: 0 0 10px 2px rgba(40, 167, 69, 0.6);
+  transition: box-shadow 0.3s ease;
+}
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 rgba(40, 167, 69, 0.6); }
+  50% { box-shadow: 0 0 10px 3px rgba(40, 167, 69, 0.8); }
+  100% { box-shadow: 0 0 0 rgba(40, 167, 69, 0.6); }
+}
+</style><style>
+#scanButtons button {
+  display: inline-block;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  border-radius: 40px;
+  margin: 0 12px;
+  background-size: 300% 300%;
+  animation: pulseWave 5s ease infinite;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#scanButtons button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.4);
+}
+
+#scanVINButton {
+  background: linear-gradient(to right, #003366, #00aaff);
+}
+
+#scanPlateButton {
+  background: linear-gradient(to right, #880000, #ff4444);
+}
+</style><style>
+@keyframes glowBorder {
+  0%   { box-shadow: 0 0 10px #0077cc; }
+  50%  { box-shadow: 0 0 20px #00cc99; }
+  100% { box-shadow: 0 0 10px #0077cc; }
+}
+</style><style>
+@keyframes colorShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+</style></head>
+<body style="padding-top: 80px;"><div id="topHeaderBar" style="width: 100%; display: flex; justify-content: space-between; align-items: center; background: #001f3f; padding: 1rem 2rem; position: fixed; top: 0; left: 0; z-index: 10000; gap: 10px; flex-wrap: wrap; padding: 1rem 1rem; gap: 0.5rem; box-sizing: border-box;"><div id="animatedRecarra" style="font-size: 2.8rem; font-weight: bold; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 800% 800%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: colorShift 8s ease infinite;">Recarra</div><div style="display: flex; align-items: center; margin-left: auto; gap: 10px; flex-wrap: wrap; justify-content: flex-end; flex-shrink: 1; max-width: 100%; gap: 0.5rem;"><div id="faqMiniBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">FAQ</div><div id="chatBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Chat</div><div id="callBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Call</div><div id="referBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Refer</div></div></div><div id="faqHelpBtn" style="position: fixed; bottom: 20px; left: 20px; z-index: 10000; background: #0077cc; color: white; font-weight: bold; padding: 10px 18px; border-radius: 25px; font-size: 14px; box-shadow: 0 0 10px rgba(0,0,0,0.2); cursor: pointer;">Need Help? FAQ</div>
+<a class="animated-offer-btn" href="#chatContainer" style="position: fixed; bottom: 20px; right: 20px; background: red; color: white; padding: 12px 16px; border-radius: 6px; font-weight: bold; font-size: 14px; z-index: 1000; text-decoration: none; box-shadow: 0 0 5px rgba(0,0,0,0.3);">Get My Offer + $100 Extra</a>
+<div style="padding-left: 1rem; margin-top: 1rem;">
+<h1 style="
+    font-family: Impact, Haettenschweiler, 'Arial Black', sans-serif;
+    font-size: 3.2rem;
+    background: linear-gradient(to right, #6200ea, #03dac6, #ff0266);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    margin: 0;
+   margin-top: 80px;">Recarra AiA</h1>
+<p style="
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: 500;
+    margin-top: 0.25rem;
+  ">
+    Get Your Instant Car Offer
+  </p>
+</div>
+<!-- Hero Section -->
+<div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,58.7C960,53,1056,43,1152,48C1248,53,1344,75,1392,85.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="#f1f5fb" fill-opacity="1"></path></svg></div>
+<section class="slide-in" style="padding: 2rem; text-align: center; background: linear-gradient(to right, #003366, #005599); color: white;">
+<h1 style="font-size: 2rem; margin-bottom: 1rem;">Sell Your Car Instantly — No Games. Just Guaranteed Offers.</h1>
+<p style="font-size: 1.2rem;">We buy any car. Free pickup. Fastest payouts. Same-day deals.</p>
+</section>
+<div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
+<p style="font-size: 1.1rem; color: #003366; font-weight: 500;">Want same-day pickup and $100 cash? Start now — it takes seconds.</p>
+<a href="#chatContainer" style="
+    display: inline-block;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(120deg, #0077cc, #00cc99, #ffaa00, #ff4444);
+    background-size: 300% 300%;
+    border: none;
+    border-radius: 50px;
+    text-decoration: none;
+    animation: pulseWave 5s ease infinite;
+    box-shadow: 0 0 12px rgba(0,0,0,0.15);
+  ">Let’s Lock This In +$100</a>
+</div>
+<!-- How It Works -->
+<h1 id="recarraTitle" style="
+  font-family: Impact, Haettenschweiler, 'Arial Black', sans-serif;
+  font-size: 3.2rem;
+  background: linear-gradient(to right, #ff3c3c, #ffaa00, #ffee00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+">
+  Recarra
+</h1>
+<p style="
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 500;
+  margin-top: -0.5rem;
+  margin-bottom: 2rem;
+">
+  The Fastest Way to Get Paid for Your Car — Instantly.
+</p>
+<section class="slide-in" style="padding: 2rem; text-align: center; background: #001f3f; color: white;">
+<h1 id="rotatingAdBanner" style="
+    font-size: 2rem;
+    font-weight: bold;
+    background: linear-gradient(to right, #ffaa00, #ff4444, #00cc99);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 300% 300%;
+    animation: waveColorCycle 8s ease infinite;
+  ">Sell Your Junk Car Today for Real Cash — Fast, Free, Guaranteed.</h1>
+</section>
+<div id="chatContainer">
+<h1 id="aiaFormHeader" style="
+  font-family: Impact, Haettenschweiler, 'Arial Black', sans-serif;
+  font-size: 3.2rem;
+  background: linear-gradient(to right, #8e2de2, #ff6a00, #1de9b6, #f50057);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  background-size: 300% 300%;
+  animation: waveColorCycle 8s ease infinite;
+">
+  AiA Form
+</h1>
+<div id="chatMessages">Loading...</div>
+<div id="scanButtons" style="text-align: center; margin-top: 1rem;">
+<button id="scanVINButton" onclick="scanVIN()">Scan VIN</button>
+<button id="scanPlateButton" onclick="scanPlate()">Scan Plate</button>
+</div>
+<form id="chatForm" onsubmit="handleUserInput(event)">
+<div id="formProgress" style="height: 8px; width: 80%; margin: 1rem auto; background: #ddd; border-radius: 4px;">
+<div id="formProgressBar" style="height: 100%; width: 0%; background: linear-gradient(to right, #28a745, #00c851); border-radius: 4px;"></div>
+</div>
+</div>
+<div id="offerPreview" style="text-align:center; margin-top:2rem;">
+<div id="finalOfferAmount" style="display:none; font-size:2rem; font-weight:bold; color:#28a745; margin-top:1rem;">Crunching your AiA Offer...</div>
+</div>
+<div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display:none;"><p id="crunchingMsg" style="font-size:1.2rem; font-weight:bold; color:#555;">Crunching numbers...</p><button style="display:block; margin:2rem auto; padding:14px 28px; font-size:1.1rem; background:linear-gradient(to right,#ff8c00,#ffcc00); color:black; font-weight:bold; border:none; border-radius:10px; cursor:pointer;" type="submit">Submit AiA Offer Now</button></div>
+<div class="form-step" style="display: none;">
+  <h3 style="text-align:center;">Upload Required Vehicle Photos</h3>
+  <div style="margin-top:1rem; font-size:0.9rem; text-align:center; color:#444;">
+    AiA will review photo quality and damage severity automatically after upload (future feature).
+  </div>
+</div>
+<div class="form-step" style="display:none;"><label for="photoFront" style="display:block; font-weight:bold;">Front View <span style="color:red">*</span></label><input accept="image/*" id="photoFront" name="photoFront" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoBack" style="display:block; font-weight:bold;">Back View <span style="color:red">*</span></label><input accept="image/*" id="photoBack" name="photoBack" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoLeft" style="display:block; font-weight:bold;">Left Side <span style="color:red">*</span></label><input accept="image/*" id="photoLeft" name="photoLeft" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoRight" style="display:block; font-weight:bold;">Right Side <span style="color:red">*</span></label><input accept="image/*" id="photoRight" name="photoRight" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoEngine" style="display:block; font-weight:bold;">Engine Compartment <span style="color:red">*</span></label><input accept="image/*" id="photoEngine" name="photoEngine" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoDash" style="display:block; font-weight:bold;">Dashboard Lit Up <span style="color:red">*</span></label><input accept="image/*" id="photoDash" name="photoDash" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div></form>
+</div>
+<div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,58.7C960,53,1056,43,1152,48C1248,53,1344,75,1392,85.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="#f1f5fb" fill-opacity="1"></path></svg></div>
+<section class="slide-in" style="padding: 2rem; background: #fff;">
+<h2 style="text-align: center; color: #003366;">How It Works</h2>
+<div style="max-width: 800px; margin: auto; display: flex; flex-direction: column; gap: 1rem;">
+<div><strong>1.</strong> Enter your VIN or license plate</div>
+<div><strong>2.</strong> Upload a few quick photos</div>
+<div><strong>3.</strong> Get a real offer &amp; get paid today</div>
+</div>
+</section>
+<div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
+<p style="font-size: 1.1rem; color: #003366; font-weight: 500;">Get paid directly to your bank card today. Let’s begin your instant offer!</p>
+<a class="animated-offer-btn" href="#chatContainer" style="
+    display: inline-block;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(120deg, #0077cc, #00cc99, #ffaa00, #ff4444);
+    background-size: 300% 300%;
+    border: none;
+    border-radius: 50px;
+    text-decoration: none;
+    animation: pulseWave 5s ease infinite;
+    box-shadow: 0 0 12px rgba(0,0,0,0.15);
+  ">Send My Info — Bonus Ready</a>
+</div>
+<!-- Why Choose Recarra -->
+<div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,58.7C960,53,1056,43,1152,48C1248,53,1344,75,1392,85.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="#f1f5fb" fill-opacity="1"></path></svg></div>
+<section class="slide-in" style="padding: 2rem; background: #f9f9f9;">
+<h2 style="text-align: center; color: #003366;">Why Choose Recarra</h2>
+<ul style="max-width: 600px; margin: auto; list-style: none; padding: 0;">
+<li>• Highest payouts in your area</li>
+<li>• Fast response &amp; guaranteed price</li>
+<li>• Free same-day pickup</li>
+<li>• No hidden fees — ever</li>
+</ul>
+</section>
+<div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
+<p style="font-size: 1.1rem; color: #003366; font-weight: 500;">Don’t let your car sit. Claim your guaranteed offer and bonus now.</p>
+<a class="animated-offer-btn" href="#chatContainer" style="
+    display: inline-block;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(120deg, #0077cc, #00cc99, #ffaa00, #ff4444);
+    background-size: 300% 300%;
+    border: none;
+    border-radius: 50px;
+    text-decoration: none;
+    animation: pulseWave 5s ease infinite;
+    box-shadow: 0 0 12px rgba(0,0,0,0.15);
+  ">I’m Ready — Add My Bonus</a>
+</div>
+<!-- Testimonials -->
+<div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,58.7C960,53,1056,43,1152,48C1248,53,1344,75,1392,85.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="#f1f5fb" fill-opacity="1"></path></svg></div>
+<section class="slide-in" style="padding: 2rem; background: #fff;">
+<h2 style="text-align: center; color: #003366;">Customer Testimonials</h2>
+<blockquote style="text-align: center; font-style: italic;">“I got paid the same day — super easy!”</blockquote>
+<blockquote style="text-align: center; font-style: italic;">“Recarra gave me a better offer than 3 other sites.”</blockquote>
+</section>
+<div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
+<p style="font-size: 1.1rem; color: #003366; font-weight: 500;">Start your free quote. Instant cash. No pressure. All digital.</p>
+<a class="animated-offer-btn" href="#chatContainer" style="
+    display: inline-block;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(120deg, #0077cc, #00cc99, #ffaa00, #ff4444);
+    background-size: 300% 300%;
+    border: none;
+    border-radius: 50px;
+    text-decoration: none;
+    animation: pulseWave 5s ease infinite;
+    box-shadow: 0 0 12px rgba(0,0,0,0.15);
+  ">Show My Offer + Bonus</a>
+</div>
+<!-- Trust Badges -->
+<div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,58.7C960,53,1056,43,1152,48C1248,53,1344,75,1392,85.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="#f1f5fb" fill-opacity="1"></path></svg></div>
+<section class="slide-in" style="padding: 2rem; background: #f1f1f1; text-align: center;">
+<h3 style="color: #003366;">Trusted Nationwide</h3>
+<p>✓ 100% Secure • ✓ Licensed Buyer • ✓ Instant Cash Transfer</p>
+</section>
+<div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
+<p style="font-size: 1.1rem; color: #003366; font-weight: 500;">Want to skip the games? Get a real offer with free pickup today.</p>
+<a class="animated-offer-btn" href="#chatContainer" style="
+    display: inline-block;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(120deg, #0077cc, #00cc99, #ffaa00, #ff4444);
+    background-size: 300% 300%;
+    border: none;
+    border-radius: 50px;
+    text-decoration: none;
+    animation: pulseWave 5s ease infinite;
+    box-shadow: 0 0 12px rgba(0,0,0,0.15);
+  ">Start Offer — Get Paid Fast</a>
+</div>
+<!-- How Recarra Generates Offers (No tech exposed) -->
+<div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L60,58.7C120,53,240,43,360,64C480,85,600,139,720,138.7C840,139,960,85,1080,85.3C1200,85,1320,139,1380,165.3L1440,192L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z" fill="#e9f3ff" fill-opacity="1"></path></svg></div>
+<section class="slide-in" style="padding: 2rem; background: #ffffff;">
+<h2 style="text-align: center; color: #003366;">How Recarra Delivers Real Offers — Instantly</h2>
+<p style="max-width: 750px; margin: 0 auto 1.5rem auto; font-size: 1.1rem; color: #444; text-align: center;">
+    Most websites delay, guess, or hide the truth. Recarra does none of that. Every offer we show is based on a smart, direct process built to give you a fast and confident deal — without revealing your personal details or wasting time.
+  </p>
+<div style="max-width: 900px; margin: auto; display: flex; flex-direction: column; gap: 1.5rem;">
+<div style="background: #f0f8ff; border-left: 6px solid #0077cc; padding: 1rem; border-radius: 8px;">
+<h3 style="margin: 0; color: #003366;">Step-by-Step Simplicity</h3>
+<p style="margin: 0.5rem 0 0;">We ask smart questions — one at a time — so you never feel overwhelmed. Your answers help us shape your real-time offer without pressure.</p>
+</div>
+<div style="background: #fff9e6; border-left: 6px solid #ffaa00; padding: 1rem; border-radius: 8px;">
+<h3 style="margin: 0; color: #aa5500;">Fast Visual Confirmation</h3>
+<p style="margin: 0.5rem 0 0;">You upload photos with ease — and your offer grows live as we confirm key points. No callbacks. No waiting.</p>
+</div>
+<div style="background: #e6ffef; border-left: 6px solid #33cc77; padding: 1rem; border-radius: 8px;">
+<h3 style="margin: 0; color: #008844;">Transparent Pricing</h3>
+<p style="margin: 0.5rem 0 0;">We show you a real number — not a guess. You get a confirmation, a pickup option, and a guaranteed way to lock it in.</p>
+</div>
+</div>
+<div style="text-align: center; margin-top: 2rem;">
+<a href="#chatContainer" style="background: linear-gradient(to right, #0077cc, #00cc99); color: white; padding: 12px 24px; font-size: 1rem; border-radius: 8px; font-weight: bold; text-decoration: none;">Turn My Car Into Cash +$100</a>
+</div>
+</section>
+<div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
+<p style="font-size: 1.1rem; color: #003366; font-weight: 500;">Your $100 pickup bonus is one click away. Let’s value your car.</p>
+<a class="animated-offer-btn" href="#chatContainer" style="
+    display: inline-block;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(120deg, #0077cc, #00cc99, #ffaa00, #ff4444);
+    background-size: 300% 300%;
+    border: none;
+    border-radius: 50px;
+    text-decoration: none;
+    animation: pulseWave 5s ease infinite;
+    box-shadow: 0 0 12px rgba(0,0,0,0.15);
+  ">Get Paid + Bonus Applied</a>
+</div>
+<!-- Recarra Advantage Comparison -->
+<div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,58.7C960,53,1056,43,1152,48C1248,53,1344,75,1392,85.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="#f1f5fb" fill-opacity="1"></path></svg></div>
+<section class="slide-in" style="padding: 2rem; background: #ffffff; text-align: center;">
+<h2 style="color: #003366; font-size: 2rem;">Why Recarra Beats the Rest</h2>
+<p style="max-width: 700px; margin: auto; font-size: 1.1rem; color: #444;">
+    Most car-buying sites offer slow forms and generic quotes. Recarra gives you the real deal — instantly, intelligently, and with no games.
+  </p>
+<div style="max-width: 900px; margin: 2rem auto; overflow-x: auto;">
+<table style="width: 100%; border-collapse: collapse; font-size: 1rem;">
+<thead style="background: #003366; color: white;">
+<tr>
+<th style="padding: 12px; border: 1px solid #ccc;">Feature</th>
+<th style="padding: 12px; border: 1px solid #ccc;">Recarra</th>
+<th style="padding: 12px; border: 1px solid #ccc;">Typical Sites</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="padding: 12px; border: 1px solid #ccc;">AiA Smart Chat Assistant</td>
+<td style="padding: 12px; border: 1px solid #ccc;">✓ Real-time questions &amp; responses</td>
+<td style="padding: 12px; border: 1px solid #ccc;">✗ Static forms, no interactivity</td>
+</tr>
+<tr style="background: #f9f9f9;">
+<td style="padding: 12px; border: 1px solid #ccc;">Instant Price Updates</td>
+<td style="padding: 12px; border: 1px solid #ccc;">✓ Live animated offer previews</td>
+<td style="padding: 12px; border: 1px solid #ccc;">✗ Final price shown only at the end</td>
+</tr>
+<tr>
+<td style="padding: 12px; border: 1px solid #ccc;">Photo Upload in Chat</td>
+<td style="padding: 12px; border: 1px solid #ccc;">✓ Guided, grouped photo steps</td>
+<td style="padding: 12px; border: 1px solid #ccc;">✗ Uploaded separately or after offer</td>
+</tr>
+<tr style="background: #f9f9f9;">
+<td style="padding: 12px; border: 1px solid #ccc;">Guaranteed Pickup</td>
+<td style="padding: 12px; border: 1px solid #ccc;">✓ Same-day available in most cities</td>
+<td style="padding: 12px; border: 1px solid #ccc;">✗ Delayed or conditional availability</td>
+</tr>
+<tr>
+<td style="padding: 12px; border: 1px solid #ccc;">Referral Bonuses</td>
+<td style="padding: 12px; border: 1px solid #ccc;">✓ $100 for every successful friend</td>
+<td style="padding: 12px; border: 1px solid #ccc;">✗ Limited or unavailable</td>
+</tr>
+<tr style="background: #f9f9f9;">
+<td style="padding: 12px; border: 1px solid #ccc;">Real Support</td>
+<td style="padding: 12px; border: 1px solid #ccc;">✓ Text, call, chat — your way</td>
+<td style="padding: 12px; border: 1px solid #ccc;">✗ Slow email-only communication</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div style="margin-top: 2rem;">
+<a href="#chatContainer" style="background: linear-gradient(to right, #ff4444, #ffcc00); color: black; padding: 12px 24px; border-radius: 8px; font-weight: bold; text-decoration: none; font-size: 1.1rem;">Yes — Add My Extra $100</a>
+</div>
+</section>
+<div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
+<p style="font-size: 1.1rem; color: #003366; font-weight: 500;">Want same-day pickup and $100 cash? Start now — it takes seconds.</p>
+<a class="animated-offer-btn" href="#chatContainer" style="
+    display: inline-block;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(120deg, #0077cc, #00cc99, #ffaa00, #ff4444);
+    background-size: 300% 300%;
+    border: none;
+    border-radius: 50px;
+    text-decoration: none;
+    animation: pulseWave 5s ease infinite;
+    box-shadow: 0 0 12px rgba(0,0,0,0.15);
+  ">Finish Now + Bonus Cash</a>
+</div>
+<!-- Footer -->
+<div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,58.7C960,53,1056,43,1152,48C1248,53,1344,75,1392,85.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="#f1f5fb" fill-opacity="1"></path></svg></div>
+<section class="slide-in" style="padding: 2rem; background: #fffbe6; text-align: center; border-top: 2px solid #ffc107;">
+<h2 style="color: #b86e00;">Refer &amp; Earn $100</h2>
+<p>Share your VIP referral code with friends. They get a bonus — and you get <strong>$100 cash</strong> for each one who sells a car!</p>
+<p style="margin-top: 1rem;">
+<strong>Your Code:</strong> <code style="background: #fff3cd; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 1.1rem;">VIP1234</code>
+<br/>
+<button onclick="navigator.clipboard.writeText('VIP1234'); alert('Referral code copied!')" style="margin-top: 10px;">Copy Code</button>
+</p>
+<p style="margin-top: 1rem; font-size: 0.9rem; color: #555;">Referral payouts are processed within 48 hours of a successful sale.</p>
+</section>
+<div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
+<p style="font-size: 1.1rem; color: #003366; font-weight: 500;">Get paid directly to your bank card today. Let’s begin your instant offer!</p>
+<a class="animated-offer-btn" href="#chatContainer" style="
+    display: inline-block;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(120deg, #0077cc, #00cc99, #ffaa00, #ff4444);
+    background-size: 300% 300%;
+    border: none;
+    border-radius: 50px;
+    text-decoration: none;
+    animation: pulseWave 5s ease infinite;
+    box-shadow: 0 0 12px rgba(0,0,0,0.15);
+  ">Get My Offer + $100 Extra</a>
+</div>
+<section class="slide-in" style="padding: 2rem; background: #fff;">
+<h2 style="text-align:center; color: #003366;">Where We Operate</h2>
+<p style="text-align: center;">Recarra covers most U.S. cities with fast service &amp; free towing.</p>
+<div style="text-align:center; margin-top: 1rem;">
+<img alt="Service Area" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Blank_US_Map_%28states_only%29.svg/1280px-Blank_US_Map_%28states_only%29.svg.png" style="max-width:90%; height:auto; border: 2px solid #ccc; border-radius: 8px;"/>
+</div>
+</section>
+<section class="slide-in" style="padding: 2rem; background: #f9f9f9; text-align: center;">
+<h2 style="color: #003366;">We Pay Your Way</h2>
+<p style="margin-bottom: 1.5rem;">Choose how to get paid instantly — fast, easy, and secure.</p>
+<div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem;">
+<div style="display:flex; flex-direction:column; align-items:center;">
+<img alt="Debit Card" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Generic_debit_card_icon.svg/120px-Generic_debit_card_icon.svg.png" style="height: 50px;"/>
+<span>Instant to Debit</span>
+</div>
+<div style="display:flex; flex-direction:column; align-items:center;">
+<img alt="Bank" src="https://upload.wikimedia.org/wikipedia/commons/b/bb/Bank_Icon.svg" style="height: 50px;"/>
+<span>Direct to Bank</span>
+</div>
+<div style="display:flex; flex-direction:column; align-items:center;">
+<img alt="Cash" src="https://upload.wikimedia.org/wikipedia/commons/7/72/Cash_icon.svg" style="height: 50px;"/>
+<span>Cash on Pickup</span>
+</div>
+</div>
+</section>
+<section id="faqSlideshow" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 9999; overflow-y: auto; display: none; flex-direction: column; justify-content: center; align-items: center;"><h2 style="color:#003366;">Frequently Asked Questions</h2><button id="closeFAQBtn" style="position: absolute; top: 20px; right: 30px; font-size: 1.5rem; background: none; border: none; color: #003366; font-weight: bold; cursor: pointer;">× Close FAQ</button><div id="faqDisplay" style="max-width:700px; margin:auto; font-size:1.2rem; font-weight:bold; padding:1.5rem; border:4px solid #0077cc; border-radius:12px; transition:all 0.4s ease; animation:glowBorder 3s infinite;">Loading...</div></section><footer style="padding: 2rem; background: #001f3f; color: white; text-align: center; padding-bottom: 5rem; margin-bottom: 5rem;">
+<div style="max-width: 800px; margin: auto;">
+<p><strong>Quick Links:</strong></p>
+<p>
+<a href="#chatContainer" style="color: #fff;">Let’s Lock This In +$100</a> |
+        <a href="#how-it-works" style="color: #fff;">How It Works</a> |
+        <a href="#why-recarra" style="color: #fff;">Why Recarra</a> |
+        <a href="#testimonials" style="color: #fff;">Testimonials</a> |
+        <a href="#referral" style="color: #fff;">Referral Program</a>
+</p>
+<p>Contact Us: <a href="tel:3462740071" style="color: #fff;">346-274-0071</a> | <a href="mailto:support@recarra.com" style="color: #fff;">support@recarra.com</a></p>
+<p>© 2025 Recarra. All rights reserved.</p>
+</div>
+</footer>
+<!-- Load AiA logic -->
+<script defer src="aia_final_logic_enhanced.js"></script>
+<!-- Init AiA after script is ready -->
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const tryInit = setInterval(() => {
+        if (typeof renderNextQuestion === 'function') {
+          clearInterval(tryInit);
+          document.getElementById('chatMessages').innerHTML = '';
+          renderNextQuestion();
+        }
+      }, 100);
+    });
+
+    function handleUserInput(event) {
+      event.preventDefault();
+      const input = document.getElementById('chatInput');
+      const userAnswer = input.value.trim();
+
+      if (userAnswer) {
+        const chatMessages = document.getElementById('chatMessages');
+        const userDiv = document.createElement('div');
+        userDiv.textContent = `You: ${userAnswer}`;
+        userDiv.style.marginTop = '10px';
+        userDiv.style.fontWeight = 'bold';
+        chatMessages.appendChild(userDiv);
+
+        input.value = '';
+
+        // Call AiA logic with user input
+        if (typeof handleAnswer === 'function') {
+          handleAnswer(userAnswer);
+        } else {
+          console.warn('handleAnswer function not yet available.');
+        }
+      }
+    }
+  </script>
+<style>
+.pulse-urgent {
+  animation: urgentPulse 1s infinite;
+}
+@keyframes urgentPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+.bg-trust { background: linear-gradient(to right, #003366, #005599); }
+.bg-urgency { background: linear-gradient(to right, #990000, #ff0000); }
+.bg-deal { background: linear-gradient(to right, #ffaa00, #ff4444); }
+</style>
+<script defer="">
+window.addEventListener("load", function() {
+  const banner = document.getElementById("rotatingAdBanner");
+  const container = document.getElementById("rotatingAdBannerContainer");
+  if (!banner || !container) return;
+
+  const messages = ['Recarra pays fast and fair - We tow for free every time', 'Recarra is trusted nationwide - Fair prices and no drama', 'Trust Recarra to deliver - Cash first, pickup second', 'No surprises here - We show full payment details', 'Same-day service available - Money wired to your bank instantly', 'Short form. Big payout - It only takes a minute', 'Try us today - You’ll see the difference', 'Final chance today - lock your cash offer now', 'Only hours left - secure your $100 bonus fast', 'Don’t delay - your top payout is slipping away', 'Submit now - payout expires by midnight tonight', 'Skip the wait - sell your car in 5 minutes', 'Act fast - this quote won’t last much longer', 'Only one form - get paid in record time', 'Start now - stop losing money every day', 'Limited availability - same-day pickup filling fast', 'Get paid now - tomorrow might be too late', 'Old ride. New money. - Make it happen today', '$100 bonus unlocked - Start your instant valuation', 'Want $100 more? - Choose same-day pickup at checkout', 'Pickup included. Cash guaranteed - See your real price right now'];
+  const themes = ['trust', 'trust', 'trust', 'trust', 'urgency', 'urgency', 'urgency', 'urgency', 'urgency', 'urgency', 'urgency', 'urgency', 'urgency', 'urgency', 'urgency', 'urgency', 'urgency', 'deal', 'deal', 'deal', 'deal'];
+
+  let index = 0;
+
+  function rotateMessage() {
+    banner.textContent = messages[index];
+    container.className = "";
+    container.classList.add("bg-" + themes[index]);
+
+    if (themes[index] === "urgency") {
+      banner.classList.add("pulse-urgent");
+    } else {
+      banner.classList.remove("pulse-urgent");
+    }
+
+    index = (index + 1) % messages.length;
+  }
+
+  rotateMessage();
+  setInterval(rotateMessage, 8000);
+});
+</script>
+<script>
+(function() {
+  const display = document.getElementById("bonusTimer");
+  const countdownKey = "bonusCountdownStart";
+  const duration = 24 * 60 * 60 * 1000; // 24 hours in ms
+
+  function formatTime(ms) {
+    const totalSec = Math.floor(ms / 1000);
+    const hrs = String(Math.floor(totalSec / 3600)).padStart(2, '0');
+    const mins = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0');
+    const secs = String(totalSec % 60).padStart(2, '0');
+    return `${hrs}:${mins}:${secs}`;
+  }
+
+  let start = localStorage.getItem(countdownKey);
+  if (!start) {
+    start = Date.now();
+    localStorage.setItem(countdownKey, start);
+  } else {
+    start = parseInt(start, 10);
+  }
+
+  const end = start + duration;
+
+  function updateCountdown() {
+    const now = Date.now();
+    const remaining = end - now;
+    if (remaining <= 0) {
+      display.textContent = "Expired — Tap to restart your bonus offer.";
+      display.style.color = "#999";
+      
+      document.getElementById("renewBonusBtn").style.display = "inline-block";
+      const audio = document.getElementById("bonusSound");
+      if (audio) audio.play();
+      // TODO: Send timestamp to backend here
+      return clearInterval(interval);
+    
+    }
+    display.textContent = formatTime(remaining);
+  }
+
+  updateCountdown();
+  const interval = setInterval(updateCountdown, 1000);
+})();
+
+function renewBonus() {
+  const newStart = Date.now();
+  localStorage.setItem("bonusCountdownStart", newStart);
+  location.reload();
+}
+</script>
+<audio id="bonusSound">
+<source src="https://cdn.pixabay.com/audio/2022/03/15/audio_131a4cd6e2.mp3" type="audio/mp3"/>
+</audio>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const formFields = ["licenseInput", "yearInput", "makeInput", "modelInput", "trimInput"];
+  let currentIndex = 0;
+
+  const showField = (index) => {
+    formFields.forEach((id, i) => {
+      const field = document.getElementById(id);
+      if (field) {
+        field.style.display = i === index ? "block" : "none";
+      }
+    });
+  };
+
+  const nextBtn = document.getElementById("nextBtn");
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      const currentField = document.getElementById(formFields[currentIndex]);
+      if (currentField && currentField.value.trim() !== "") {
+        currentIndex = Math.min(currentIndex + 1, formFields.length - 1);
+        showField(currentIndex);
+      }
+    });
+  }
+
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      nextBtn.click();
+    }
+  });
+
+  showField(currentIndex); // Initialize first input
+});
+
+function updateProgress(index) {
+  const bar = document.getElementById("formProgressBar");
+  const percent = Math.floor(((index + 1) / formFields.length) * 100);
+  bar.style.width = percent + "%";
+}
+
+nextBtn.addEventListener("click", () => {
+  const currentField = document.getElementById(formFields[currentIndex]);
+  if (currentField && currentField.value.trim() !== "") {
+    currentIndex = Math.min(currentIndex + 1, formFields.length - 1);
+    showField(currentIndex);
+    updateProgress(currentIndex);
+  } else {
+    currentField.classList.add("error");
+    setTimeout(() => currentField.classList.remove("error"), 300);
+  }
+});
+</script><script>
+document.addEventListener("DOMContentLoaded", function() {
+  const yearField = document.getElementById("yearInput");
+  const makeField = document.getElementById("makeInput");
+  const conditionField = document.getElementById("carCondition");
+
+  const preview = document.getElementById("finalOfferAmount");
+  const crunching = document.getElementById("crunchingMsg");
+
+  function calculateOffer() {
+    let base = 500;
+    if (!yearField || !makeField) return;
+    const year = parseInt(yearField.value);
+    if (!isNaN(year)) base += (2025 - year) * 5;
+
+    if (makeField.value.toLowerCase().includes("toyota")) base += 75;
+    if (makeField.value.toLowerCase().includes("bmw")) base += 100;
+
+    if (conditionField && conditionField.value.toLowerCase().includes("excellent")) {
+      base += 50;
+    }
+
+    crunching.style.display = "block";
+    preview.style.display = "none";
+
+    setTimeout(() => {
+      preview.textContent = "Your AiA Offer: $" + base;
+      crunching.style.display = "none";
+      preview.style.display = "block";
+    }, 1200);
+  }
+
+  [yearField, makeField, conditionField].forEach(field => {
+    if (field) field.addEventListener("input", calculateOffer);
+  });
+});
+</script><script>
+document.addEventListener("DOMContentLoaded", function () {
+  const requiredInputs = document.querySelectorAll("input[required], select[required]");
+  requiredInputs.forEach(input => {
+    input.addEventListener("blur", () => {
+      let msgId = input.id + "_validation";
+      let msgEl = document.getElementById(msgId);
+      if (!msgEl) {
+        msgEl = document.createElement("div");
+        msgEl.id = msgId;
+        msgEl.style.color = "#e74c3c";
+        msgEl.style.fontSize = "0.85rem";
+        msgEl.style.marginTop = "0.25rem";
+        input.insertAdjacentElement("afterend", msgEl);
+      }
+      msgEl.textContent = input.value.trim() === "" ? "This field is required." : "";
+    });
+  });
+});
+</script><script>
+document.addEventListener("DOMContentLoaded", () => {
+  const vinInput = document.getElementById("licenseInput");
+  const output = document.getElementById("vinDecodedInfo");
+
+  vinInput.addEventListener("blur", () => {
+    const vin = vinInput.value.trim();
+    if (vin.length >= 11) {
+      output.textContent = "Checking VIN...";
+      // Placeholder fetch (to be replaced with backend call)
+      setTimeout(() => {
+        output.textContent = "Example: 2017 Toyota Camry SE (Decoded)";
+      }, 1000);
+    } else {
+      output.textContent = "Enter a full VIN to decode.";
+    }
+  });
+});
+</script><script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<div id="thankYouScreen" style="display:none; text-align:center; padding:3rem;">
+<h2 style="font-size:1.8rem; color:#28a745;">Thank you!</h2>
+<p style="font-size:1.2rem;">Your offer ID is: <strong id="offerId"></strong></p>
+<p>We’ll text and email your final offer details shortly.</p>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const countdownDisplay = document.getElementById("bonusCountdown");
+  const countdownKey = "bonusStartTime";
+  const duration = 24 * 60 * 60 * 1000;
+  let start = localStorage.getItem(countdownKey);
+  if (!start) {
+    start = Date.now();
+    localStorage.setItem(countdownKey, start);
+  } else {
+    start = parseInt(start);
+  }
+  const end = start + duration;
+  function updateCountdown() {
+    const now = Date.now();
+    const remaining = end - now;
+    if (remaining <= 0) {
+      countdownDisplay.textContent = "⏳ Bonus expired. Submit to restart.";
+      return;
+    }
+    const h = String(Math.floor(remaining / (1000 * 60 * 60))).padStart(2, '0');
+    const m = String(Math.floor((remaining / (1000 * 60)) % 60)).padStart(2, '0');
+    const s = String(Math.floor((remaining / 1000) % 60)).padStart(2, '0');
+    countdownDisplay.textContent = `⏳ Submit within ${h}:${m}:${s} to claim $100 bonus!`;
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+});
+</script><script>
+document.addEventListener("DOMContentLoaded", function () {
+  const steps = document.querySelectorAll(".form-step");
+  let currentStep = 0;
+
+  function showStep(index) {
+    steps.forEach((step, i) => {
+      step.classList.remove("active");
+      step.style.display = "none";
+    });
+    steps[index].classList.add("active");
+  }
+
+  function goToNextStep() {
+    const currentField = steps[currentStep].querySelector("input, select");
+    if (currentField && currentField.value.trim() !== "") {
+      currentStep++;
+      if (currentStep < steps.length) {
+        showStep(currentStep);
+      }
+    } else {
+      currentField.classList.add("error");
+      setTimeout(() => currentField.classList.remove("error"), 300);
+    }
+  }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      goToNextStep();
+    }
+  });
+
+  const nextBtns = document.querySelectorAll("button");
+  nextBtns.forEach(btn => {
+    if (btn.textContent === "Next") {
+      btn.addEventListener("click", e => {
+        e.preventDefault();
+        goToNextStep();
+      });
+    }
+  });
+
+  showStep(currentStep);
+
+  // Image preview logic
+  const photoInputs = document.querySelectorAll("input[type='file']");
+  photoInputs.forEach(input => {
+    input.addEventListener("change", function () {
+      const previewId = input.id + "_preview";
+      let preview = document.getElementById(previewId);
+      if (!preview) {
+        preview = document.createElement("img");
+        preview.id = previewId;
+        preview.style.maxWidth = "200px";
+        preview.style.display = "block";
+        preview.style.margin = "10px auto";
+        input.insertAdjacentElement("afterend", preview);
+      }
+
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          preview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  });
+});
+</script><script>function submitOfferToBackend() {
+  fetch('/api/submit-offer', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(formData)
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('finalOfferAmount').innerHTML = `Your AiA Offer: $${data.offer}`;
+    document.getElementById('finalOfferAmount').style.display = 'block';
+    confetti(); // Trigger celebration
+    document.getElementById('offerId').innerText = data.offerId;
+    document.getElementById('thankYouScreen').style.display = 'block';
+  })
+  .catch(error => {
+    document.getElementById('finalOfferAmount').innerHTML = "Error generating offer. Please try again.";
+    document.getElementById('finalOfferAmount').style.color = "#cc0000";
+    document.getElementById('finalOfferAmount').style.display = 'block';
+  });
+}</script><script>
+function scanVIN() {
+  openCameraModal();
+  const input = document.getElementById("chatInput");
+  if (input) {
+    input.value = fakeVIN;
+    fetchDecodedInfo(fakeVIN);
+  }
+}
+
+function scanPlate() {
+  openCameraModal();
+  const input = document.getElementById("chatInput");
+  if (input) {
+    input.value = fakePlate;
+    fetchDecodedInfo(fakePlate);
+  }
+}
+
+function fetchDecodedInfo(code) {
+  fetch(`/api/decode?code=${encodeURIComponent(code)}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.year && data.make && data.model) {
+        formData["vehicle_info"] = `${data.year} ${data.make} ${data.model}`;
+      }
+    })
+    .catch(err => console.error("Decoding error:", err));
+}
+</script><!-- Camera Modal -->
+<div id="cameraModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center; flex-direction:column; color:white;">
+<video autoplay="" id="videoStream" playsinline="" style="width:90%; max-width:400px; border-radius:10px;"></video>
+<button onclick="capturePhoto()" style="margin-top:1rem; padding:10px 20px; background:#28a745; color:white; font-weight:bold; border:none; border-radius:6px;">Capture</button>
+<button onclick="closeCameraModal()" style="margin-top:1rem; background:none; color:#ccc; text-decoration:underline;">Cancel</button>
+</div>
+<canvas id="canvasCapture" style="display:none;"></canvas><script defer="True" src="camera_scan_script.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const steps = document.querySelectorAll(".form-step");
+  let currentStep = 0;
+
+  function showStep(index) {
+    steps.forEach((step, i) => {
+      step.classList.remove("active");
+      step.style.display = "none";
+    });
+    steps[index].classList.add("active");
+  }
+
+  function createReasonInput(fieldId) {
+    let reasonInput = document.createElement("textarea");
+    reasonInput.placeholder = "Enter reason for skipping...";
+    reasonInput.style.width = "80%";
+    reasonInput.style.margin = "1rem auto";
+    reasonInput.style.display = "block";
+    reasonInput.id = fieldId + "_reason";
+    return reasonInput;
+  }
+
+  function createContinueButton(reasonInput, nextFunc) {
+    let continueBtn = document.createElement("button");
+    continueBtn.textContent = "Continue Without Photo";
+    continueBtn.style.marginTop = "1rem";
+    continueBtn.onclick = () => {
+      const reasonText = reasonInput.value.trim();
+      if (reasonText.length >= 5) {
+        window.formData = window.formData || {};
+        window.formData[reasonInput.id] = reasonText;
+        nextFunc();
+      } else {
+        reasonInput.classList.add("error");
+        setTimeout(() => reasonInput.classList.remove("error"), 300);
+      }
+    };
+    return continueBtn;
+  }
+
+  function goToNextStep() {
+    const step = steps[currentStep];
+    const currentField = step.querySelector("input[type='file'], input, select");
+    if (!currentField) return;
+
+    if (
+      currentField.type === "file" &&
+      (!currentField.files || currentField.files.length === 0)
+    ) {
+      if (!step.querySelector("textarea")) {
+        const reasonInput = createReasonInput(currentField.id);
+        const continueBtn = createContinueButton(reasonInput, () => {
+          currentStep++;
+          if (currentStep < steps.length) {
+            showStep(currentStep);
+          }
+        });
+        step.appendChild(reasonInput);
+        step.appendChild(continueBtn);
+      }
+      return;
+    }
+
+    if (currentField.value.trim() !== "") {
+      currentStep++;
+      if (currentStep < steps.length) {
+        showStep(currentStep);
+      }
+    } else {
+      currentField.classList.add("error");
+      setTimeout(() => currentField.classList.remove("error"), 300);
+    }
+  }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      goToNextStep();
+    }
+  });
+
+  const nextBtns = document.querySelectorAll("button");
+  nextBtns.forEach(btn => {
+    if (btn.textContent === "Next") {
+      btn.addEventListener("click", e => {
+        e.preventDefault();
+        goToNextStep();
+      });
+    }
+  });
+
+  showStep(currentStep);
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const faqList = [
+    { q: "What types of vehicles do you accept?", a: "We buy cars, trucks, SUVs — even if they're damaged, old, or missing keys." },
+  { q: "How do I scan my VIN or plate?", a: "Use our smart scan buttons to detect your vehicle instantly." },
+  { q: "Do I need a title to sell my car?", a: "Not always. We can help even if you’ve lost your title." },
+  { q: "How does the photo upload process work?", a: "We ask you for clear pictures one-by-one with smart tips." },
+  { q: "How is my offer calculated?", a: "AiA uses real-time data, your inputs, and image analysis to value your car." },
+  { q: "How soon will I be contacted after submitting?", a: "Most offers are reviewed within minutes. Expect fast follow-up." },
+  { q: "Can I get paid on the same day?", a: "Yes! Choose same-day pickup and receive cash or instant deposit." },
+  { q: "Is there a way to track my offer?", a: "Yes — we provide an Offer ID you can use to follow up." },
+  { q: "What if my car doesn’t run?", a: "No problem — we specialize in non-running vehicles too." },
+  { q: "Is my data secure?", a: "Absolutely. We never sell your information and use secure encryption." },
+  { q: "Do you offer referral rewards?", a: "Yes — earn $100 for every friend who completes a sale." },
+  { q: "What’s the bonus countdown?", a: "You have 24 hours to submit and lock in your $100 bonus." },
+  { q: "Can I restart the form if I leave?", a: "Yes. Your progress is saved automatically — pick up anytime." },
+  { q: "What makes Recarra different?", a: "Live pricing, trusted pickups, and no-pressure offers that are guaranteed." }
+    { q: "Is payment really that easy?", a: "Yes — just pick your method and we send it to you instantly." },
+    { q: "What makes Recarra’s process so fast?", a: "Smart AI logic + live photo review means no delays." },
+    { q: "How soon will I receive payment?", a: "Same-day payments are available — cash, card, or transfer." },
+    { q: "How fast is the offer generated?", a: "Instantly — AiA begins evaluating the moment you enter info." },
+  ];
+
+  let index = 0;
+  let showingAnswer = false;
+  const display = document.getElementById("faqDisplay");
+
+  function updateFAQ() {
+    const current = faqList[index];
+    display.textContent = showingAnswer ? current.a : current.q;
+    showingAnswer = !showingAnswer;
+    if (!showingAnswer) index = (index + 1) % faqList.length;
+  }
+
+  updateFAQ();
+  setInterval(updateFAQ, 8000);
+});</script><script>
+document.addEventListener("DOMContentLoaded", () => {
+  const faqModal = document.getElementById("faqSlideshow");
+  const closeBtn = document.getElementById("closeFAQBtn");
+
+  // Open modal if URL has #faq
+  if (window.location.hash === "#faq") {
+    faqModal.style.display = "flex";
+  } else {
+    faqModal.style.display = "none";
+  }
+
+  closeBtn.addEventListener("click", () => {
+    faqModal.style.display = "none";
+    history.replaceState(null, null, " ");
+  });
+
+  // Optional: Trigger via link
+  const faqLinks = document.querySelectorAll("a[href='#faq']");
+  faqLinks.forEach(link => {
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      faqModal.style.display = "flex";
+    });
+  });
+});
+</script><script>
+document.addEventListener("DOMContentLoaded", () => {
+  const faqModal = document.getElementById("faqSlideshow");
+  const closeBtn = document.getElementById("closeFAQBtn");
+  const faqHelpBtn = document.getElementById("faqHelpBtn");
+
+  faqHelpBtn.addEventListener("click", () => {
+    faqModal.style.display = "flex";
+  });
+
+  closeBtn.addEventListener("click", () => {
+    faqModal.style.display = "none";
+  });
+});
+</script><script>
+document.addEventListener("DOMContentLoaded", () => {
+  const topFAQLink = document.getElementById("topFAQLink");
+  const faqModal = document.getElementById("faqSlideshow");
+
+  topFAQLink.addEventListener("click", () => {
+    faqModal.style.display = "flex";
+  });
+});
+</script><script>
+document.addEventListener("DOMContentLoaded", () => {
+  const miniBtn = document.getElementById("faqMiniBtn");
+  const faqModal = document.getElementById("faqSlideshow");
+
+  miniBtn.addEventListener("click", () => {
+    faqModal.style.display = "flex";
+  });
+});
+</script><script>
+document.addEventListener("DOMContentLoaded", function () {
+  const faqBtn = document.getElementById("faqMiniBtn");
+  const faqOverlay = document.getElementById("faqSlideshow");
+  const closeBtn = document.getElementById("closeFAQBtn");
+
+  if (faqBtn && faqOverlay) {
+    faqBtn.addEventListener("click", () => {
+      faqOverlay.style.display = "flex";
+    });
+  }
+
+  if (closeBtn && faqOverlay) {
+    closeBtn.addEventListener("click", () => {
+      faqOverlay.style.display = "none";
+    });
+  }
+});
+</script><script src="aia_progressbar_with_stepcount.js"></script>
+  <script src="aia_final_logic_enhanced.js"></script>
+</body>
+</html>
