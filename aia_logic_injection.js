@@ -20,11 +20,9 @@ function renderNextQuestion() {
   if (currentStep >= questions.length) {
     document.querySelectorAll('.form-step').forEach(s => s.style.display = 'none');
     document.getElementById('formProgressBar').style.width = '100%';
-    document.getElementById('chatMessages').innerHTML = '<p style="text-align:center;">Crunching numbers...</p>';
-    setTimeout(() => {
-      document.getElementById('finalOfferAmount').style.display = 'block';
-      confetti();
-    }, 1200);
+    document.getElementById('finalOfferAmount').innerText = 'Crunching your AiA Offer...';
+    document.getElementById('finalOfferAmount').style.display = 'block';
+    submitToBackend();
     return;
   }
 
@@ -65,9 +63,31 @@ function handleAnswer() {
 
   const q = questions[currentStep];
   formData[q.id] = value;
-
   currentStep++;
   renderNextQuestion();
+}
+
+function submitToBackend() {
+  fetch('/api/submit-offer', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(formData)
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('finalOfferAmount').innerHTML = `Your AiA Offer: $${data.offer}`;
+    document.getElementById('finalOfferAmount').style.display = 'block';
+    if (window.confetti) confetti(); // Optional
+    if (data.offerId) {
+      document.getElementById('offerId').innerText = data.offerId;
+      document.getElementById('thankYouScreen').style.display = 'block';
+    }
+  })
+  .catch(error => {
+    document.getElementById('finalOfferAmount').innerHTML = "Error generating offer. Please try again.";
+    document.getElementById('finalOfferAmount').style.color = "#cc0000";
+    document.getElementById('finalOfferAmount').style.display = 'block';
+  });
 }
 
 window.addEventListener('DOMContentLoaded', fetchQuestions);

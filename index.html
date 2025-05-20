@@ -273,8 +273,7 @@ input:valid {
 </div>
 <div style="margin-top:1rem; font-size:0.9rem; text-align:center; color:#444;">AiA will review photo quality and damage severity automatically after upload (future feature).</div></div>
 <div id="offerPreview" style="text-align:center; margin-top:2rem;">
-
-<div id="finalOfferAmount" style="font-size:2rem; font-weight:bold; color:#28a745; margin-top:1rem; display:none;">Your AiA Offer: $850</div>
+<div id="finalOfferAmount" style="display:none; font-size:2rem; font-weight:bold; color:#28a745; margin-top:1rem;">Crunching your AiA Offer...</div>
 </div>
 <div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display:none;"><p id="crunchingMsg" style="font-size:1.2rem; font-weight:bold; color:#555;">Crunching numbers...</p><button style="display:block; margin:2rem auto; padding:14px 28px; font-size:1.1rem; background:linear-gradient(to right,#ff8c00,#ffcc00); color:black; font-weight:bold; border:none; border-radius:10px; cursor:pointer;" type="submit">Submit AiA Offer Now</button></div><div class="form-step" style="display:none;"><label for="photoFront" style="display:block; font-weight:bold;">Front View <span style="color:red">*</span></label><input accept="image/*" id="photoFront" name="photoFront" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoBack" style="display:block; font-weight:bold;">Back View <span style="color:red">*</span></label><input accept="image/*" id="photoBack" name="photoBack" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoLeft" style="display:block; font-weight:bold;">Left Side <span style="color:red">*</span></label><input accept="image/*" id="photoLeft" name="photoLeft" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoRight" style="display:block; font-weight:bold;">Right Side <span style="color:red">*</span></label><input accept="image/*" id="photoRight" name="photoRight" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoEngine" style="display:block; font-weight:bold;">Engine Compartment <span style="color:red">*</span></label><input accept="image/*" id="photoEngine" name="photoEngine" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoDash" style="display:block; font-weight:bold;">Dashboard Lit Up <span style="color:red">*</span></label><input accept="image/*" id="photoDash" name="photoDash" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div></form>
 </div>
@@ -956,5 +955,24 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
-</script></body>
+</script><script>function submitOfferToBackend() {
+  fetch('/api/submit-offer', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(formData)
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('finalOfferAmount').innerHTML = `Your AiA Offer: $${data.offer}`;
+    document.getElementById('finalOfferAmount').style.display = 'block';
+    confetti(); // Trigger celebration
+    document.getElementById('offerId').innerText = data.offerId;
+    document.getElementById('thankYouScreen').style.display = 'block';
+  })
+  .catch(error => {
+    document.getElementById('finalOfferAmount').innerHTML = "Error generating offer. Please try again.";
+    document.getElementById('finalOfferAmount').style.color = "#cc0000";
+    document.getElementById('finalOfferAmount').style.display = 'block';
+  });
+}</script></body>
 </html>
