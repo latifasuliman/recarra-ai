@@ -1,217 +1,89 @@
-let step = 0;
-const answers = {};
-const totalSteps = 7;
 
-function renderNextQuestion() {
-  const chat = document.getElementById("chatMessages");
-  const question = document.createElement("div");
-  question.style.padding = "1rem";
-  question.style.border = "1px solid #ccc";
-  question.style.borderRadius = "8px";
-  question.style.marginTop = "1rem";
+document.addEventListener("DOMContentLoaded", function () {
+  const steps = document.querySelectorAll(".form-step");
+  let currentStep = 0;
 
-  const progress = document.createElement("div");
-  progress.style.marginBottom = "0.5rem";
-  progress.style.fontSize = "0.9rem";
-  progress.style.color = "gray";
-  progress.textContent = `Step ${Math.min(step + 1, totalSteps)} of ${totalSteps}`;
-  chat.appendChild(progress);
+  function showStep(index) {
+    steps.forEach((step, i) => {
+      step.classList.remove("active");
+      step.style.display = "none";
+    });
+    steps[index].classList.add("active");
+    steps[index].style.display = "block";
 
-  if (step === 0) {
-    const countdown = document.createElement("div");
-    countdown.id = "countdown";
-    countdown.style.color = "red";
-    countdown.style.marginBottom = "0.5rem";
-    chat.appendChild(countdown);
-    startCountdown(120);
+    const progressBar = document.getElementById("formProgressBar");
+    if (progressBar) {
+      const percent = Math.floor(((index + 1) / steps.length) * 100);
+      progressBar.style.width = percent + "%";
+    }
   }
 
-  if (step === 0) {
-    question.textContent = "AiA: What is your License Plate or VIN?";
-  } else if (step === 1) {
-    question.textContent = "AiA: What year is your car?";
-  } else if (step === 2) {
-    question.textContent = "AiA: What make and model?";
-  } else if (step === 3) {
-    question.textContent = "AiA: Is the engine running?";
-  } else if (step === 4) {
-    question.textContent = "AiA: Please upload the front, back, engine and dashboard photos:";
-    chat.appendChild(question);
-
-  // Focus the main input after rendering the question
-  setTimeout(() => {
-    const inputBox = document.getElementById('chatInput');
-    if (inputBox) {
-      inputBox.focus();
-      inputBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  function goToNextStep() {
+    const currentField = steps[currentStep].querySelector("input, select");
+    if (currentField && currentField.value.trim() !== "") {
+      currentStep++;
+      if (currentStep < steps.length) {
+        showStep(currentStep);
+      }
+    } else if (currentField) {
+      currentField.classList.add("error");
+      setTimeout(() => currentField.classList.remove("error"), 300);
     }
-  }, 100);
-    renderPhotoUpload(chat);
-    return;
-  } else if (step === 5) {
-    question.textContent = "AiA: Do you have the title in hand?";
-  } else if (step === 6) {
-    question.textContent = "AiA: Please enter your contact details to receive your offer:";
-
-    const formDiv = document.createElement("div");
-    formDiv.innerHTML = `
-      <label>Full Name:<br><input type="text" id="fullName" required></label><br><br>
-      <label>Mobile Number:<br><input type="tel" id="mobileNumber" required></label><br><br>
-      <label>Email (optional):<br><input type="email" id="emailAddress"></label><br><br>
-      <label><input type="checkbox" id="consentBox" required> I agree to receive my offer via SMS or email.</label><br><br>
-      <button onclick="submitContactInfo()">Submit Contact Info</button>
-    `;
-    formDiv.style.padding = "1rem";
-    formDiv.style.border = "1px solid #ccc";
-    formDiv.style.borderRadius = "8px";
-    formDiv.style.marginTop = "1rem";
-    chat.appendChild(question);
-
-  // Focus the main input after rendering the question
-  setTimeout(() => {
-    const inputBox = document.getElementById('chatInput');
-    if (inputBox) {
-      inputBox.focus();
-      inputBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  }, 100);
-    chat.appendChild(formDiv);
-    return;
-  } else {
-    question.innerHTML = `<strong>Calculating your offer...</strong>`;
-    chat.appendChild(question);
-
-  // Focus the main input after rendering the question
-  setTimeout(() => {
-    const inputBox = document.getElementById('chatInput');
-    if (inputBox) {
-      inputBox.focus();
-      inputBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  }, 100);
-    setTimeout(showOffer, 2000);
-    return;
   }
 
-  chat.appendChild(question);
-
-  // Focus the main input after rendering the question
-  setTimeout(() => {
-    const inputBox = document.getElementById('chatInput');
-    if (inputBox) {
-      inputBox.focus();
-      inputBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      goToNextStep();
     }
-  }, 100);
-}
+  });
 
-function handleAnswer(userInput) {
-  answers[`q${step}`] = userInput;
-  step++;
-  renderNextQuestion();
-}
+  const nextBtns = document.querySelectorAll("button");
+  nextBtns.forEach(btn => {
+    if (btn.textContent === "Next") {
+      btn.addEventListener("click", e => {
+        e.preventDefault();
+        goToNextStep();
+      });
+    }
+  });
 
-function renderPhotoUpload(container) {
-  const uploadDiv = document.createElement("div");
-  uploadDiv.innerHTML = `
-    <label>Front Photo: <input type="file" id="photoFront" required></label><br>
-    <label>Back Photo: <input type="file" id="photoBack" required></label><br>
-    <label>Engine Photo: <input type="file" id="photoEngine" required></label><br>
-    <label>Dashboard Photo: <input type="file" id="photoDash" required></label><br>
-    <button onclick="submitPhotos()" style="margin-top: 10px;">Submit Photos</button>
-  `;
-  uploadDiv.style.padding = "1rem";
-  uploadDiv.style.border = "1px dashed #aaa";
-  uploadDiv.style.marginTop = "1rem";
-  container.appendChild(uploadDiv);
-}
+  showStep(currentStep);
 
-function submitPhotos() {
-  const front = document.getElementById("photoFront").files[0];
-  const back = document.getElementById("photoBack").files[0];
-  const engine = document.getElementById("photoEngine").files[0];
-  const dash = document.getElementById("photoDash").files[0];
+  // VIN and License Plate scan simulation (placeholder backend connection)
+  document.getElementById("scanVinBtn")?.addEventListener("click", () => {
+    const input = document.getElementById("licenseInput");
+    if (input) input.value = "1HGCM82633A004352"; // Example VIN
+  });
 
-  if (!front || !back || !engine || !dash) {
-    alert("Please upload all required photos.");
-    return;
-  }
+  document.getElementById("scanPlateBtn")?.addEventListener("click", () => {
+    const input = document.getElementById("licenseInput");
+    if (input) input.value = "TX-PLT-9921"; // Example plate
+  });
 
-  answers.photos = { front, back, engine, dash };
-  step++;
-  renderNextQuestion();
-}
+  // Image previews
+  const photoInputs = document.querySelectorAll("input[type='file']");
+  photoInputs.forEach(input => {
+    input.addEventListener("change", function () {
+      const previewId = input.id + "_preview";
+      let preview = document.getElementById(previewId);
+      if (!preview) {
+        preview = document.createElement("img");
+        preview.id = previewId;
+        preview.style.maxWidth = "200px";
+        preview.style.display = "block";
+        preview.style.margin = "10px auto";
+        input.insertAdjacentElement("afterend", preview);
+      }
 
-function submitContactInfo() {
-  const name = document.getElementById("fullName").value.trim();
-  const mobile = document.getElementById("mobileNumber").value.trim();
-  const email = document.getElementById("emailAddress").value.trim();
-  const consent = document.getElementById("consentBox").checked;
-
-  if (!name || !mobile || !consent) {
-    alert("Name, mobile number, and consent are required.");
-    return;
-  }
-
-  answers.contact = { name, mobile, email };
-  step++;
-  renderNextQuestion();
-}
-
-function showOffer() {
-  const chat = document.getElementById("chatMessages");
-  const offerID = "RC" + Math.floor(1000 + Math.random() * 9000);
-  triggerConfetti();
-
-  const result = document.createElement("div");
-  result.innerHTML = `
-    <h3>AiA: Your instant cash offer is ready.</h3>
-    <p>Offer ID: <code id="offerID">${offerID}</code> <button onclick="copyOfferID()">Copy</button></p>
-    <p>This offer is valid for 24 hours. Call or text now to lock it in!</p>
-  `;
-  result.style.marginTop = "20px";
-  result.style.padding = "1rem";
-  result.style.border = "2px solid green";
-  result.style.borderRadius = "10px";
-  result.style.background = "#eaffea";
-  chat.appendChild(result);
-
-  // Final Confirm button
-  const confirmBtn = document.createElement("button");
-  confirmBtn.textContent = "Confirm My Offer";
-  confirmBtn.style.marginTop = "1rem";
-  confirmBtn.onclick = () => {
-    alert("Your offer has been confirmed and saved. We’ll contact you shortly!");
-  };
-  result.appendChild(confirmBtn);
-}
-
-function copyOfferID() {
-  const id = document.getElementById("offerID").innerText;
-  navigator.clipboard.writeText(id);
-  alert("Offer ID copied: " + id);
-}
-
-function startCountdown(seconds) {
-  const countdown = document.getElementById("countdown");
-  const timer = setInterval(() => {
-    const min = Math.floor(seconds / 60);
-    const sec = seconds % 60;
-    countdown.textContent = `⏳ Submit within ${min}:${sec < 10 ? "0" + sec : sec} to claim $100 bonus!`;
-    seconds--;
-    if (seconds < 0) clearInterval(timer);
-  }, 1000);
-}
-
-function triggerConfetti() {
-  const confetti = document.createElement("div");
-  confetti.textContent = "🎉";
-  confetti.style.fontSize = "3rem";
-  confetti.style.position = "fixed";
-  confetti.style.top = "20%";
-  confetti.style.left = "50%";
-  confetti.style.transform = "translateX(-50%)";
-  confetti.style.animation = "fall 3s ease-out";
-  document.body.appendChild(confetti);
-  setTimeout(() => confetti.remove(), 3000);
-}
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          preview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  });
+});
