@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function () {
   const steps = document.querySelectorAll(".form-step");
   const progressBar = document.getElementById("formProgressBar");
@@ -104,4 +103,29 @@ function submitOfferToBackend() {
     if (thankYouEl) thankYouEl.style.display = 'block';
     if (typeof confetti === "function") confetti();
   }, 2500);
+}
+
+// Global function to be used by index.html
+function renderNextQuestion() {
+  const steps = document.querySelectorAll(".form-step");
+  let currentStep = 0;
+
+  function updateProgress() {
+    const progressBar = document.getElementById("formProgressBar");
+    if (!progressBar || steps.length === 0) return;
+    const percent = Math.round(((currentStep + 1) / steps.length) * 100);
+    progressBar.style.width = percent + "%";
+    const stepCounter = document.getElementById("stepCounter");
+    if (stepCounter) stepCounter.textContent = "Step " + (currentStep + 1) + " of " + steps.length;
+  }
+
+  function showStep(index) {
+    steps.forEach((step) => step.style.display = "none");
+    if (steps[index]) {
+      steps[index].style.display = "block";
+      updateProgress();
+    }
+  }
+
+  showStep(currentStep);
 }
