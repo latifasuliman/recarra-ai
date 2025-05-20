@@ -1,89 +1,73 @@
 
-document.addEventListener("DOMContentLoaded", function () {
-  const steps = document.querySelectorAll(".form-step");
-  let currentStep = 0;
+let currentStep = 0;
+let questions = [];
+let formData = {};
 
-  function showStep(index) {
-    steps.forEach((step, i) => {
-      step.classList.remove("active");
-      step.style.display = "none";
-    });
-    steps[index].classList.add("active");
-    steps[index].style.display = "block";
+async function fetchQuestions() {
+  try {
+    const response = await fetch('aia_question_flow.json');
+    questions = await response.json();
+    renderNextQuestion();
+  } catch (error) {
+    document.getElementById('chatMessages').innerText = 'Error loading form.';
+    console.error('Failed to load questions:', error);
+  }
+}
 
-    const progressBar = document.getElementById("formProgressBar");
-    if (progressBar) {
-      const percent = Math.floor(((index + 1) / steps.length) * 100);
-      progressBar.style.width = percent + "%";
-    }
+function renderNextQuestion() {
+  const chat = document.getElementById('chatMessages');
+  chat.innerHTML = '';
+  if (currentStep >= questions.length) {
+    document.querySelectorAll('.form-step').forEach(s => s.style.display = 'none');
+    document.getElementById('formProgressBar').style.width = '100%';
+    document.getElementById('chatMessages').innerHTML = '<p style="text-align:center;">Crunching numbers...</p>';
+    setTimeout(() => {
+      document.getElementById('finalOfferAmount').style.display = 'block';
+      confetti();
+    }, 1200);
+    return;
   }
 
-  function goToNextStep() {
-    const currentField = steps[currentStep].querySelector("input, select");
-    if (currentField && currentField.value.trim() !== "") {
-      currentStep++;
-      if (currentStep < steps.length) {
-        showStep(currentStep);
-      }
-    } else if (currentField) {
-      currentField.classList.add("error");
-      setTimeout(() => currentField.classList.remove("error"), 300);
-    }
+  const q = questions[currentStep];
+  const label = document.createElement('label');
+  label.textContent = q.question;
+  label.setAttribute('for', 'chatInput');
+  chat.appendChild(label);
+
+  const input = document.createElement('input');
+  input.type = q.type === 'file' ? 'file' : 'text';
+  input.id = 'chatInput';
+  input.name = q.id;
+  if (q.type === 'file' && q.multiple) input.multiple = true;
+  input.required = q.required || false;
+  input.style.marginTop = '10px';
+  chat.appendChild(input);
+
+  const nextBtn = document.createElement('button');
+  nextBtn.textContent = 'Next';
+  nextBtn.type = 'button';
+  nextBtn.style.marginTop = '1rem';
+  nextBtn.onclick = handleAnswer;
+  chat.appendChild(nextBtn);
+
+  const progress = Math.floor((currentStep / questions.length) * 100);
+  document.getElementById('formProgressBar').style.width = progress + '%';
+}
+
+function handleAnswer() {
+  const input = document.getElementById('chatInput');
+  const value = input.type === 'file' ? input.files : input.value.trim();
+  if ((input.type !== 'file' && value === '') || (input.type === 'file' && value.length === 0)) {
+    input.classList.add('error');
+    setTimeout(() => input.classList.remove('error'), 300);
+    return;
   }
 
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      goToNextStep();
-    }
-  });
+  const q = questions[currentStep];
+  formData[q.id] = value;
 
-  const nextBtns = document.querySelectorAll("button");
-  nextBtns.forEach(btn => {
-    if (btn.textContent === "Next") {
-      btn.addEventListener("click", e => {
-        e.preventDefault();
-        goToNextStep();
-      });
-    }
-  });
+  currentStep++;
+  renderNextQuestion();
+}
 
-  showStep(currentStep);
-
-  // VIN and License Plate scan simulation (placeholder backend connection)
-  document.getElementById("scanVinBtn")?.addEventListener("click", () => {
-    const input = document.getElementById("licenseInput");
-    if (input) input.value = "1HGCM82633A004352"; // Example VIN
-  });
-
-  document.getElementById("scanPlateBtn")?.addEventListener("click", () => {
-    const input = document.getElementById("licenseInput");
-    if (input) input.value = "TX-PLT-9921"; // Example plate
-  });
-
-  // Image previews
-  const photoInputs = document.querySelectorAll("input[type='file']");
-  photoInputs.forEach(input => {
-    input.addEventListener("change", function () {
-      const previewId = input.id + "_preview";
-      let preview = document.getElementById(previewId);
-      if (!preview) {
-        preview = document.createElement("img");
-        preview.id = previewId;
-        preview.style.maxWidth = "200px";
-        preview.style.display = "block";
-        preview.style.margin = "10px auto";
-        input.insertAdjacentElement("afterend", preview);
-      }
-
-      const file = input.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          preview.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  });
-});
+window.addEventListener('DOMContentLoaded', fetchQuestions);
