@@ -335,24 +335,23 @@ input:valid {
 <button id="scanPlateButton" onclick="scanPlate()">Scan Plate</button>
 </div>
 <div id="chatMessages">Loading...</div>
-
 <form id="chatForm" onsubmit="handleUserInput(event)">
 <div id="formProgress" style="height: 8px; width: 80%; margin: 1rem auto; background: #ddd; border-radius: 4px;">
 <div id="formProgressBar" style="height: 100%; width: 0%; background: linear-gradient(to right, #28a745, #00c851); border-radius: 4px;"></div>
 </div>
+<div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display:none;"><p id="crunchingMsg" style="font-size:1.2rem; font-weight:bold; color:#555;">Crunching numbers...</p><button style="display:block; margin:2rem auto; padding:14px 28px; font-size:1.1rem; background:linear-gradient(to right,#ff8c00,#ffcc00); color:black; font-weight:bold; border:none; border-radius:10px; cursor:pointer;" type="submit">Submit AiA Offer Now</button></div><div class="form-step" style="display: none;">
+<h3 style="text-align:center;">Upload Required Vehicle Photos</h3>
+<div style="margin-top:1rem; font-size:0.9rem; text-align:center; color:#444;">
+    AiA will review photo quality and damage severity automatically after upload (future feature).
+  </div>
+</div><div class="form-step" style="display:none;"><label for="photoFront" style="display:block; font-weight:bold;">Front View <span style="color:red">*</span></label><input accept="image/*" id="photoFront" name="photoFront" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoBack" style="display:block; font-weight:bold;">Back View <span style="color:red">*</span></label><input accept="image/*" id="photoBack" name="photoBack" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoLeft" style="display:block; font-weight:bold;">Left Side <span style="color:red">*</span></label><input accept="image/*" id="photoLeft" name="photoLeft" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoRight" style="display:block; font-weight:bold;">Right Side <span style="color:red">*</span></label><input accept="image/*" id="photoRight" name="photoRight" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoEngine" style="display:block; font-weight:bold;">Engine Compartment <span style="color:red">*</span></label><input accept="image/*" id="photoEngine" name="photoEngine" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoDash" style="display:block; font-weight:bold;">Dashboard Lit Up <span style="color:red">*</span></label><input accept="image/*" id="photoDash" name="photoDash" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div></form></div>
 <div id="offerPreview" style="text-align:center; margin-top:2rem;">
 <div id="finalOfferAmount" style="display:none; font-size:2rem; font-weight:bold; color:#28a745; margin-top:1rem;">Crunching your AiA Offer...</div>
 </div>
-<div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display:none;"><p id="crunchingMsg" style="font-size:1.2rem; font-weight:bold; color:#555;">Crunching numbers...</p><button style="display:block; margin:2rem auto; padding:14px 28px; font-size:1.1rem; background:linear-gradient(to right,#ff8c00,#ffcc00); color:black; font-weight:bold; border:none; border-radius:10px; cursor:pointer;" type="submit">Submit AiA Offer Now</button></div>
-</form>
-<div class="form-step" style="display: none;">
-  <h3 style="text-align:center;">Upload Required Vehicle Photos</h3>
-  <div style="margin-top:1rem; font-size:0.9rem; text-align:center; color:#444;">
-    AiA will review photo quality and damage severity automatically after upload (future feature).
-  </div>
-</div>
-<div class="form-step" style="display:none;"><label for="photoFront" style="display:block; font-weight:bold;">Front View <span style="color:red">*</span></label><input accept="image/*" id="photoFront" name="photoFront" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoBack" style="display:block; font-weight:bold;">Back View <span style="color:red">*</span></label><input accept="image/*" id="photoBack" name="photoBack" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoLeft" style="display:block; font-weight:bold;">Left Side <span style="color:red">*</span></label><input accept="image/*" id="photoLeft" name="photoLeft" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoRight" style="display:block; font-weight:bold;">Right Side <span style="color:red">*</span></label><input accept="image/*" id="photoRight" name="photoRight" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoEngine" style="display:block; font-weight:bold;">Engine Compartment <span style="color:red">*</span></label><input accept="image/*" id="photoEngine" name="photoEngine" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoDash" style="display:block; font-weight:bold;">Dashboard Lit Up <span style="color:red">*</span></label><input accept="image/*" id="photoDash" name="photoDash" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div></form>
-</div>
+
+
+
+
 <div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,58.7C960,53,1056,43,1152,48C1248,53,1344,75,1392,85.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="#f1f5fb" fill-opacity="1"></path></svg></div>
 <section class="slide-in" style="padding: 2rem; background: #fff;">
 <h2 style="text-align: center; color: #003366;">How It Works</h2>
@@ -636,7 +635,7 @@ input:valid {
 </div>
 </footer>
 <!-- Load AiA logic -->
-<script defer src="aia_final_logic_enhanced_FIXED.js"></script>
+<script defer="" src="aia_final_logic_enhanced_FIXED.js"></script>
 <!-- Init AiA after script is ready -->
 <script>
     window.addEventListener('DOMContentLoaded', () => {
@@ -928,77 +927,6 @@ document.addEventListener("DOMContentLoaded", function() {
   updateCountdown();
   setInterval(updateCountdown, 1000);
 });
-</script><script>
-document.addEventListener("DOMContentLoaded", function () {
-  const steps = document.querySelectorAll(".form-step");
-  let currentStep = 0;
-
-  function showStep(index) {
-    steps.forEach((step, i) => {
-      step.classList.remove("active");
-      step.style.display = "none";
-    });
-    steps[index].classList.add("active");
-  }
-
-  function goToNextStep() {
-    const currentField = steps[currentStep].querySelector("input, select");
-    if (currentField && currentField.value.trim() !== "") {
-      currentStep++;
-      if (currentStep < steps.length) {
-        showStep(currentStep);
-      }
-    } else {
-      currentField.classList.add("error");
-      setTimeout(() => currentField.classList.remove("error"), 300);
-    }
-  }
-
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      goToNextStep();
-    }
-  });
-
-  const nextBtns = document.querySelectorAll("button");
-  nextBtns.forEach(btn => {
-    if (btn.textContent === "Next") {
-      btn.addEventListener("click", e => {
-        e.preventDefault();
-        goToNextStep();
-      });
-    }
-  });
-
-  showStep(currentStep);
-
-  // Image preview logic
-  const photoInputs = document.querySelectorAll("input[type='file']");
-  photoInputs.forEach(input => {
-    input.addEventListener("change", function () {
-      const previewId = input.id + "_preview";
-      let preview = document.getElementById(previewId);
-      if (!preview) {
-        preview = document.createElement("img");
-        preview.id = previewId;
-        preview.style.maxWidth = "200px";
-        preview.style.display = "block";
-        preview.style.margin = "10px auto";
-        input.insertAdjacentElement("afterend", preview);
-      }
-
-      const file = input.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          preview.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  });
-});
 </script><script>function submitOfferToBackend() {
   fetch('/api/submit-offer', {
     method: 'POST',
@@ -1054,101 +982,7 @@ function fetchDecodedInfo(code) {
 <button onclick="closeCameraModal()" style="margin-top:1rem; background:none; color:#ccc; text-decoration:underline;">Cancel</button>
 </div>
 <canvas id="canvasCapture" style="display:none;"></canvas><script defer="True" src="camera_scan_script.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const steps = document.querySelectorAll(".form-step");
-  let currentStep = 0;
 
-  function showStep(index) {
-    steps.forEach((step, i) => {
-      step.classList.remove("active");
-      step.style.display = "none";
-    });
-    steps[index].classList.add("active");
-  }
-
-  function createReasonInput(fieldId) {
-    let reasonInput = document.createElement("textarea");
-    reasonInput.placeholder = "Enter reason for skipping...";
-    reasonInput.style.width = "80%";
-    reasonInput.style.margin = "1rem auto";
-    reasonInput.style.display = "block";
-    reasonInput.id = fieldId + "_reason";
-    return reasonInput;
-  }
-
-  function createContinueButton(reasonInput, nextFunc) {
-    let continueBtn = document.createElement("button");
-    continueBtn.textContent = "Continue Without Photo";
-    continueBtn.style.marginTop = "1rem";
-    continueBtn.onclick = () => {
-      const reasonText = reasonInput.value.trim();
-      if (reasonText.length >= 5) {
-        window.formData = window.formData || {};
-        window.formData[reasonInput.id] = reasonText;
-        nextFunc();
-      } else {
-        reasonInput.classList.add("error");
-        setTimeout(() => reasonInput.classList.remove("error"), 300);
-      }
-    };
-    return continueBtn;
-  }
-
-  function goToNextStep() {
-    const step = steps[currentStep];
-    const currentField = step.querySelector("input[type='file'], input, select");
-    if (!currentField) return;
-
-    if (
-      currentField.type === "file" &&
-      (!currentField.files || currentField.files.length === 0)
-    ) {
-      if (!step.querySelector("textarea")) {
-        const reasonInput = createReasonInput(currentField.id);
-        const continueBtn = createContinueButton(reasonInput, () => {
-          currentStep++;
-          if (currentStep < steps.length) {
-            showStep(currentStep);
-          }
-        });
-        step.appendChild(reasonInput);
-        step.appendChild(continueBtn);
-      }
-      return;
-    }
-
-    if (currentField.value.trim() !== "") {
-      currentStep++;
-      if (currentStep < steps.length) {
-        showStep(currentStep);
-      }
-    } else {
-      currentField.classList.add("error");
-      setTimeout(() => currentField.classList.remove("error"), 300);
-    }
-  }
-
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      goToNextStep();
-    }
-  });
-
-  const nextBtns = document.querySelectorAll("button");
-  nextBtns.forEach(btn => {
-    if (btn.textContent === "Next") {
-      btn.addEventListener("click", e => {
-        e.preventDefault();
-        goToNextStep();
-      });
-    }
-  });
-
-  showStep(currentStep);
-});
-</script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const faqList = [
@@ -1262,7 +1096,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 </script>
-
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const faqBtn = document.getElementById("faqMiniBtn");
@@ -1279,6 +1112,51 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const steps = document.querySelectorAll(".form-step");
+  let currentStep = 0;
 
-</body>
+  function showStep(index) {
+    steps.forEach((step, i) => {
+      step.style.display = "none";
+      step.classList.remove("active");
+    });
+    if (steps[index]) {
+      steps[index].style.display = "block";
+      steps[index].classList.add("active");
+    }
+  }
+
+  function goToNextStep() {
+    const step = steps[currentStep];
+    const currentField = step.querySelector("input, select");
+    if (!currentField) return;
+
+    if (currentField.type === "file" && (!currentField.files || currentField.files.length === 0)) {
+      currentField.classList.add("error");
+      return;
+    }
+
+    if (currentField.value.trim() !== "") {
+      currentStep++;
+      if (currentStep < steps.length) {
+        showStep(currentStep);
+      }
+    } else {
+      currentField.classList.add("error");
+      setTimeout(() => currentField.classList.remove("error"), 300);
+    }
+  }
+
+  document.querySelectorAll(".form-step button[type='button']").forEach(btn => {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      goToNextStep();
+    });
+  });
+
+  showStep(currentStep);
+});
+</script></body>
 </html>
