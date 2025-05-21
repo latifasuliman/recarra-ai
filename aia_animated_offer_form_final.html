@@ -6,6 +6,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Recarra AiA Smart Offer</title>
   <style>
+
+#aiaFormExit {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  background: #ff3333;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+#aiaFormExit:hover {
+  transform: scale(1.1);
+}
+
+
     @keyframes glowBlue {
       0% { box-shadow: 0 0 8px rgba(0,170,255,0.4); }
       100% { box-shadow: 0 0 20px rgba(0,170,255,1); }
@@ -105,7 +127,7 @@
     <div id="formContent">
       <div class="question">What is your license plate or VIN?</div>
       <div class="ad-line">No VIN? No win. Let’s ID that ride!</div>
-      <input type="text" class="input-field" placeholder="ABC123 or 1HGCM82633A..." />
+      <input type="text" class="input-field" style="margin-left: -10px; border: 3px solid #000; box-shadow: 0 0 20px rgba(0, 153, 255, 0.9);" placeholder="ABC123 or 1HGCM82633A..." />
     </div>
     <div id="scanBtns" style="display:flex; justify-content:center; gap:1rem; margin-top:1rem;">
       <button onclick="alert('Scanning VIN...')" style="background: linear-gradient(to right, #003366, #00aaff); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(0,170,255,0.8); animation: glowBlue 2s infinite alternate;">Scan VIN</button>
