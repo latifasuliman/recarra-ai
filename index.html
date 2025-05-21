@@ -984,11 +984,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeBtn = document.getElementById("closeFAQBtn");
 
   // Open modal if URL has #faq
-  if (window.location.hash === "#faq") {
-    faqModal.style.display = "flex";
-  } else {
-    faqModal.style.display = "none";
-  }
+  faqModal.style.display = "none"; // Auto-open disabled
 
   closeBtn.addEventListener("click", () => {
     faqModal.style.display = "none";
