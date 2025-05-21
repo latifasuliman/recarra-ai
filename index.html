@@ -1324,6 +1324,11 @@ document.addEventListener("DOMContentLoaded", function () {
       e.preventDefault();
       drawer.style.display = "block";
       document.body.style.overflow = "hidden";
+
+      // Ensure the form re-renders the first step
+      if (typeof renderStep === "function") {
+        renderStep();
+      }
     });
   });
 
