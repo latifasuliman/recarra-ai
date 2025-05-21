@@ -653,12 +653,54 @@ select:focus {
 </div>
 <section class="slide-in" style="padding: 2rem; text-align: center; background: linear-gradient(to right, #003366, #005599); color: white;">
 <h1 style="font-size: 2rem; margin-bottom: 1rem;">
-    Sell Your Car Instantly — No Games. Just Guaranteed Offers.
-   </h1>
-<p style="font-size: 1.2rem;">
-    We buy any car. Free pickup. Fastest payouts. Same-day deals.
-   </p>
+    
+<section class="slide-in" style="padding: 2rem; text-align: center; background: linear-gradient(to right, #003366, #005599); color: white;">
+  <h1 id="rotatingHeadline" style="font-size: 2rem; margin-bottom: 1rem; animation: fadeinout 1s ease-in-out;">Sell Your Car Instantly — No Games. Just Guaranteed Offers.</h1>
+  <p id="rotatingSub" style="font-size: 1.2rem;">We buy any car. Free pickup. Fastest payouts. Same-day deals.</p>
 </section>
+
+<style>
+  @keyframes fadeinout {
+    0%,100% { opacity: 0; }
+    10%,90% { opacity: 1; }
+  }
+</style>
+
+<script>
+  const headlines = [
+    "Sell Your Car Instantly — No Games. Just Guaranteed Offers.",
+    "Get Paid Fast — We Transfer Cash Instantly.",
+    "We Pay Before We Tow. Always.",
+    "Compare Us to Peddle, Wheelzy, CarBrain — We Win.",
+    "Others send quotes. We send money.",
+    "Submit in seconds. Offer in seconds. Pickup in minutes.",
+    "Our form is fast. Our payout is faster.",
+    "100% free service. No pressure. No haggle.",
+    "Same-day cash deposits. Real drivers. Real money.",
+    "You get paid first. We pick up after."
+  ];
+
+  const sublines = [
+    "We buy any car. Free pickup. Fastest payouts. Same-day deals.",
+    "Bank transfer or cash. Your choice. Always instant.",
+    "We’re the only site that pays before tow truck arrival.",
+    "Customers choose Recarra when others delay or disappear.",
+    "Skip the games. Lock your cash offer now.",
+    "Just plate or VIN. That’s all we need.",
+    "No confusing forms. No waiting games. Just cash.",
+    "No fees. No lowballs. No nonsense.",
+    "We’ve paid over 1,000 sellers in the past 30 days.",
+    "No title? No worries. We pay anyway."
+  ];
+
+  let currentAd = 0;
+  setInterval(() => {
+    currentAd = (currentAd + 1) % headlines.length;
+    document.getElementById("rotatingHeadline").textContent = headlines[currentAd];
+    document.getElementById("rotatingSub").textContent = sublines[currentAd];
+  }, 8000);
+</script>
+
 <div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
 <p style="font-size: 1.1rem; color: #003366; font-weight: 500;">
     Want same-day pickup and $100 cash? Start now — it takes seconds.
