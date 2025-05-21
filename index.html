@@ -436,6 +436,39 @@ button:hover,
   border-radius: 6px;
 }
   </style>
+  <style>
+   /* Ensure form input values are black */
+input,
+textarea,
+select {
+  color: #000 !important;
+}
+
+/* Ensure visible questions/prompts are black */
+#chatContainer label,
+#chatContainer .question,
+#chatContainer h2,
+#chatContainer h3 {
+  color: #000 !important;
+  font-weight: 600;
+}
+
+/* Adjust progress bar fill for better readability */
+.progress-bar {
+  height: 10px;
+  background: #333;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.4);
+}
+.progress-bar-fill {
+  background: #ffcc00;
+  height: 100%;
+  width: 0%;
+  border-radius: 6px;
+  transition: width 0.4s ease-in-out;
+}
+  </style>
  </head>
  <body style="padding-top: 80px; margin:0; padding:0; background:#001f3f;">
   <div id="recarra-background-scroll">
