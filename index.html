@@ -2093,5 +2093,100 @@ function copyOfferId() {
   });
 }
   </script>
- </body>
+ 
+<!-- AiA FORM DRAWER -->
+<style>
+  #aiaFormDrawer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: #fff;
+    z-index: 9999;
+    max-width: 480px;
+    margin: auto;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    box-shadow: 0 -8px 20px rgba(0,0,0,0.3);
+    transform: translateY(100%);
+    transition: transform 0.5s ease;
+  }
+  #aiaFormDrawer.active {
+    transform: translateY(0);
+  }
+  #aiaFormExit {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: red;
+    color: white;
+    font-size: 1.5rem;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 99999;
+  }
+  #confetti {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10000;
+  }
+</style>
+
+<div id="aiaFormDrawer">
+  <button id="aiaFormExit" onclick="document.getElementById('aiaFormDrawer').classList.remove('active')">×</button>
+  <iframe src="aia_animated_offer_form_final.html" style="width:100%; height:92vh; border:none; border-top: 4px solid #003366; border-radius: 0 0 12px 12px;"></iframe>
+</div>
+
+<!-- LAUNCH FORM FROM ANYWHERE -->
+<script>
+  function openDrawerSteps() {
+    document.getElementById('aiaFormDrawer').classList.add('active');
+  }
+
+  // Confetti generator on submit (can be triggered from iframe postMessage later)
+  function triggerConfetti() {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'confetti';
+    document.body.appendChild(canvas);
+    const confetti = canvas.getContext('2d');
+    let particles = [];
+
+    for (let i = 0; i < 120; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        size: Math.random() * 6 + 4,
+        color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+        speed: Math.random() * 3 + 2
+      });
+    }
+
+    function draw() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      confetti.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        confetti.beginPath();
+        confetti.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        confetti.fillStyle = p.color;
+        confetti.fill();
+        p.y += p.speed;
+      });
+    }
+
+    let interval = setInterval(draw, 30);
+    setTimeout(() => {
+      clearInterval(interval);
+      canvas.remove();
+    }, 3000);
+  }
+</script>
+
+</body>
 </html>
