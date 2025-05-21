@@ -1095,5 +1095,99 @@ document.addEventListener("DOMContentLoaded", function () {
 
   showStep(currentStep);
 });
-</script></body>
+</script><script>
+
+document.addEventListener("DOMContentLoaded", function() {
+  const formFields = ["licenseInput", "yearInput", "makeInput", "modelInput", "trimInput"];
+  let currentIndex = 0;
+
+  const showField = (index) => {
+    formFields.forEach((id, i) => {
+      const field = document.getElementById(id);
+      if (field) {
+        field.style.display = i === index ? "block" : "none";
+      }
+    });
+  };
+
+  const nextBtn = document.getElementById("nextBtn");
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      const currentField = document.getElementById(formFields[currentIndex]);
+      if (currentField && currentField.value.trim() !== "") {
+        currentIndex = Math.min(currentIndex + 1, formFields.length - 1);
+        showField(currentIndex);
+      }
+    });
+  }
+
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      nextBtn.click();
+    }
+  });
+
+  showField(currentIndex); // Initialize first input
+});
+
+function updateProgress(index) {
+  const bar = document.getElementById("formProgressBar");
+  const percent = Math.floor(((index + 1) / formFields.length) * 100);
+  bar.style.width = percent + "%";
+}
+
+nextBtn.addEventListener("click", () => {
+  const currentField = document.getElementById(formFields[currentIndex]);
+  if (currentField && currentField.value.trim() !== "") {
+    currentIndex = Math.min(currentIndex + 1, formFields.length - 1);
+    showField(currentIndex);
+    updateProgress(currentIndex);
+  } else {
+    currentField.classList.add("error");
+    setTimeout(() => currentField.classList.remove("error"), 300);
+  }
+});
+
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  const chat = document.getElementById("chatMessages");
+  const formSteps = [
+    { id: "plate_or_vin", q: "What is your License Plate or VIN?", required: true },
+    { id: "vehicle_info", q: "What is your vehicle's Year, Make, and Model?", required: true },
+    { id: "full_name", q: "Please enter your Full Name.", required: true },
+    { id: "phone", q: "What's your Mobile Number?", required: true },
+    { id: "email", q: "And your Email Address?", required: true }
+  ];
+  let current = 0;
+  let responses = {};
+
+  function renderNextQuestion() {
+    chat.innerHTML = '';
+    if (current >= formSteps.length) {
+      chat.innerHTML += `<div><strong>Thanks!</strong> Your info has been submitted.</div>`;
+      return;
+    }
+    const step = formSteps[current];
+    chat.innerHTML += `<div>${step.q}</div>
+      <input type="text" id="chatInput" placeholder="Type your answer..." autofocus />`;
+  }
+
+  window.handleAnswer = function(input) {
+    if (!input) return;
+    const step = formSteps[current];
+    responses[step.id] = input;
+    chat.innerHTML += `<div style="color: green; font-weight: bold;">You: ${input}</div>`;
+    current++;
+    setTimeout(() => {
+      renderNextQuestion();
+    }, 300);
+  };
+
+  renderNextQuestion();
+});
+
+</script>
+</body>
 </html>
