@@ -469,6 +469,40 @@ select {
   transition: width 0.4s ease-in-out;
 }
   </style>
+  <style>
+   /* Force black visible form questions */
+#chatContainer .question,
+#chatContainer label,
+#chatContainer h2,
+#chatContainer h3 {
+  color: #111 !important;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+/* Force black text in inputs */
+input,
+textarea,
+select {
+  color: #111 !important;
+  font-weight: 600;
+}
+
+/* Improved gold progress bar visibility */
+.progress-bar {
+  height: 12px;
+  background: #222 !important;
+  border-radius: 8px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.4);
+}
+.progress-bar-fill {
+  background: linear-gradient(to right, #ffcc00, #ffaa00) !important;
+  height: 100%;
+  width: 0%;
+  border-radius: 8px;
+  transition: width 0.4s ease-in-out;
+}
+  </style>
  </head>
  <body style="padding-top: 80px; margin:0; padding:0; background:#001f3f;">
   <div id="recarra-background-scroll">
