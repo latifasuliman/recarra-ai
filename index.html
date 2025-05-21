@@ -239,9 +239,7 @@ input:valid {
   100% { background-position: 0% 50%; }
 }
 </style></head>
-<body style="padding-top: 80px;"><div id="aiaDrawer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; overflow-y: auto;"><button id="aiaCloseBtn" style="position: absolute; top: 10px; right: 10px; background: black; color: white; font-size: 20px; padding: 6px 12px; border: none; border-radius: 50%;">X</button><body>
-<div class="bonus-badge">+ $100 Bonus Active</div>
-<div class="form-container">
+<body style="padding-top: 80px;"><div id="aiaDrawer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; overflow-y: auto;"><button id="aiaCloseBtn" style="position: absolute; top: 10px; right: 10px; background: black; color: white; font-size: 20px; padding: 6px 12px; border: none; border-radius: 50%;">X</button><div class="bonus-badge">+ $100 Bonus Active</div><div class="form-container">
 <div class="progress-bar"><div class="progress-fill" id="progressBar"></div></div>
 <div id="formContent">
 <div class="question">What is your license plate or VIN?</div>
@@ -255,8 +253,7 @@ input:valid {
 <div style="display: flex; justify-content: center; margin-top: 2rem;">
 <button class="btn" onclick="nextStep()">Next</button>
 </div>
-</div>
-<script>
+</div><script>
 const steps = [["What is your license plate or VIN?","No VIN? No win. Let’s ID that ride!","text"],
 ["What year is your vehicle?","Was it born in the 1900s? We still want it!","text"],
 ["What is the make of your vehicle?","If it has a name, we’ll make it rain.","text"],
@@ -323,8 +320,7 @@ function prevStep() {
 }
 
 window.onload = () => renderStep();
-</script>
-</body></div><div id="topHeaderBar" style="width: 100%; display: flex; justify-content: space-between; align-items: center; background: #001f3f; padding: 1rem 2rem; position: fixed; top: 0; left: 0; z-index: 10000; gap: 10px; flex-wrap: wrap; padding: 1rem 1rem; gap: 0.5rem; box-sizing: border-box;"><div id="animatedRecarra" style="font-size: 2.8rem; font-weight: bold; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 800% 800%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: colorShift 8s ease infinite;">Recarra</div><div style="display: flex; align-items: center; margin-left: auto; gap: 10px; flex-wrap: wrap; justify-content: flex-end; flex-shrink: 1; max-width: 100%; gap: 0.5rem;"><div id="chatBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Chat</div><div id="callBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Call</div><div id="referBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Refer</div></div></div>
+</script></div><div id="topHeaderBar" style="width: 100%; display: flex; justify-content: space-between; align-items: center; background: #001f3f; padding: 1rem 2rem; position: fixed; top: 0; left: 0; z-index: 10000; gap: 10px; flex-wrap: wrap; padding: 1rem 1rem; gap: 0.5rem; box-sizing: border-box;"><div id="animatedRecarra" style="font-size: 2.8rem; font-weight: bold; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 800% 800%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: colorShift 8s ease infinite;">Recarra</div><div style="display: flex; align-items: center; margin-left: auto; gap: 10px; flex-wrap: wrap; justify-content: flex-end; flex-shrink: 1; max-width: 100%; gap: 0.5rem;"><div id="chatBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Chat</div><div id="callBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Call</div><div id="referBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Refer</div></div></div>
 <a class="animated-offer-btn open-form-drawer" href="#" style="position: fixed; bottom: 20px; right: 20px; background: red; color: white; padding: 12px 16px; border-radius: 6px; font-weight: bold; font-size: 14px; z-index: 1000; text-decoration: none; box-shadow: 0 0 5px rgba(0,0,0,0.3);">Get My Offer + $100 Extra</a>
 <div style="padding-left: 1rem; margin-top: 1rem;">
 <h1 style="
