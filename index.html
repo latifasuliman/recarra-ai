@@ -632,41 +632,7 @@ input:valid {
 </footer>
 <!-- Load AiA logic -->
 <!-- Init AiA after script is ready -->
-<script>
-    window.addEventListener('DOMContentLoaded', () => {
-      const tryInit = setInterval(() => {
-        if (typeof renderNextQuestion === 'function') {
-          clearInterval(tryInit);
-          document.getElementById('chatMessages').innerHTML = '';
-          renderNextQuestion();
-        }
-      }, 100);
-    });
 
-    function handleUserInput(event) {
-      event.preventDefault();
-      const input = document.getElementById('chatInput');
-      const userAnswer = input.value.trim();
-
-      if (userAnswer) {
-        const chatMessages = document.getElementById('chatMessages');
-        const userDiv = document.createElement('div');
-        userDiv.textContent = `You: ${userAnswer}`;
-        userDiv.style.marginTop = '10px';
-        userDiv.style.fontWeight = 'bold';
-        chatMessages.appendChild(userDiv);
-
-        input.value = '';
-
-        // Call AiA logic with user input
-        if (typeof handleAnswer === 'function') {
-          handleAnswer(userAnswer);
-        } else {
-          console.warn('handleAnswer function not yet available.');
-        }
-      }
-    }
-  </script>
 <style>
 .pulse-urgent {
   animation: urgentPulse 1s infinite;
@@ -1353,5 +1319,43 @@ function submitForm(e) {
   console.log("Form submitted:", output);
   form.style.display = "none";
   document.getElementById("confirmation").style.display = "block";
-}</script></body>
+}</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const chat = document.getElementById("chatMessages");
+  const formSteps = [
+    { id: "plate_or_vin", q: "What is your License Plate or VIN?", required: true },
+    { id: "vehicle_info", q: "What is your vehicle's Year, Make, and Model?", required: true },
+    { id: "full_name", q: "Please enter your Full Name.", required: true },
+    { id: "phone", q: "What's your Mobile Number?", required: true },
+    { id: "email", q: "And your Email Address?", required: true }
+  ];
+  let current = 0;
+  let responses = {};
+
+  function renderNextQuestion() {
+    if (current >= formSteps.length) {
+      chat.innerHTML += `<div><strong>Thanks!</strong> Your info has been submitted.</div>`;
+      return;
+    }
+    const step = formSteps[current];
+    chat.innerHTML += `<div>${step.q}</div>
+      <input type="text" id="chatInput" placeholder="Type your answer..." autofocus />`;
+  }
+
+  window.handleAnswer = function(input) {
+    if (!input) return;
+    const step = formSteps[current];
+    responses[step.id] = input;
+    chat.innerHTML += `<div style="color: green; font-weight: bold;">You: ${input}</div>`;
+    current++;
+    setTimeout(() => {
+      renderNextQuestion();
+    }, 300);
+  };
+
+  renderNextQuestion();
+});
+</script>
+</body>
 </html>
