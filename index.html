@@ -5,168 +5,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Recarra AiA - Instant Car Offer</title>
-<style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: #f9f9f9;
-      color: #111;
-    }
-    header {
-      background: linear-gradient(to right, #001f3f, #003366);
-      color: white;
-      padding: 1.5rem;
-      font-size: 1.5rem;
-      font-weight: bold;
-      text-align: center;
-    }
-    #chatContainer {
-      max-width: 600px;
-      margin: 2rem auto;
-      padding: 1rem;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    #chatMessages {
-      min-height: 100px;
-      font-size: 1.2rem;
-    }
-    #chatForm {
-      margin-top: 1rem;
-    }
-    #chatInput {
-      width: 100%;
-      padding: 12px;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-  
-    input[type="text"],
-    input[type="tel"],
-    input[type="email"],
-    input[type="file"] {
-      width: 90%;
-      max-width: 300px;
-      box-sizing: border-box;
-      padding: 10px;
-      margin-top: 6px;
-      font-size: 1rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    button {
-      display: block;
-      margin: 1rem auto;
-      padding: 10px 20px;
-      font-size: 1rem;
-      background: linear-gradient(to right, #0077cc, #00aaff);
-      color: white;
-      border: none;
-      border-radius: 6px;
-    }
-    
-<style>
-@keyframes waveColorCycle {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-.aia-color-wave {
-  text-align: center;
-  font-size: 1.6rem;
-  font-weight: bold;
-  color: white;
-  background: linear-gradient(270deg, #0077cc, #00cc99, #ffaa00, #ff4444);
-  background-size: 600% 600%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: waveColorCycle 8s ease infinite;
-  margin-bottom: 1.5rem;
-}
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-5px); }
-  40%, 80% { transform: translateX(5px); }
-}
-input.error {
-  animation: shake 0.3s;
-  border: 2px solid #e74c3c;
-}
-
-input[type="text"],
-input[type="file"],
-input[type="number"],
-select {
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  padding: 10px;
-  width: 80%;
-  margin: 0.5rem auto;
-  display: block;
-  transition: box-shadow 0.3s ease;
-  box-shadow: 0 0 5px rgba(0, 153, 255, 0.3);
-}
-
-input:focus,
-select:focus {
-  outline: none;
-  box-shadow: 0 0 12px 2px rgba(0, 153, 255, 0.5);
-}
-
-.form-step {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.4s ease;
-  display: none;
-}
-.form-step.active {
-  opacity: 1;
-  transform: translateY(0);
-  display: block;
-}
-
-#faqMiniBtn {
-  transition: all 0.3s ease;
-  background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff);
-  background-size: 600% 600%;
-  animation: faqColorShift 8s ease infinite;
-  border: 2px solid transparent;
-  box-shadow: 0 0 10px rgba(255, 0, 128, 0.6);
-}
-#faqMiniBtn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 18px rgba(0, 255, 204, 0.8), 0 0 8px rgba(255, 170, 0, 0.6);
-  border-color: white;
-}
-
-@keyframes faqColorShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.animated-offer-btn {
-  transition: all 0.3s ease;
-  background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff);
-  background-size: 600% 600%;
-  animation: faqColorShift 8s ease infinite;
-  border: 2px solid transparent;
-  box-shadow: 0 0 10px rgba(255, 0, 128, 0.6);
-  font-weight: bold;
-}
-
-.animated-offer-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 18px rgba(0, 255, 204, 0.8), 0 0 8px rgba(255, 170, 0, 0.6);
-  border-color: white;
-}
-</style>
 <style>
 @keyframes pulseWave {
   0% { background-position: 0% 50%; }
@@ -239,7 +78,7 @@ input:valid {
   100% { background-position: 0% 50%; }
 }
 </style></head>
-<body style="padding-top: 80px;"><div id="topHeaderBar" style="width: 100%; display: flex; justify-content: space-between; align-items: center; background: #001f3f; padding: 1rem 2rem; position: fixed; top: 0; left: 0; z-index: 10000; gap: 10px; flex-wrap: wrap; padding: 1rem 1rem; gap: 0.5rem; box-sizing: border-box;"><div id="animatedRecarra" style="font-size: 2.8rem; font-weight: bold; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 800% 800%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: colorShift 8s ease infinite;">Recarra</div><div style="display: flex; align-items: center; margin-left: auto; gap: 10px; flex-wrap: wrap; justify-content: flex-end; flex-shrink: 1; max-width: 100%; gap: 0.5rem;"><div id="faqMiniBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">FAQ</div><div id="chatBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Chat</div><div id="callBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Call</div><div id="referBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Refer</div></div></div><div id="faqHelpBtn" style="position: fixed; bottom: 20px; left: 20px; z-index: 10000; background: #0077cc; color: white; font-weight: bold; padding: 10px 18px; border-radius: 25px; font-size: 14px; box-shadow: 0 0 10px rgba(0,0,0,0.2); cursor: pointer;">Need Help? FAQ</div>
+<body style="padding-top: 80px;"><div id="topHeaderBar" style="width: 100%; display: flex; justify-content: space-between; align-items: center; background: #001f3f; padding: 1rem 2rem; position: fixed; top: 0; left: 0; z-index: 10000; gap: 10px; flex-wrap: wrap; padding: 1rem 1rem; gap: 0.5rem; box-sizing: border-box;"><div id="animatedRecarra" style="font-size: 2.8rem; font-weight: bold; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 800% 800%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: colorShift 8s ease infinite;">Recarra</div><div style="display: flex; align-items: center; margin-left: auto; gap: 10px; flex-wrap: wrap; justify-content: flex-end; flex-shrink: 1; max-width: 100%; gap: 0.5rem;"><div id="chatBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Chat</div><div id="callBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Call</div><div id="referBtn" style="font-size: 0.85rem; font-weight: bold; padding: 8px 14px; margin-left: 12px; border-radius: 20px; background: linear-gradient(270deg, #ff0000, #00ffcc, #ffaa00, #cc00ff); background-size: 600% 600%; animation: faqColorShift 8s ease infinite; border: 2px solid transparent; box-shadow: 0 0 8px rgba(255, 0, 128, 0.6); color: white; cursor: pointer;">Refer</div></div></div>
 <a class="animated-offer-btn" href="#chatContainer" style="position: fixed; bottom: 20px; right: 20px; background: red; color: white; padding: 12px 16px; border-radius: 6px; font-weight: bold; font-size: 14px; z-index: 1000; text-decoration: none; box-shadow: 0 0 5px rgba(0,0,0,0.3);">Get My Offer + $100 Extra</a>
 <div style="padding-left: 1rem; margin-top: 1rem;">
 <h1 style="
@@ -339,19 +178,19 @@ input:valid {
 <div id="formProgress" style="height: 8px; width: 80%; margin: 1rem auto; background: #ddd; border-radius: 4px;">
 <div id="formProgressBar" style="height: 100%; width: 0%; background: linear-gradient(to right, #28a745, #00c851); border-radius: 4px;"></div>
 </div>
-</div>
+</form></div>
 <div id="offerPreview" style="text-align:center; margin-top:2rem;">
 <div id="finalOfferAmount" style="display:none; font-size:2rem; font-weight:bold; color:#28a745; margin-top:1rem;">Crunching your AiA Offer...</div>
 </div>
 <div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display: none;"></div><div class="form-step" style="display:none;"><p id="crunchingMsg" style="font-size:1.2rem; font-weight:bold; color:#555;">Crunching numbers...</p><button style="display:block; margin:2rem auto; padding:14px 28px; font-size:1.1rem; background:linear-gradient(to right,#ff8c00,#ffcc00); color:black; font-weight:bold; border:none; border-radius:10px; cursor:pointer;" type="submit">Submit AiA Offer Now</button></div>
 <div class="form-step" style="display: none;">
-  <h3 style="text-align:center;">Upload Required Vehicle Photos</h3>
-  <div style="margin-top:1rem; font-size:0.9rem; text-align:center; color:#444;">
+<h3 style="text-align:center;">Upload Required Vehicle Photos</h3>
+<div style="margin-top:1rem; font-size:0.9rem; text-align:center; color:#444;">
     AiA will review photo quality and damage severity automatically after upload (future feature).
   </div>
 </div>
-<div class="form-step" style="display:none;"><label for="photoFront" style="display:block; font-weight:bold;">Front View <span style="color:red">*</span></label><input accept="image/*" id="photoFront" name="photoFront" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoBack" style="display:block; font-weight:bold;">Back View <span style="color:red">*</span></label><input accept="image/*" id="photoBack" name="photoBack" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoLeft" style="display:block; font-weight:bold;">Left Side <span style="color:red">*</span></label><input accept="image/*" id="photoLeft" name="photoLeft" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoRight" style="display:block; font-weight:bold;">Right Side <span style="color:red">*</span></label><input accept="image/*" id="photoRight" name="photoRight" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoEngine" style="display:block; font-weight:bold;">Engine Compartment <span style="color:red">*</span></label><input accept="image/*" id="photoEngine" name="photoEngine" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoDash" style="display:block; font-weight:bold;">Dashboard Lit Up <span style="color:red">*</span></label><input accept="image/*" id="photoDash" name="photoDash" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div></form>
-</div>
+<div class="form-step" style="display:none;"><label for="photoFront" style="display:block; font-weight:bold;">Front View <span style="color:red">*</span></label><input accept="image/*" id="photoFront" name="photoFront" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoBack" style="display:block; font-weight:bold;">Back View <span style="color:red">*</span></label><input accept="image/*" id="photoBack" name="photoBack" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoLeft" style="display:block; font-weight:bold;">Left Side <span style="color:red">*</span></label><input accept="image/*" id="photoLeft" name="photoLeft" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoRight" style="display:block; font-weight:bold;">Right Side <span style="color:red">*</span></label><input accept="image/*" id="photoRight" name="photoRight" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoEngine" style="display:block; font-weight:bold;">Engine Compartment <span style="color:red">*</span></label><input accept="image/*" id="photoEngine" name="photoEngine" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div><div class="form-step" style="display:none;"><label for="photoDash" style="display:block; font-weight:bold;">Dashboard Lit Up <span style="color:red">*</span></label><input accept="image/*" id="photoDash" name="photoDash" required="" style="display:block; margin: 0.5rem auto;" type="file"/><button style="display:block; margin:1.5rem auto; padding:10px 28px; background:#ff5f6d; color:white; font-weight:bold; border:none; border-radius:10px; font-size:1rem;" type="button">Next</button></div>
+
 <div style="line-height: 0;"><svg style="display: block; width: 100%; height: 80px;" viewbox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,58.7C960,53,1056,43,1152,48C1248,53,1344,75,1392,85.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="#f1f5fb" fill-opacity="1"></path></svg></div>
 <section class="slide-in" style="padding: 2rem; background: #fff;">
 <h2 style="text-align: center; color: #003366;">How It Works</h2>
@@ -620,7 +459,7 @@ input:valid {
 </div>
 </div>
 </section>
-<section id="faqSlideshow" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 9999; overflow-y: auto; display: none; flex-direction: column; justify-content: center; align-items: center;"><h2 style="color:#003366;">Frequently Asked Questions</h2><button id="closeFAQBtn" style="position: absolute; top: 20px; right: 30px; font-size: 1.5rem; background: none; border: none; color: #003366; font-weight: bold; cursor: pointer;">× Close FAQ</button><div id="faqDisplay" style="max-width:700px; margin:auto; font-size:1.2rem; font-weight:bold; padding:1.5rem; border:4px solid #0077cc; border-radius:12px; transition:all 0.4s ease; animation:glowBorder 3s infinite;">Loading...</div></section><footer style="padding: 2rem; background: #001f3f; color: white; text-align: center; padding-bottom: 5rem; margin-bottom: 5rem;">
+<footer style="padding: 2rem; background: #001f3f; color: white; text-align: center; padding-bottom: 5rem; margin-bottom: 5rem;">
 <div style="max-width: 800px; margin: auto;">
 <p><strong>Quick Links:</strong></p>
 <p>
@@ -635,7 +474,7 @@ input:valid {
 </div>
 </footer>
 <!-- Load AiA logic -->
-<script defer src="aia_final_logic_enhanced_FIXED.js"></script>
+<script defer="" src="aia_final_logic_enhanced_FIXED.js"></script>
 <!-- Init AiA after script is ready -->
 <script>
     window.addEventListener('DOMContentLoaded', () => {
@@ -1148,136 +987,7 @@ document.addEventListener("DOMContentLoaded", function () {
   showStep(currentStep);
 });
 </script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const faqList = [
-    { q: "What types of vehicles do you accept?", a: "We buy cars, trucks, SUVs — even if they're damaged, old, or missing keys." },
-  { q: "How do I scan my VIN or plate?", a: "Use our smart scan buttons to detect your vehicle instantly." },
-  { q: "Do I need a title to sell my car?", a: "Not always. We can help even if you’ve lost your title." },
-  { q: "How does the photo upload process work?", a: "We ask you for clear pictures one-by-one with smart tips." },
-  { q: "How is my offer calculated?", a: "AiA uses real-time data, your inputs, and image analysis to value your car." },
-  { q: "How soon will I be contacted after submitting?", a: "Most offers are reviewed within minutes. Expect fast follow-up." },
-  { q: "Can I get paid on the same day?", a: "Yes! Choose same-day pickup and receive cash or instant deposit." },
-  { q: "Is there a way to track my offer?", a: "Yes — we provide an Offer ID you can use to follow up." },
-  { q: "What if my car doesn’t run?", a: "No problem — we specialize in non-running vehicles too." },
-  { q: "Is my data secure?", a: "Absolutely. We never sell your information and use secure encryption." },
-  { q: "Do you offer referral rewards?", a: "Yes — earn $100 for every friend who completes a sale." },
-  { q: "What’s the bonus countdown?", a: "You have 24 hours to submit and lock in your $100 bonus." },
-  { q: "Can I restart the form if I leave?", a: "Yes. Your progress is saved automatically — pick up anytime." },
-  { q: "What makes Recarra different?", a: "Live pricing, trusted pickups, and no-pressure offers that are guaranteed." }
-    { q: "Is payment really that easy?", a: "Yes — just pick your method and we send it to you instantly." },
-    { q: "What makes Recarra’s process so fast?", a: "Smart AI logic + live photo review means no delays." },
-    { q: "How soon will I receive payment?", a: "Same-day payments are available — cash, card, or transfer." },
-    { q: "How fast is the offer generated?", a: "Instantly — AiA begins evaluating the moment you enter info." },
-  ];
 
-  let index = 0;
-  let showingAnswer = false;
-  const display = document.getElementById("faqDisplay");
-
-  function updateFAQ() {
-    const current = faqList[index];
-    display.textContent = showingAnswer ? current.a : current.q;
-    showingAnswer = !showingAnswer;
-    if (!showingAnswer) index = (index + 1) % faqList.length;
-  }
-
-  updateFAQ();
-  setInterval(updateFAQ, 8000);
-});</script><script>
-document.addEventListener("DOMContentLoaded", () => {
-  const faqModal = document.getElementById("faqSlideshow");
-  const closeBtn = document.getElementById("closeFAQBtn");
-
-  // Open modal if URL has #faq
-  if (window.location.hash === "#faq") {
-    faqModal.style.display = "flex";
-  } else {
-    faqModal.style.display = "none";
-  }
-
-  closeBtn.addEventListener("click", () => {
-    faqModal.style.display = "none";
-    history.replaceState(null, null, " ");
-  });
-
-  // Optional: Trigger via link
-  const faqLinks = document.querySelectorAll("a[href='#faq']");
-  faqLinks.forEach(link => {
-    link.addEventListener("click", e => {
-      e.preventDefault();
-      faqModal.style.display = "flex";
-    });
-  });
-});
-</script><script>
-document.addEventListener("DOMContentLoaded", () => {
-  const faqModal = document.getElementById("faqSlideshow");
-  const closeBtn = document.getElementById("closeFAQBtn");
-  const faqHelpBtn = document.getElementById("faqHelpBtn");
-
-  faqHelpBtn.addEventListener("click", () => {
-    faqModal.style.display = "flex";
-  });
-
-  closeBtn.addEventListener("click", () => {
-    faqModal.style.display = "none";
-  });
-});
-</script><script>
-document.addEventListener("DOMContentLoaded", () => {
-  const topFAQLink = document.getElementById("topFAQLink");
-  const faqModal = document.getElementById("faqSlideshow");
-
-  topFAQLink.addEventListener("click", () => {
-    faqModal.style.display = "flex";
-  });
-});
-</script><script>
-document.addEventListener("DOMContentLoaded", () => {
-  const miniBtn = document.getElementById("faqMiniBtn");
-  const faqModal = document.getElementById("faqSlideshow");
-
-  miniBtn.addEventListener("click", () => {
-    faqModal.style.display = "flex";
-  });
-});
-</script><script>
-document.addEventListener("DOMContentLoaded", function () {
-  const faqBtn = document.getElementById("faqMiniBtn");
-  const faqOverlay = document.getElementById("faqSlideshow");
-  const closeBtn = document.getElementById("closeFAQBtn");
-
-  if (faqBtn && faqOverlay) {
-    faqBtn.addEventListener("click", () => {
-      faqOverlay.style.display = "flex";
-    });
-  }
-
-  if (closeBtn && faqOverlay) {
-    closeBtn.addEventListener("click", () => {
-      faqOverlay.style.display = "none";
-    });
-  }
-});
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const faqBtn = document.getElementById("faqMiniBtn");
-  const faqSlide = document.getElementById("faqSlideshow");
-  const closeBtn = document.getElementById("closeFAQBtn");
-
-  if (faqBtn && faqSlide && closeBtn) {
-    faqBtn.onclick = () => faqSlide.style.display = "flex";
-    closeBtn.onclick = () => faqSlide.style.display = "none";
-  }
-
-  faqSlide?.addEventListener("click", (e) => {
-    if (e.target === faqSlide) faqSlide.style.display = "none";
-  });
-});
-</script>
 
 </body>
 </html>
