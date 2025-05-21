@@ -646,6 +646,41 @@ h1, h2, h3, h4 {
   cursor: pointer;
 }
   </style>
+  <style>
+   .glow-ad-banner {
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-align: center;
+  background: linear-gradient(90deg, #ff4444, #ffaa00, #00cc99, #ff0099);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: waveColorCycle 8s ease infinite;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+  margin: 3rem auto;
+  max-width: 90%;
+  line-height: 1.4;
+}
+  </style>
+  <style>
+   .glow-ad-container {
+  padding: 2rem;
+  border: 4px solid transparent;
+  border-image: linear-gradient(to right, #ff4444, #ffaa00, #00cc99, #ff0099);
+  border-image-slice: 1;
+  border-radius: 20px;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+  margin: 2rem auto;
+  max-width: 800px;
+  animation: pulseBorder 6s infinite ease-in-out;
+}
+
+@keyframes pulseBorder {
+  0% { box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+  50% { box-shadow: 0 0 25px rgba(255,255,255,0.4); }
+  100% { box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+}
+  </style>
  </head>
  <body style="padding-top: 80px; margin:0; padding:0; background:#001f3f;">
   <div id="recarra-background-scroll">
@@ -925,7 +960,8 @@ h1, h2, h3, h4 {
    </p>
   </div>
   <section class="slide-in" style="padding: 2rem; text-align: center; background: black; color: white; min-height: 120px;">
-   <h1 class="fade-text" id="rotatingHeadline" style="
+   <div class="glow-ad-container">
+    <h1 class="glow-ad-banner" id="rotatingHeadline" style="
     font-size: 1.8rem;
     margin: 0 auto;
     line-height: 1.5;
@@ -934,10 +970,11 @@ h1, h2, h3, h4 {
     max-width: 800px;
     transition: opacity 1s ease-in-out;
   ">
-    Others send quotes.
-    We send money.
-    Skip the wait.
-   </h1>
+     Others send quotes.
+We send money.
+Skip the wait.
+    </h1>
+   </div>
   </section>
   <div class="shine-banner" style="
   text-align: center;
@@ -1468,27 +1505,29 @@ h1, h2, h3, h4 {
        </strong>
       </p>
       <p>
-       <div class="button-glow-frame">
-        <div class="button-inner">
-         Let&rsquo;s Lock This In +$100
+       <div style="margin-bottom: 1.5rem;">
+        <div class="button-glow-frame" style="margin-bottom: 1rem;">
+         <div class="button-inner">
+          Let&rsquo;s Lock This In +$100
+         </div>
         </div>
-       </div>
-       |
-       <a href="#how-it-works" style="color: #fff;">
-        How It Works
-       </a>
-       |
-       <a href="#why-recarra" style="color: #fff;">
-        Why Recarra
-       </a>
-       |
-       <a href="#testimonials" style="color: #fff;">
-        Testimonials
-       </a>
-       |
-       <div class="button-glow-frame">
-        <div class="button-inner">
-         Referral Program
+        <div>
+         <a href="#how-it-works" style="color: #fff; margin: 0 0.5rem;">
+          How It Works
+         </a>
+         |
+         <a href="#why-recarra" style="color: #fff; margin: 0 0.5rem;">
+          Why Recarra
+         </a>
+         |
+         <a href="#testimonials" style="color: #fff; margin: 0 0.5rem;">
+          Testimonials
+         </a>
+        </div>
+        <div class="button-glow-frame" style="margin-top: 1rem;">
+         <div class="button-inner">
+          See Why We Pay More
+         </div>
         </div>
        </div>
       </p>
