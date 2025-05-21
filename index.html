@@ -71,8 +71,8 @@
 
 
 <!-- AiA Form Drawer -->
-<div id="aiaDrawer" style="position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: rgba(255,255,255,0.97); box-shadow: -4px 0 12px rgba(0,0,0,0.2); transition: right 0.4s ease; z-index: 9999; overflow-y: auto;">
-  <button onclick="closeDrawer()" id="aiaFormExit">X</button>
+<div id="aiaDrawer" style="position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: white; box-shadow: 0 -4px 12px rgba(0,0,0,0.2); transition: bottom 0.4s ease; z-index: 9999; overflow-y: auto;">
+  <button onclick="closeDrawer()" id="aiaFormExit" style="top: 12px; right: 12px; position: absolute;">X</button>
   <div class="bonus-badge">+ $100 Bonus Active</div>
   <div class="form-container">
     <div class="progress-bar"><div class="progress-fill" id="progressBar"></div></div>
@@ -162,10 +162,10 @@ window.onload = () => renderStep();
 
 <script>
 function openDrawer() {
-  document.getElementById("aiaDrawer").style.right = "0";
+  document.getElementById("aiaDrawer").style.bottom = "0";
 }
 function closeDrawer() {
-  document.getElementById("aiaDrawer").style.right = "-100%";
+  document.getElementById("aiaDrawer").style.bottom = "-100%";
 }
 </script>
 
