@@ -632,6 +632,41 @@ input:valid {
 </footer>
 <!-- Load AiA logic -->
 <!-- Init AiA after script is ready -->
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const tryInit = setInterval(() => {
+        if (typeof renderNextQuestion === 'function') {
+          clearInterval(tryInit);
+          document.getElementById('chatMessages').innerHTML = '';
+          renderNextQuestion();
+        }
+      }, 100);
+    });
+
+    function handleUserInput(event) {
+      event.preventDefault();
+      const input = document.getElementById('chatInput');
+      const userAnswer = input.value.trim();
+
+      if (userAnswer) {
+        const chatMessages = document.getElementById('chatMessages');
+        const userDiv = document.createElement('div');
+        userDiv.textContent = `You: ${userAnswer}`;
+        userDiv.style.marginTop = '10px';
+        userDiv.style.fontWeight = 'bold';
+        chatMessages.appendChild(userDiv);
+
+        input.value = '';
+
+        // Call AiA logic with user input
+        if (typeof handleAnswer === 'function') {
+          handleAnswer(userAnswer);
+        } else {
+          console.warn('handleAnswer function not yet available.');
+        }
+      }
+    }
+  </script>
 <style>
 .pulse-urgent {
   animation: urgentPulse 1s infinite;
@@ -853,7 +888,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-</script>
+</script><script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <div id="thankYouScreen" style="display:none; text-align:center; padding:3rem;">
 <h2 style="font-size:1.8rem; color:#28a745;">Thank you!</h2>
 <p style="font-size:1.2rem;">Your offer ID is: <strong id="offerId"></strong></p>
@@ -941,7 +976,7 @@ function fetchDecodedInfo(code) {
 <button onclick="capturePhoto()" style="margin-top:1rem; padding:10px 20px; background:#28a745; color:white; font-weight:bold; border:none; border-radius:6px;">Capture</button>
 <button onclick="closeCameraModal()" style="margin-top:1rem; background:none; color:#ccc; text-decoration:underline;">Cancel</button>
 </div>
-<canvas id="canvasCapture" style="display:none;"></canvas>
+<canvas id="canvasCapture" style="display:none;"></canvas><script defer="True" src="camera_scan_script.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const faqList = [
@@ -979,28 +1014,6 @@ document.addEventListener("DOMContentLoaded", () => {
   updateFAQ();
   setInterval(updateFAQ, 8000);
 });</script><script>
-document.addEventListener("DOMContentLoaded", () => {
-  const faqModal = document.getElementById("faqSlideshow");
-  const closeBtn = document.getElementById("closeFAQBtn");
-
-  // Open modal if URL has #faq
-  faqModal.style.display = "none"; // Auto-open disabled
-
-  closeBtn.addEventListener("click", () => {
-    faqModal.style.display = "none";
-    history.replaceState(null, null, " ");
-  });
-
-  // Optional: Trigger via link
-  const faqLinks = document.querySelectorAll("a[href='#faq']");
-  faqLinks.forEach(link => {
-    link.addEventListener("click", e => {
-      e.preventDefault();
-      faqModal.style.display = "flex";
-    });
-  });
-});
-</script><script>
 document.addEventListener("DOMContentLoaded", () => {
   const faqModal = document.getElementById("faqSlideshow");
   const closeBtn = document.getElementById("closeFAQBtn");
@@ -1314,60 +1327,5 @@ function submitForm(e) {
   console.log("Form submitted:", output);
   form.style.display = "none";
   document.getElementById("confirmation").style.display = "block";
-}</script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const chat = document.getElementById("chatMessages");
-  const formSteps = [
-    { id: "plate_or_vin", q: "What is your License Plate or VIN?", required: true },
-    { id: "vehicle_info", q: "What is your vehicle's Year, Make, and Model?", required: true },
-    { id: "full_name", q: "Please enter your Full Name.", required: true },
-    { id: "phone", q: "What's your Mobile Number?", required: true },
-    { id: "email", q: "And your Email Address?", required: true }
-  ];
-  let current = 0;
-  let responses = {};
-
-  function renderNextQuestion() {
-    chat.innerHTML = '';
-    if (current >= formSteps.length) {
-      chat.innerHTML += `<div><strong>Thanks!</strong> Your info has been submitted.</div>`;
-      return;
-    }
-    const step = formSteps[current];
-    chat.innerHTML += `<div>${step.q}</div>
-      <input type="text" id="chatInput" placeholder="Type your answer..." autofocus />`;
-  }
-
-  window.handleAnswer = function(input) {
-    if (!input) return;
-    const step = formSteps[current];
-    responses[step.id] = input;
-    chat.innerHTML += `<div style="color: green; font-weight: bold;">You: ${input}</div>`;
-    current++;
-    setTimeout(() => {
-      renderNextQuestion();
-    }, 300);
-  };
-
-  renderNextQuestion();
-});
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.querySelector("form");
-  const steps = document.querySelectorAll(".form-step");
-  let current = 0;
-  function showStep(i) {
-    steps.forEach((s, idx) => s.style.display = idx === i ? "block" : "none");
-  }
-  document.querySelectorAll(".nextBtn").forEach(btn =>
-    btn.addEventListener("click", () => {
-      current++;
-      if (current < steps.length) showStep(current);
-    })
-  );
-  showStep(0);
-});
-</script></body>
+}</script></body>
 </html>
