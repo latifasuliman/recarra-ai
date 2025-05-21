@@ -631,7 +631,6 @@ input:valid {
 </div>
 </footer>
 <!-- Load AiA logic -->
-
 <!-- Init AiA after script is ready -->
 <script>
     window.addEventListener('DOMContentLoaded', () => {
@@ -889,7 +888,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-</script><script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</script><script src="confetti.browser.min.js?v=2"></script>
 <div id="thankYouScreen" style="display:none; text-align:center; padding:3rem;">
 <h2 style="font-size:1.8rem; color:#28a745;">Thank you!</h2>
 <p style="font-size:1.2rem;">Your offer ID is: <strong id="offerId"></strong></p>
@@ -977,7 +976,7 @@ function fetchDecodedInfo(code) {
 <button onclick="capturePhoto()" style="margin-top:1rem; padding:10px 20px; background:#28a745; color:white; font-weight:bold; border:none; border-radius:6px;">Capture</button>
 <button onclick="closeCameraModal()" style="margin-top:1rem; background:none; color:#ccc; text-decoration:underline;">Cancel</button>
 </div>
-<canvas id="canvasCapture" style="display:none;"></canvas><script defer="True" src="camera_scan_script.js"></script>
+<canvas id="canvasCapture" style="display:none;"></canvas><script defer="True" src="camera_scan_script.js?v=2"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const faqList = [
