@@ -1,92 +1,113 @@
-{
-  "questions": [
-    {
-      "id": "plate_or_vin",
-      "question": "What is your License Plate or VIN?",
-      "type": "text",
-      "required": true
-    },
-    {
-      "id": "vehicle_info",
-      "question": "What is your vehicle's Year, Make, and Model?",
-      "type": "text",
-      "required": true
-    },
-    {
-      "id": "full_name",
-      "question": "Please enter your Full Name.",
-      "type": "text",
-      "required": true,
-      "validation": "name"
-    },
-    {
-      "id": "phone",
-      "question": "What's your Mobile Number?",
-      "type": "phone",
-      "required": true,
-      "validation": "phone"
-    },
-    {
-      "id": "email",
-      "question": "And your Email Address?",
-      "type": "email",
-      "required": true,
-      "validation": "email"
-    },
-    {
-      "id": "running",
-      "question": "Is your car currently running?",
-      "type": "choice",
-      "options": ["Yes", "No"],
-      "required": true
-    },
-    {
-      "id": "title_type",
-      "question": "What type of title do you have? (Clean, Salvage, None)",
-      "type": "choice",
-      "options": ["Clean", "Salvage", "None"],
-      "required": true
-    },
-    {
-      "id": "keys",
-      "question": "Do you have all the keys for the vehicle?",
-      "type": "choice",
-      "options": ["Yes", "No"],
-      "required": true
-    },
-    {
-      "id": "tires",
-      "question": "What is the condition of the tires?",
-      "type": "choice",
-      "options": ["All Good", "Some Flat", "All Flat", "Missing"],
-      "required": true
-    },
-    {
-      "id": "damage",
-      "question": "Is there any visible damage to the car?",
-      "type": "choice",
-      "options": ["Yes", "No"],
-      "required": true
-    },
-    {
-      "id": "damage_photo",
-      "question": "Please upload a photo of the damaged area.",
-      "type": "file",
-      "required_if": { "damage": "Yes" }
-    },
-    {
-      "id": "photos",
-      "question": "Please upload the following photos: Front, Rear, Right Side, Left Side, Engine, Dashboard.",
-      "type": "file",
-      "required": true,
-      "multiple": true
-    },
-    {
-      "id": "pickup_bonus_optin",
-      "question": "Would you like same-day pickup to receive a $100 bonus on top of your AiA offer?",
-      "type": "choice",
-      "options": ["Yes — Pick Up Today!", "No — Schedule Later"],
-      "required": true
+[
+  {
+    "id": "plate_or_vin",
+    "question": "What is your License Plate or VIN?",
+    "type": "text",
+    "required": true
+  },
+  {
+    "id": "vehicle_info",
+    "question": "What is your vehicle's Year, Make, and Model?",
+    "type": "text",
+    "required": true
+  },
+  {
+    "id": "full_name",
+    "question": "Please enter your Full Name.",
+    "type": "text",
+    "required": true,
+    "validation": "name"
+  },
+  {
+    "id": "phone",
+    "question": "What's your Mobile Number?",
+    "type": "phone",
+    "required": true,
+    "validation": "phone"
+  },
+  {
+    "id": "email",
+    "question": "And your Email Address?",
+    "type": "email",
+    "required": true,
+    "validation": "email"
+  },
+  {
+    "id": "running",
+    "question": "Is your car currently running?",
+    "type": "choice",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "required": true
+  },
+  {
+    "id": "title_type",
+    "question": "What type of title do you have? (Clean, Salvage, None)",
+    "type": "choice",
+    "options": [
+      "Clean",
+      "Salvage",
+      "None"
+    ],
+    "required": true
+  },
+  {
+    "id": "keys",
+    "question": "Do you have all the keys for the vehicle?",
+    "type": "choice",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "required": true
+  },
+  {
+    "id": "tires",
+    "question": "What is the condition of the tires?",
+    "type": "choice",
+    "options": [
+      "All Good",
+      "Some Flat",
+      "All Flat",
+      "Missing"
+    ],
+    "required": true
+  },
+  {
+    "id": "damage",
+    "question": "Is there any visible damage to the car?",
+    "type": "choice",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "required": true
+  },
+  {
+    "id": "damage_photo",
+    "question": "Please upload a photo of the damaged area.",
+    "type": "file",
+    "required_if": {
+      "damage": "Yes"
     }
-  ]
-}
+  },
+  {
+    "id": "photos",
+    "question": "Please upload the following photos: Front, Rear, Right Side, Left Side, Engine, Dashboard.",
+    "type": "file",
+    "required": true,
+    "multiple": true
+  },
+  {
+    "id": "pickup_bonus_optin",
+    "question": "Would you like same-day pickup to receive a $100 bonus on top of your AiA offer?",
+    "type": "choice",
+    "options": [
+      "Yes \u2014 Pick Up Today!",
+      "No \u2014 Schedule Later"
+    ],
+    "required": true
+  }
+]
