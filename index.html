@@ -632,7 +632,6 @@ input:valid {
 </footer>
 <!-- Load AiA logic -->
 <!-- Init AiA after script is ready -->
-
 <style>
 .pulse-urgent {
   animation: urgentPulse 1s infinite;
@@ -854,7 +853,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-</script><script src="confetti.browser.min.js?v=2"></script>
+</script>
 <div id="thankYouScreen" style="display:none; text-align:center; padding:3rem;">
 <h2 style="font-size:1.8rem; color:#28a745;">Thank you!</h2>
 <p style="font-size:1.2rem;">Your offer ID is: <strong id="offerId"></strong></p>
@@ -942,7 +941,7 @@ function fetchDecodedInfo(code) {
 <button onclick="capturePhoto()" style="margin-top:1rem; padding:10px 20px; background:#28a745; color:white; font-weight:bold; border:none; border-radius:6px;">Capture</button>
 <button onclick="closeCameraModal()" style="margin-top:1rem; background:none; color:#ccc; text-decoration:underline;">Cancel</button>
 </div>
-<canvas id="canvasCapture" style="display:none;"></canvas><script defer="True" src="camera_scan_script.js?v=2"></script>
+<canvas id="canvasCapture" style="display:none;"></canvas>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const faqList = [
@@ -1358,5 +1357,21 @@ document.addEventListener("DOMContentLoaded", function() {
   renderNextQuestion();
 });
 </script>
-</body>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.querySelector("form");
+  const steps = document.querySelectorAll(".form-step");
+  let current = 0;
+  function showStep(i) {
+    steps.forEach((s, idx) => s.style.display = idx === i ? "block" : "none");
+  }
+  document.querySelectorAll(".nextBtn").forEach(btn =>
+    btn.addEventListener("click", () => {
+      current++;
+      if (current < steps.length) showStep(current);
+    })
+  );
+  showStep(0);
+});
+</script></body>
 </html>
