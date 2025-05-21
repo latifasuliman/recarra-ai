@@ -245,9 +245,153 @@ select:focus {
   100% { background-position: 0% 50%; }
 }
   </style>
+  <style>
+   body::before {
+  content: "";
+  background: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'), url('https://i.imgur.com/S8VKZrI.jpg');
+  background-size: cover;
+  background-position: center;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.15;
+  z-index: -2;
+}
+  </style>
+  <style>
+   body {
+  margin: 0;
+  padding: 0;
+  background: #001f3f;
+  overflow-x: hidden;
+}
+.falling-cash {
+  position: fixed;
+  top: -50px;
+  color: #00ff88;
+  font-size: 24px;
+  animation: fall linear infinite;
+  z-index: -1;
+  opacity: 0.4;
+}
+@keyframes fall {
+  0% { top: -50px; opacity: 0.4; }
+  100% { top: 110%; opacity: 0; }
+}
+.cash-container {
+  pointer-events: none;
+  z-index: -1;
+}
+.car-scene {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: -2;
+  opacity: 0.3;
+}
+.car-scene svg {
+  width: 100%;
+  height: auto;
+}
+  </style>
+  <style>
+   @keyframes moveCars {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+@keyframes smokeRise {
+  0% { transform: translateY(0) scale(1); opacity: 0.5; }
+  100% { transform: translateY(-40px) scale(1.5); opacity: 0; }
+}
+.car-scene {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: -2;
+  animation: moveCars 60s linear infinite;
+  opacity: 0.4;
+}
+.smoke {
+  fill: #ccc;
+  opacity: 0.5;
+  animation: smokeRise 4s ease-in-out infinite;
+}
+.flicker {
+  fill: yellow;
+  animation: flicker 1s infinite;
+}
+  </style>
  </head>
- <body style="padding-top: 80px;margin:0; padding:0; background:#001f3f;">
-  <div style="position: relative; top: 0; width: 100%; background: #000; overflow: hidden; white-space: nowrap; color: #fff; font-weight: bold; font-size: 1rem; margin: 0; padding: 0;">
+ <body style="padding-top: 80px; margin:0; padding:0; background:#001f3f;">
+  <div class="car-scene">
+   <svg viewbox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- Junk Car with smoke -->
+    <g transform="translate(50, 100)">
+     <rect fill="#888" height="40" rx="10" width="160" x="0" y="30">
+     </rect>
+     <rect fill="#555" height="30" rx="6" width="100" x="30" y="10">
+     </rect>
+     <circle cx="30" cy="80" fill="#222" r="10">
+     </circle>
+     <circle cx="130" cy="80" fill="#222" r="10">
+     </circle>
+     <line stroke="black" stroke-width="2" x1="50" x2="100" y1="15" y2="35">
+     </line>
+     <circle class="smoke" cx="80" cy="5" r="10">
+     </circle>
+    </g>
+    <!-- Tow Truck with flashing light -->
+    <g transform="translate(300, 90)">
+     <rect fill="#aa0000" height="40" rx="8" width="180" x="0" y="40">
+     </rect>
+     <rect fill="#cc0000" height="30" width="60" x="20" y="15">
+     </rect>
+     <polygon fill="#444" points="140,40 170,0 180,0 150,40">
+     </polygon>
+     <line stroke="#333" stroke-width="4" x1="170" x2="120" y1="0" y2="40">
+     </line>
+     <circle cx="30" cy="85" fill="#111" r="10">
+     </circle>
+     <circle cx="150" cy="85" fill="#111" r="10">
+     </circle>
+     <circle class="flicker" cx="100" cy="10" r="6">
+     </circle>
+    </g>
+    <!-- Damaged Car with cracked window -->
+    <g transform="translate(550, 105)">
+     <rect fill="#444" height="40" rx="10" width="140" x="0" y="30">
+     </rect>
+     <rect fill="#333" height="30" rx="6" width="100" x="20" y="10">
+     </rect>
+     <circle cx="20" cy="80" fill="#000" r="10">
+     </circle>
+     <circle cx="120" cy="80" fill="#000" r="10">
+     </circle>
+     <line stroke="#ff0000" stroke-width="3" x1="30" x2="110" y1="15" y2="15">
+     </line>
+     <line stroke="#00ffff" stroke-width="2" x1="30" x2="60" y1="10" y2="35">
+     </line>
+    </g>
+   </svg>
+  </div>
+  <div style="position: fixed; z-index: -1; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden;">
+   <svg preserveaspectratio="none" style="width: 100%; height: 100%; animation: waveAnim 12s infinite linear;" viewbox="0 0 1440 320">
+    <path d="M0,160L60,144C120,128,240,96,360,101.3C480,107,600,149,720,181.3C840,213,960,235,1080,224C1200,213,1320,171,1380,149.3L1440,128L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z" fill="rgba(0,0,0,0.4)" fill-opacity="1">
+    </path>
+   </svg>
+  </div>
+  <style>
+   @keyframes waveAnim {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+  </style>
+  <div style="width: 100%; background: #000; overflow: hidden; white-space: nowrap; color: #fff; font-weight: bold; font-size: 1rem;">
    <div style="display: inline-block; padding-left: 100%; animation: scrollLeft 15s linear infinite;">
     We Pay More. Free Pickup. Same Day Cash. Instant Offers. Trusted &amp; Secure. Recarra Gets You Paid Faster. We Buy Any Car, Any Condition. Get Your Instant Offer Now!
    </div>
@@ -258,6 +402,70 @@ select:focus {
   100% { transform: translateX(-100%); }
 }
   </style>
+  <style>
+   @keyframes floatDown {
+  0% { top: -10%; transform: scale(0.8); opacity: 0.7; }
+  100% { top: 110%; transform: scale(1); opacity: 0; }
+}
+.floating-car {
+  position: fixed;
+  animation: floatDown linear infinite;
+  z-index: -1;
+}
+  </style>
+  <div class="car-float-container">
+   <!-- Different shapes and colors of cars -->
+   <div class="floating-car" style="left:5%; animation-duration: 14s;">
+    <svg height="30" width="60">
+     <rect fill="#ff4444" height="20" rx="6" width="60" y="5">
+     </rect>
+     <circle cx="15" cy="25" fill="#111" r="5">
+     </circle>
+     <circle cx="45" cy="25" fill="#111" r="5">
+     </circle>
+    </svg>
+   </div>
+   <div class="floating-car" style="left:20%; animation-duration: 18s;">
+    <svg height="25" width="50">
+     <rect fill="#00ccff" height="18" rx="5" width="50" y="4">
+     </rect>
+     <circle cx="13" cy="23" fill="#222" r="4">
+     </circle>
+     <circle cx="37" cy="23" fill="#222" r="4">
+     </circle>
+    </svg>
+   </div>
+   <div class="floating-car" style="left:35%; animation-duration: 20s;">
+    <svg height="35" width="70">
+     <rect fill="#33cc33" height="25" rx="7" width="70" y="5">
+     </rect>
+     <circle cx="20" cy="30" fill="#333" r="6">
+     </circle>
+     <circle cx="55" cy="30" fill="#333" r="6">
+     </circle>
+    </svg>
+   </div>
+   <div class="floating-car" style="left:60%; animation-duration: 22s;">
+    <svg height="30" width="65">
+     <rect fill="#ffaa00" height="22" rx="5" width="65" y="4">
+     </rect>
+     <circle cx="18" cy="28" fill="#111" r="5">
+     </circle>
+     <circle cx="50" cy="28" fill="#111" r="5">
+     </circle>
+    </svg>
+   </div>
+   <div class="floating-car" style="left:80%; animation-duration: 26s;">
+    <svg height="25" width="55">
+     <rect fill="#9933ff" height="20" rx="4" width="55" y="3">
+     </rect>
+     <circle cx="15" cy="23" fill="#111" r="5">
+     </circle>
+     <circle cx="40" cy="23" fill="#111" r="5">
+     </circle>
+    </svg>
+   </div>
+  </div>
   <header style="text-align: center; font-size: 2rem; font-weight: bold; color: white; background: #001f3f; padding: 1rem;">
    <span style="background: linear-gradient(to right, #7F00FF, #00FFFF, #FF0099); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.2rem; font-weight: bold;">
     Recarra
