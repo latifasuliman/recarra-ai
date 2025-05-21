@@ -1334,6 +1334,7 @@ document.addEventListener("DOMContentLoaded", function() {
   let responses = {};
 
   function renderNextQuestion() {
+    chat.innerHTML = '';
     if (current >= formSteps.length) {
       chat.innerHTML += `<div><strong>Thanks!</strong> Your info has been submitted.</div>`;
       return;
