@@ -207,5 +207,86 @@ function prevStep() {
 window.onload = () => renderStep();
 </script>
 
+
+<div id="successScreen" style="display:none; justify-content:center; align-items:center; flex-direction:column; height:100%; text-align:center; padding:2rem;">
+  <h2 style="font-size:2rem; color:green;">Thank you!</h2>
+  <p style="font-size:1.2rem; max-width:400px;">Your offer is being reviewed. Expect a text message soon with next steps and your $100 bonus confirmation.</p>
+  <button onclick="location.reload()" style="margin-top:2rem; padding:0.8rem 1.5rem; font-size:1rem; border:none; border-radius:30px; background:linear-gradient(to right, #ff0000, #cc0000); color:white; cursor:pointer;">Return to Start</button>
+</div>
+
+
+<script>
+const steps = [
+  ["What is your license plate or VIN?","No VIN? No win. Let’s ID that ride!","text"],
+  ["What year is your vehicle?","Was it born in the 1900s? We still want it!","text"],
+  ["What is the make of your vehicle?","If it has a name, we’ll make it rain.","text"],
+  ["What model is it?","Even if it’s a Mysterymobile, we’ll price it!","text"],
+  ["What is the overall condition of the vehicle?","Runs like a dream or screams like a nightmare — we’ll still pay.","text"],
+  ["Upload front view","Say cheese! Show us that beautiful bumper.","file"],
+  ["Upload rear view","Back that cash up. We need to see the rear.","file"],
+  ["Upload right side","We don’t pick sides… but we still need this one.","file"],
+  ["Upload left side","Left side strong side. Let’s check it out.","file"],
+  ["Upload engine","Lift the hood — we won’t judge the mess.","file"],
+  ["Upload dashboard","Lights on the dash? No worries. We’ve seen worse.","file"],
+  ["What is your full name?","We need to know who to send the money to.","text"],
+  ["Your mobile number?","We text faster than your ex. Promise.","tel"],
+  ["Your email address?","No spam. No games. Just your offer in writing.","email"],
+  ["Want same-day pickup for $100 bonus?","We’ll bring the cash, you bring the keys — today!","text"]
+];
+let currentStep = 0;
+
+function renderStep() {
+  const [q, ad, type] = steps[currentStep];
+  const input = type === "file"
+    ? `<input type="file" accept="image/*" onchange='previewImage(event)' />
+       <img id='previewImg' style='display:none; margin-top:10px; max-width:100%; border-radius:8px;' />`
+    : `<input type='${type}' class='input-field' placeholder='Enter here...' style='margin-left: -10px; border: 3px solid #000; box-shadow: 0 0 20px rgba(0, 153, 255, 0.9);' />`;
+
+  document.getElementById("formContent").innerHTML = `
+    <div class='question'>${q}</div>
+    <div class='ad-line'>${ad}</div>${input}
+  `;
+
+  document.getElementById("scanBtns").innerHTML = currentStep === 0 ? `
+    <button onclick="alert('Scanning VIN...')" style="background: linear-gradient(to right, #003366, #00aaff); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(0,170,255,0.8); animation: glowBlue 2s infinite alternate;">Scan VIN</button>
+    <button onclick="alert('Scanning Plate...')" style="background: linear-gradient(to right, #990000, #ff4444); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(255,68,68,0.8); animation: glowRed 2s infinite alternate;">Scan Plate</button>
+  ` : "";
+
+  document.getElementById("backBtn")?.style.display = currentStep > 0 ? "inline-block" : "none";
+  document.getElementById("nextBtn").textContent = currentStep === steps.length - 1 ? "Submit" : "Next";
+  document.getElementById("progressBar").style.width = ((currentStep + 1) / steps.length * 100) + "%";
+}
+
+function previewImage(event) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById("previewImg");
+    img.src = e.target.result;
+    img.style.display = "block";
+  };
+  reader.readAsDataURL(event.target.files[0]);
+}
+
+function nextStep() {
+  if (currentStep < steps.length - 1) {
+    currentStep++;
+    renderStep();
+  } else {
+    document.querySelector(".form-container").style.display = "none";
+    document.getElementById("scanBtns").style.display = "none";
+    document.getElementById("successScreen").style.display = "flex";
+  }
+}
+
+function prevStep() {
+  if (currentStep > 0) {
+    currentStep--;
+    renderStep();
+  }
+}
+
+window.onload = () => renderStep();
+</script>
+
 </body>
 </html>
