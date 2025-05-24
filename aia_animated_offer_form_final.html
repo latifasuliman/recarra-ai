@@ -159,7 +159,7 @@
       <button onclick="alert('Scanning Plate...')" style="background: linear-gradient(to right, #990000, #ff4444); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(255,68,68,0.8); animation: glowRed 2s infinite alternate;">Scan Plate</button>
     </div>
     <div style="display: flex; justify-content: center; margin-top: 2rem;">
-      <button class="btn" id="nextBtn" onclick="nextStep()">Next</button>
+      <button class="btn" onclick="nextStep()">Next</button>
     </div>
   </div>
 
@@ -182,8 +182,8 @@ const steps = [["What is your license plate or VIN?","No VIN? No win. Let’s ID
 let currentStep = 0;
 
 
+
 function renderStep() {
-  localStorage.setItem("recarra_step", currentStep);  // Save step progress
   const [q, ad, type] = steps[currentStep];
   const input = type === "file"
     ? `<input type="file" accept="image/*" onchange='previewImage(event)' />
@@ -202,56 +202,16 @@ function renderStep() {
     <button onclick="alert('Scanning Plate...')" style="background: linear-gradient(to right, #990000, #ff4444); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(255,68,68,0.8); animation: glowRed 2s infinite alternate;">Scan Plate</button>
   ` : "";
 
-  document.getElementById("progressBar").style.width = ((currentStep + 1) / steps.length * 100) + "%";
-}
-  `;
-
-  document.getElementById("scanBtns").innerHTML = currentStep === 0 ? `
-    <button onclick="alert('Scanning VIN...')" style="background: linear-gradient(to right, #003366, #00aaff); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(0,170,255,0.8); animation: glowBlue 2s infinite alternate;">Scan VIN</button>
-    <button onclick="alert('Scanning Plate...')" style="background: linear-gradient(to right, #990000, #ff4444); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(255,68,68,0.8); animation: glowRed 2s infinite alternate;">Scan Plate</button>
-  ` : "";
-
-  document.getElementById("backBtn").style.display = currentStep > 0 ? "inline-block" : "none";
+  document.getElementById("backBtn")?.style?.display = currentStep > 0 ? "inline-block" : "none";
   document.getElementById("nextBtn").textContent = currentStep === steps.length - 1 ? "Submit" : "Next";
   document.getElementById("progressBar").style.width = ((currentStep + 1) / steps.length * 100) + "%";
+
+  focusInput();
+  attachLiveValidation();
+  updateStickyProgress();
+  restoreLastInputs();
 }
 
-function previewImage(event) {
-  const reader = new FileReader();
-  reader.onload = e => {
-    const img = document.getElementById("previewImg");
-    img.src = e.target.result;
-    img.style.display = "block";
-  };
-  reader.readAsDataURL(event.target.files[0]);
-}
-
-
-
-function nextStep() {
-  if (currentStep < steps.length - 1) {
-    const inputVal = document.querySelector(".input-field")?.value || "";
-    if (currentStep === 0) {
-      const type = detectVINorPlate(inputVal);
-      if (type) {
-        console.log("Detected:", type);
-      }
-    }
-    if (currentStep === steps.length - 2) {
-      checkBonusEligibility();
-    }
-    currentStep++;
-    renderStep();
-    maybeShowOfferFeedback();
-  } else {
-    submitOfferData().then((offerID) => {
-      document.querySelector(".form-container").style.display = "none";
-      document.getElementById("scanBtns").style.display = "none";
-      document.getElementById("successScreen").style.display = "flex";
-      document.querySelector("#successScreen h2").textContent += " — Ref #" + offerID;
-    });
-  }
-}
 
 
 
@@ -293,6 +253,7 @@ const steps = [
 ];
 let currentStep = 0;
 
+
 function renderStep() {
   const [q, ad, type] = steps[currentStep];
   const input = type === "file"
@@ -301,8 +262,10 @@ function renderStep() {
     : `<input type='${type}' class='input-field' placeholder='Enter here...' style='margin-left: -10px; border: 3px solid #000; box-shadow: 0 0 20px rgba(0, 153, 255, 0.9);' />`;
 
   document.getElementById("formContent").innerHTML = `
-    <div class='question'>${q}</div>
-    <div class='ad-line'>${ad}</div>${input}
+    <div class='fade-step'>
+      <div class='question'>${q}</div>
+      <div class='ad-line'>${ad}</div>${input}
+    </div>
   `;
 
   document.getElementById("scanBtns").innerHTML = currentStep === 0 ? `
@@ -310,47 +273,16 @@ function renderStep() {
     <button onclick="alert('Scanning Plate...')" style="background: linear-gradient(to right, #990000, #ff4444); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(255,68,68,0.8); animation: glowRed 2s infinite alternate;">Scan Plate</button>
   ` : "";
 
-  document.getElementById("backBtn")?.style.display = currentStep > 0 ? "inline-block" : "none";
+  document.getElementById("backBtn")?.style?.display = currentStep > 0 ? "inline-block" : "none";
   document.getElementById("nextBtn").textContent = currentStep === steps.length - 1 ? "Submit" : "Next";
   document.getElementById("progressBar").style.width = ((currentStep + 1) / steps.length * 100) + "%";
+
+  focusInput();
+  attachLiveValidation();
+  updateStickyProgress();
+  restoreLastInputs();
 }
 
-function previewImage(event) {
-  const reader = new FileReader();
-  reader.onload = e => {
-    const img = document.getElementById("previewImg");
-    img.src = e.target.result;
-    img.style.display = "block";
-  };
-  reader.readAsDataURL(event.target.files[0]);
-}
-
-
-
-function nextStep() {
-  if (currentStep < steps.length - 1) {
-    const inputVal = document.querySelector(".input-field")?.value || "";
-    if (currentStep === 0) {
-      const type = detectVINorPlate(inputVal);
-      if (type) {
-        console.log("Detected:", type);
-      }
-    }
-    if (currentStep === steps.length - 2) {
-      checkBonusEligibility();
-    }
-    currentStep++;
-    renderStep();
-    maybeShowOfferFeedback();
-  } else {
-    submitOfferData().then((offerID) => {
-      document.querySelector(".form-container").style.display = "none";
-      document.getElementById("scanBtns").style.display = "none";
-      document.getElementById("successScreen").style.display = "flex";
-      document.querySelector("#successScreen h2").textContent += " — Ref #" + offerID;
-    });
-  }
-}
 
 
 
@@ -374,17 +306,6 @@ function detectVINorPlate(value) {
   if (cleaned.length >= 5 && cleaned.length <= 8) return 'Plate';
   return '';
 }
-
-// Smart VIN vs Plate Detection
-
-function detectVINorPlate(value) {
-  if (!value) return '';
-  const cleaned = value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
-  if (cleaned.length === 17) return 'VIN';
-  if (cleaned.length >= 5 && cleaned.length <= 8) return 'Plate';
-  return '';
-}
-
 
 // Live Offer Feedback
 function maybeShowOfferFeedback() {
@@ -437,6 +358,92 @@ async function submitOfferData() {
   }
 
   return offerID;
+}
+</script>
+
+
+<script>
+// 1. Auto-focus the input field on every step
+function focusInput() {
+  setTimeout(() => {
+    const input = document.querySelector(".input-field");
+    if (input) input.focus();
+  }, 100);
+}
+
+// 2. Real-time VIN/Plate validation feedback
+function attachLiveValidation() {
+  const input = document.querySelector(".input-field");
+  if (!input) return;
+
+  const feedback = document.createElement('div');
+  feedback.id = 'inputFeedback';
+  feedback.style.fontSize = '0.85rem';
+  feedback.style.marginTop = '-1rem';
+  feedback.style.color = '#d80000';
+
+  input.addEventListener('input', () => {
+    const val = input.value.trim().toUpperCase();
+    if (val.length >= 17) {
+      feedback.textContent = 'Looks like a VIN number';
+      feedback.style.color = 'green';
+    } else if (val.length >= 5 && val.length <= 8) {
+      feedback.textContent = 'Looks like a license plate';
+      feedback.style.color = 'orange';
+    } else {
+      feedback.textContent = 'Too short or invalid';
+      feedback.style.color = '#d80000';
+    }
+  });
+
+  input.insertAdjacentElement('afterend', feedback);
+}
+
+// 3. Animated Offer Reveal after Step 5
+function maybeShowOfferFeedback() {
+  if (currentStep === 4) {
+    const offerEl = document.createElement('div');
+    offerEl.innerHTML = "<div style='background:#fff3cd; padding:1rem; border:2px solid #ffeeba; border-radius:10px; margin-top:1rem; font-weight:bold;'>AI Offer Estimate: <span style='color:#d80000;'>$680 – $890</span><br><small>(based on images and input)</small></div>";
+    document.querySelector(".form-container").appendChild(offerEl);
+  }
+}
+
+// 4. Sticky Progress Tracker
+function updateStickyProgress() {
+  let tracker = document.getElementById('stickyStep');
+  if (!tracker) {
+    tracker = document.createElement('div');
+    tracker.id = 'stickyStep';
+    tracker.style.position = 'fixed';
+    tracker.style.top = '0';
+    tracker.style.left = '0';
+    tracker.style.width = '100%';
+    tracker.style.background = '#111';
+    tracker.style.color = 'white';
+    tracker.style.fontSize = '0.9rem';
+    tracker.style.textAlign = 'center';
+    tracker.style.padding = '6px 0';
+    tracker.style.zIndex = '999';
+    document.body.appendChild(tracker);
+  }
+  tracker.textContent = `Step ${currentStep + 1} of ${steps.length}`;
+}
+
+// 5. Smart Fast Fill (localStorage restore)
+function restoreLastInputs() {
+  const saved = JSON.parse(localStorage.getItem('recarra_last_inputs') || '{}');
+  const input = document.querySelector(".input-field");
+  if (input && saved[currentStep]) {
+    input.value = saved[currentStep];
+  }
+}
+
+function saveCurrentInput() {
+  const input = document.querySelector(".input-field");
+  if (!input) return;
+  const saved = JSON.parse(localStorage.getItem('recarra_last_inputs') || '{}');
+  saved[currentStep] = input.value;
+  localStorage.setItem('recarra_last_inputs', JSON.stringify(saved));
 }
 </script>
 
