@@ -6,553 +6,196 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Recarra AiA Smart Offer</title>
   <style>
-
-#aiaFormExit {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 32px;
-  height: 32px;
-  background: #ff3333;
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to bottom right, #ff0040, #ffd700);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: #111;
+}
+.form-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 2.5rem;
+  margin: 2rem auto;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 15px 25px rgba(0,0,0,0.2);
+  position: relative;
+  text-align: center;
+  animation: fadeInUp 0.6s ease;
+}
+.question {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+.ad-line {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+.input-field {
+  width: 100%;
+  padding: 18px 16px;
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  border-radius: 14px;
+  border: 2px solid #333;
+  background-color: #fefefe;
+  box-shadow: 0 0 8px rgba(0, 153, 255, 0.4);
+  transition: all 0.3s ease;
+}
+.input-field:focus {
+  outline: none;
+  border-color: #ff00cc;
+  box-shadow: 0 0 12px rgba(255, 0, 204, 0.4);
+}
+.btn {
+  background: linear-gradient(to right, #00f0ff, #ff00cc);
   border: none;
-  border-radius: 50%;
-  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  padding: 14px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 30px;
+  color: white;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  margin: 1rem 0.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
-#aiaFormExit:hover {
-  transform: scale(1.1);
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
 }
-
-
-    @keyframes glowBlue {
-      0% { box-shadow: 0 0 8px rgba(0,170,255,0.4); }
-      100% { box-shadow: 0 0 20px rgba(0,170,255,1); }
-    }
-    @keyframes glowRed {
-      0% { box-shadow: 0 0 8px rgba(255,68,68,0.4); }
-      100% { box-shadow: 0 0 20px rgba(255,68,68,1); }
-    }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to bottom right, #ff0040, #ffd700);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      overflow-x: hidden;
-      color: #111;
-    }
-    .form-container {
-      background: white;
-      border-radius: 14px;
-      padding: 2rem;
-      margin: 2rem;
-      max-width: 400px;
-      width: 90%;
-      box-shadow: 0 0 18px rgba(0,0,0,0.2);
-      position: relative;
-      text-align: center;
-    }
-    .question {
-      font-size: 1.3rem;
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-    }
-    .ad-line {
-      font-size: 0.95rem;
-      color: #555;
-      margin-bottom: 1.5rem;
-    }
-    .input-field {
-      width: 100%;
-      padding: 12px;
-      font-size: 1rem;
-      margin-bottom: 1.5rem;
-      border-radius: 10px;
-      border: 3px solid #000;
-      box-shadow: 0 0 12px rgba(0, 153, 255, 0.6);
-      transition: box-shadow 0.3s ease;
-    }
-    .btn {
-      background: linear-gradient(to right, #00f0ff, #ff00cc);
-      border: none;
-      padding: 12px 20px;
-      font-size: 1rem;
-      font-weight: bold;
-      border-radius: 30px;
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
-      margin: 1rem 0.5rem;
-    }
-    .progress-bar {
-      height: 12px;
-      background: #eee;
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 1.5rem;
-    }
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(to right, #ffaa00, #ffcc00);
-      transition: width 0.4s ease-in-out;
-      border-radius: 8px;
-    }
-    .bonus-badge {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      padding: 10px 18px;
-      background: linear-gradient(to right, red, orange, yellow);
-      color: white;
-      font-weight: bold;
-      border-radius: 30px;
-      box-shadow: 0 0 12px rgba(255, 0, 0, 0.7);
-      animation: pulseBadge 8s infinite;
-      z-index: 1000;
-    }
-  </style>
-
-<style>
-@keyframes fadeInStep {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.progress-bar {
+  height: 12px;
+  background: #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(to right, #ffaa00, #ffcc00);
+  transition: width 0.4s ease-in-out;
+  border-radius: 8px;
 }
 .fade-step {
-  animation: fadeInStep 0.4s ease;
+  animation: fadeIn 0.4s ease-in-out;
 }
-.spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #d80000;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  animation: spin 1s linear infinite;
-  margin-left: 10px;
-  display: inline-block;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 </style>
-
 </head>
 <body>
-  <div class="bonus-badge">+ $100 Bonus Active</div>
   <div class="form-container">
     <div class="progress-bar"><div class="progress-fill" id="progressBar"></div></div>
-    <div id="formContent">
-      <div class="question">What is your license plate or VIN?</div>
-      <div class="ad-line">No VIN? No win. Let’s ID that ride!</div>
-      <input type="text" class="input-field" style="margin-left: -10px; border: 3px solid #000; box-shadow: 0 0 20px rgba(0, 153, 255, 0.9);" placeholder="ABC123 or 1HGCM82633A..." />
-    </div>
-    <div id="scanBtns" style="display:flex; justify-content:center; gap:1rem; margin-top:1rem;">
-      <button onclick="alert('Scanning VIN...')" style="background: linear-gradient(to right, #003366, #00aaff); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(0,170,255,0.8); animation: glowBlue 2s infinite alternate;">Scan VIN</button>
-      <button onclick="alert('Scanning Plate...')" style="background: linear-gradient(to right, #990000, #ff4444); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(255,68,68,0.8); animation: glowRed 2s infinite alternate;">Scan Plate</button>
+    <div id="formContent"></div>
+    <div id="scanBtns" style="display:none; justify-content:center; gap:1rem; margin-top:1rem;">
+      <button onclick="alert('Scanning VIN...')" style="background: linear-gradient(to right, #003366, #00aaff); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(0,170,255,0.8);">Scan VIN</button>
+      <button onclick="alert('Scanning Plate...')" style="background: linear-gradient(to right, #990000, #ff4444); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(255,68,68,0.8);">Scan Plate</button>
     </div>
     <div style="display: flex; justify-content: center; margin-top: 2rem;">
       <button class="btn" id="nextBtn" onclick="nextStep()">Next</button>
     </div>
-  </div>
-
-<script>
-
-let currentStep = 0;
-
-
-
-' class='input-field' placeholder='Enter here...' style='margin-left: -10px; border: 3px solid #000; box-shadow: 0 0 20px rgba(0, 153, 255, 0.9);' />`;
-
-  document.getElementById("formContent").innerHTML = `
-    <div class='fade-step'>
-      <div class='question'>${q}</div>
-      <div class='ad-line'>${ad}</div>${input}
-    </div>
-  `;
-
-  document.getElementById("scanBtns").innerHTML = currentStep === 0 ? `
-    <button onclick="alert('Scanning VIN...')" style="background: linear-gradient(to right, #003366, #00aaff); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(0,170,255,0.8); animation: glowBlue 2s infinite alternate;">Scan VIN</button>
-    <button onclick="alert('Scanning Plate...')" style="background: linear-gradient(to right, #990000, #ff4444); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(255,68,68,0.8); animation: glowRed 2s infinite alternate;">Scan Plate</button>
-  ` : "";
-
-  document.getElementById("backBtn")?.style?.display = currentStep > 0 ? "inline-block" : "none";
-  document.getElementById("nextBtn").textContent = currentStep === steps.length - 1 ? "Submit" : "Next";
-  document.getElementById("progressBar").style.width = ((currentStep + 1) / steps.length * 100) + "%";
-
-  focusInput();
-  attachLiveValidation();
-  updateStickyProgress();
-  restoreLastInputs();
-}
-
-
-
-
-function prevStep() {
-  if (currentStep > 0) {
-    currentStep--;
-    renderStep();
-  }
-}
-
-window.onload = () => renderStep();
-</script>
-
-
-<div id="successScreen" style="display:none; justify-content:center; align-items:center; flex-direction:column; height:100%; text-align:center; padding:2rem;">
-  <h2 style="font-size:2rem; color:green;">Thank you!</h2>
-  <p style="font-size:1.2rem; max-width:400px;">Your offer is being reviewed. Expect a text message soon with next steps and your $100 bonus confirmation.</p>
-  <button onclick="location.reload()" style="margin-top:2rem; padding:0.8rem 1.5rem; font-size:1rem; border:none; border-radius:30px; background:linear-gradient(to right, #ff0000, #cc0000); color:white; cursor:pointer;">Return to Start</button>
+  <div id="actionBar" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 2rem;">
+  <button onclick="alert('Scanning VIN...')" class="btn">Scan VIN</button>
+  <button onclick="alert('Scanning Plate...')" class="btn">Scan Plate</button>
+  <button onclick="window.location.href='tel:3462740071'" class="btn">Call Offer</button>
+  <button onclick="window.location.href='sms:3462740071'" class="btn">Text Offer</button>
+  <button onclick="alert('Starting live chat...')" class="btn">Chat Offer</button>
+  <button onclick="document.getElementById('formContent').scrollIntoView({ behavior: 'smooth' })" class="btn">Live Offer</button>
 </div>
-
-
+</div>
 <script>
-
 let currentStep = 0;
+let formData = [];
 
-
-' class='input-field' placeholder='Enter here...' style='margin-left: -10px; border: 3px solid #000; box-shadow: 0 0 20px rgba(0, 153, 255, 0.9);' />`;
-
-  document.getElementById("formContent").innerHTML = `
-    <div class='fade-step'>
-      <div class='question'>${q}</div>
-      <div class='ad-line'>${ad}</div>${input}
-    </div>
-  `;
-
-  document.getElementById("scanBtns").innerHTML = currentStep === 0 ? `
-    <button onclick="alert('Scanning VIN...')" style="background: linear-gradient(to right, #003366, #00aaff); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(0,170,255,0.8); animation: glowBlue 2s infinite alternate;">Scan VIN</button>
-    <button onclick="alert('Scanning Plate...')" style="background: linear-gradient(to right, #990000, #ff4444); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(255,68,68,0.8); animation: glowRed 2s infinite alternate;">Scan Plate</button>
-  ` : "";
-
-  document.getElementById("backBtn")?.style?.display = currentStep > 0 ? "inline-block" : "none";
-  document.getElementById("nextBtn").textContent = currentStep === steps.length - 1 ? "Submit" : "Next";
-  document.getElementById("progressBar").style.width = ((currentStep + 1) / steps.length * 100) + "%";
-
-  focusInput();
-  attachLiveValidation();
-  updateStickyProgress();
-  restoreLastInputs();
-}
-
-
-
-
-function prevStep() {
-  if (currentStep > 0) {
-    currentStep--;
-    renderStep();
-  }
-}
-
-window.onload = () => renderStep();
-</script>
-
-
-<script>
-// Smart VIN vs Plate Detection
-function detectVINorPlate(value) {
-  if (!value) return '';
-  const cleaned = value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
-  if (cleaned.length === 17) return 'VIN';
-  if (cleaned.length >= 5 && cleaned.length <= 8) return 'Plate';
-  return '';
-}
-
-// Live Offer Feedback
-}
-
-// Detect $100 Bonus Eligibility
-function checkBonusEligibility() {
-  const textInputs = document.querySelectorAll("input[type='text']");
-  for (let input of textInputs) {
-    if (input.value.toLowerCase().includes('same')) {
-      alert("You're eligible for the $100 Same-Day Pickup Bonus!");
-      break;
-    }
-  }
-}
-</script>
-
-
-<script>
-// Backend submission logic
-async function submitOfferData() {
-  const inputs = document.querySelectorAll("input");
-  const formData = {};
-  inputs.forEach(input => {
-    if (input.type === 'file') {
-      formData[input.placeholder || input.name || 'file'] = "image_uploaded";
-    } else {
-      formData[input.placeholder || input.name || 'value'] = input.value;
-    }
-  });
-
-  const offerID = "R-" + Math.floor(10000000 + Math.random() * 90000000);
-  localStorage.setItem("recarra_offer_id", offerID);
-
-  try {
-    // Replace with your real backend API
-    await fetch("https://example.com/api/submit-offer", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ offerID, ...formData })
-    });
-    console.log("Offer submitted successfully:", offerID);
-  } catch (error) {
-    console.warn("Backend call failed (mocked):", error);
-  }
-
-  return offerID;
-}
-</script>
-
-
-<script>
-// 1. Auto-focus the input field on every step
-function focusInput() {
-  setTimeout(() => {
-    const input = document.querySelector(".input-field");
-    if (input) input.focus();
-  }, 100);
-}
-
-// 2. Real-time VIN/Plate validation feedback
-function attachLiveValidation() {
-  const input = document.querySelector(".input-field");
-  if (!input) return;
-
-  const feedback = document.createElement('div');
-  feedback.id = 'inputFeedback';
-  feedback.style.fontSize = '0.85rem';
-  feedback.style.marginTop = '-1rem';
-  feedback.style.color = '#d80000';
-
-  input.addEventListener('input', () => {
-    const val = input.value.trim().toUpperCase();
-    if (val.length >= 17) {
-      feedback.textContent = 'Looks like a VIN number';
-      feedback.style.color = 'green';
-    } else if (val.length >= 5 && val.length <= 8) {
-      feedback.textContent = 'Looks like a license plate';
-      feedback.style.color = 'orange';
-    } else {
-      feedback.textContent = 'Too short or invalid';
-      feedback.style.color = '#d80000';
-    }
-  });
-
-  input.insertAdjacentElement('afterend', feedback);
-}
-
-// 3. Animated Offer Reveal after Step 5
-}
-
-// 4. Sticky Progress Tracker
-function updateStickyProgress() {
-  let tracker = document.getElementById('stickyStep');
-  if (!tracker) {
-    tracker = document.createElement('div');
-    tracker.id = 'stickyStep';
-    tracker.style.position = 'fixed';
-    tracker.style.top = '0';
-    tracker.style.left = '0';
-    tracker.style.width = '100%';
-    tracker.style.background = '#111';
-    tracker.style.color = 'white';
-    tracker.style.fontSize = '0.9rem';
-    tracker.style.textAlign = 'center';
-    tracker.style.padding = '6px 0';
-    tracker.style.zIndex = '999';
-    document.body.appendChild(tracker);
-  }
-  tracker.textContent = `Step ${currentStep + 1} of ${steps.length}`;
-}
-
-// 5. Smart Fast Fill (localStorage restore)
-function restoreLastInputs() {
-  const saved = JSON.parse(localStorage.getItem('recarra_last_inputs') || '{}');
-  const input = document.querySelector(".input-field");
-  if (input && saved[currentStep]) {
-    input.value = saved[currentStep];
-  }
-}
-
-function saveCurrentInput() {
-  const input = document.querySelector(".input-field");
-  if (!input) return;
-  const saved = JSON.parse(localStorage.getItem('recarra_last_inputs') || '{}');
-  saved[currentStep] = input.value;
-  localStorage.setItem('recarra_last_inputs', JSON.stringify(saved));
-}
-</script>
-
-
-<script>
-
-let currentStep = 0;
-
-
-
- catch (e) {
-    console.error("Step error:", e);
-    alert("There was an issue moving to the next step.");
-  }
-}
-
-window.onload = () => renderStep();
-</script>
-
-
-<script>
 const steps = [
-  ["What is your license plate or VIN?","No VIN? No win. Let’s ID that ride!","text"],
-  ["What year is your vehicle?","Was it born in the 1900s? We still want it!","text"],
-  ["What is the make of your vehicle?","If it has a name, we’ll make it rain.","text"],
-  ["What model is it?","Even if it’s a Mysterymobile, we’ll price it!","text"],
-  ["What is the overall condition of the vehicle?","Runs like a dream or screams like a nightmare — we’ll still pay.","text"],
-  ["Upload front view","Say cheese! Show us that beautiful bumper.","file"],
-  ["Upload rear view","Back that cash up. We need to see the rear.","file"],
-  ["Upload right side","We don’t pick sides… but we still need this one.","file"],
-  ["Upload left side","Left side strong side. Let’s check it out.","file"],
-  ["Upload engine","Lift the hood — we won’t judge the mess.","file"],
-  ["Upload dashboard","Lights on the dash? No worries. We’ve seen worse.","file"],
-  ["What is your full name?","We need to know who to send the money to.","text"],
-  ["Your mobile number?","We text faster than your ex. Promise.","tel"],
-  ["Your email address?","No spam. No games. Just your offer in writing.","email"],
-  ["Want same-day pickup for $100 bonus?","We’ll bring the cash, you bring the keys — today!","text"]
+  ["What is your license plate or VIN?", "No VIN? No win. Let’s ID that ride!", "text"],
+  ["What year is your vehicle?", "Was it born in the 1900s? We still want it!", "text"]
 ];
-let currentStep = 0;
-
-function detectVINorPlate(value) {
-  if (!value) return '';
-  const cleaned = value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
-  if (cleaned.length === 17) return 'VIN';
-  if (cleaned.length >= 5 && cleaned.length <= 8) return 'Plate';
-  return '';
-}
-
-function maybeShowOfferFeedback() {
-  if (currentStep === 4) {
-    const offerEl = document.createElement('div');
-    offerEl.innerHTML = "<div style='background:#fff3cd; padding:1rem; border:2px solid #ffeeba; border-radius:10px; margin-top:1rem; font-weight:bold;'>AI Offer Estimate: <span style='color:#d80000;'>$680 – $890</span><br><small>(based on images and input)</small></div>";
-    document.querySelector(".form-container").appendChild(offerEl);
-  }
-}
-
-function saveCurrentInput() {
-  const input = document.querySelector(".input-field");
-  if (!input) return;
-  const saved = JSON.parse(localStorage.getItem('recarra_last_inputs') || '{}');
-  saved[currentStep] = input.value;
-  localStorage.setItem('recarra_last_inputs', JSON.stringify(saved));
-}
-
-function restoreLastInputs() {
-  const saved = JSON.parse(localStorage.getItem('recarra_last_inputs') || '{}');
-  const input = document.querySelector(".input-field");
-  if (input && saved[currentStep]) {
-    input.value = saved[currentStep];
-  }
-}
-
-function updateStickyProgress() {
-  let tracker = document.getElementById('stickyStep');
-  if (!tracker) {
-    tracker = document.createElement('div');
-    tracker.id = 'stickyStep';
-    tracker.style.position = 'fixed';
-    tracker.style.top = '0';
-    tracker.style.left = '0';
-    tracker.style.width = '100%';
-    tracker.style.background = '#111';
-    tracker.style.color = 'white';
-    tracker.style.fontSize = '0.9rem';
-    tracker.style.textAlign = 'center';
-    tracker.style.padding = '6px 0';
-    tracker.style.zIndex = '999';
-    document.body.appendChild(tracker);
-  }
-  tracker.textContent = `Step ${currentStep + 1} of ${steps.length}`;
-}
-
-function attachLiveValidation() {
-  const input = document.querySelector(".input-field");
-  if (!input) return;
-
-  const feedback = document.createElement('div');
-  feedback.id = 'inputFeedback';
-  feedback.style.fontSize = '0.85rem';
-  feedback.style.marginTop = '-1rem';
-  feedback.style.color = '#d80000';
-
-  input.addEventListener('input', () => {
-    const val = input.value.trim().toUpperCase();
-    if (val.length === 17) {
-      feedback.textContent = 'Looks like a VIN number';
-      feedback.style.color = 'green';
-    } else if (val.length >= 5 && val.length <= 8) {
-      feedback.textContent = 'Looks like a license plate';
-      feedback.style.color = 'orange';
-    } else {
-      feedback.textContent = 'Too short or invalid';
-      feedback.style.color = '#d80000';
-    }
-  });
-
-  input.insertAdjacentElement('afterend', feedback);
-}
 
 function renderStep() {
   const [q, ad, type] = steps[currentStep];
-  const input = type === "file"
-    ? `<input type="file" accept="image/*" onchange='previewImage(event)' />
-       <img id='previewImg' style='display:none; margin-top:10px; max-width:100%; border-radius:8px;' />`
-    : `<input type='${type}' class='input-field' placeholder='Enter here...' style='margin-left: -10px; border: 3px solid #000; box-shadow: 0 0 20px rgba(0, 153, 255, 0.9);' />`;
+  const inputValue = formData[currentStep] || "";
+  const inputHTML = `<input type='${type}' class='input-field' placeholder='Enter here...' value='${inputValue}' />`;
 
   document.getElementById("formContent").innerHTML = `
     <div class='fade-step'>
       <div class='question'>${q}</div>
-      <div class='ad-line'>${ad}</div>${input}
+      <div class='ad-line'>${ad}</div>
+      ${inputHTML}
+      <div id="errorMsg" style="color:red; font-size:0.9rem; display:none;">Please fill this out before continuing.</div>
     </div>
   `;
 
-  document.getElementById("scanBtns").innerHTML = currentStep === 0 ? `
-    <button onclick="alert('Scanning VIN...')" style="background: linear-gradient(to right, #003366, #00aaff); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(0,170,255,0.8); animation: glowBlue 2s infinite alternate;">Scan VIN</button>
-    <button onclick="alert('Scanning Plate...')" style="background: linear-gradient(to right, #990000, #ff4444); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(255,68,68,0.8); animation: glowRed 2s infinite alternate;">Scan Plate</button>
-  ` : "";
-
-  document.getElementById("backBtn")?.style?.display = currentStep > 0 ? "inline-block" : "none";
+  document.getElementById("scanBtns").style.display = currentStep === 0 ? "flex" : "none";
   document.getElementById("nextBtn").textContent = currentStep === steps.length - 1 ? "Submit" : "Next";
   document.getElementById("progressBar").style.width = ((currentStep + 1) / steps.length * 100) + "%";
-
-  attachLiveValidation();
-  updateStickyProgress();
-  restoreLastInputs();
 }
 
 function nextStep() {
-  saveCurrentInput();
-  const inputVal = document.querySelector(".input-field")?.value || "";
-  if (currentStep === 0) {
-    const type = detectVINorPlate(inputVal);
-    console.log("Detected:", type || "unknown format");
+  const input = document.querySelector(".input-field");
+  const value = input.value.trim();
+  if (!value) {
+    document.getElementById("errorMsg").style.display = "block";
+    return;
   }
-  if (currentStep === steps.length - 2) {
-    alert("You’re eligible for the $100 Same-Day Pickup Bonus!");
-  }
+
+  formData[currentStep] = value;
+
   if (currentStep < steps.length - 1) {
     currentStep++;
     renderStep();
-    maybeShowOfferFeedback();
+  } else {
+    alert("Form submitted: " + JSON.stringify(formData));
+  }
+}
+
+window.onload = () => renderStep();
+</script>
+<script>
+let currentStep = 0;
+const steps = [
+  ["What is your license plate or VIN?","No VIN? No win. Let’s ID that ride!","text"],
+  ["What year is your vehicle?","Was it born in the 1900s? We still want it!","text"]
+];
+
+function renderStep() {
+  const [q, ad, type] = steps[currentStep];
+  const inputHTML = \`<input type='\${type}' class='input-field' placeholder='Enter here...' />\`;
+
+  document.getElementById("formContent").innerHTML = \`
+    <div class='fade-step'>
+      <div class='question'>\${q}</div>
+      <div class='ad-line'>\${ad}</div>
+      \${inputHTML}
+    </div>
+  \`;
+
+  document.getElementById("scanBtns").style.display = currentStep === 0 ? "flex" : "none";
+  document.getElementById("nextBtn").textContent = currentStep === steps.length - 1 ? "Submit" : "Next";
+  document.getElementById("progressBar").style.width = ((currentStep + 1) / steps.length * 100) + "%";
+}
+
+function nextStep() {
+  if (currentStep < steps.length - 1) {
+    currentStep++;
+    renderStep();
   }
 }
 
