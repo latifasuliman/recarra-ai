@@ -164,31 +164,12 @@
   </div>
 
 <script>
-const steps = [["What is your license plate or VIN?","No VIN? No win. Let’s ID that ride!","text"],
-["What year is your vehicle?","Was it born in the 1900s? We still want it!","text"],
-["What is the make of your vehicle?","If it has a name, we’ll make it rain.","text"],
-["What model is it?","Even if it’s a Mysterymobile, we’ll price it!","text"],
-["What is the overall condition of the vehicle?","Runs like a dream or screams like a nightmare — we’ll still pay.","text"],
-["Upload front view","Say cheese! Show us that beautiful bumper.","file"],
-["Upload rear view","Back that cash up. We need to see the rear.","file"],
-["Upload right side","We don’t pick sides… but we still need this one.","file"],
-["Upload left side","Left side strong side. Let’s check it out.","file"],
-["Upload engine","Lift the hood — we won’t judge the mess.","file"],
-["Upload dashboard","Lights on the dash? No worries. We’ve seen worse.","file"],
-["What is your full name?","We need to know who to send the money to.","text"],
-["Your mobile number?","We text faster than your ex. Promise.","tel"],
-["Your email address?","No spam. No games. Just your offer in writing.","email"],
-["Want same-day pickup for $100 bonus?","We’ll bring the cash, you bring the keys — today!","text"]];
+
 let currentStep = 0;
 
 
 
-function renderStep() {
-  const [q, ad, type] = steps[currentStep];
-  const input = type === "file"
-    ? `<input type="file" accept="image/*" onchange='previewImage(event)' />
-       <img id='previewImg' style='display:none; margin-top:10px; max-width:100%; border-radius:8px;' />`
-    : `<input type='${type}' class='input-field' placeholder='Enter here...' style='margin-left: -10px; border: 3px solid #000; box-shadow: 0 0 20px rgba(0, 153, 255, 0.9);' />`;
+' class='input-field' placeholder='Enter here...' style='margin-left: -10px; border: 3px solid #000; box-shadow: 0 0 20px rgba(0, 153, 255, 0.9);' />`;
 
   document.getElementById("formContent").innerHTML = `
     <div class='fade-step'>
@@ -234,32 +215,11 @@ window.onload = () => renderStep();
 
 
 <script>
-const steps = [
-  ["What is your license plate or VIN?","No VIN? No win. Let’s ID that ride!","text"],
-  ["What year is your vehicle?","Was it born in the 1900s? We still want it!","text"],
-  ["What is the make of your vehicle?","If it has a name, we’ll make it rain.","text"],
-  ["What model is it?","Even if it’s a Mysterymobile, we’ll price it!","text"],
-  ["What is the overall condition of the vehicle?","Runs like a dream or screams like a nightmare — we’ll still pay.","text"],
-  ["Upload front view","Say cheese! Show us that beautiful bumper.","file"],
-  ["Upload rear view","Back that cash up. We need to see the rear.","file"],
-  ["Upload right side","We don’t pick sides… but we still need this one.","file"],
-  ["Upload left side","Left side strong side. Let’s check it out.","file"],
-  ["Upload engine","Lift the hood — we won’t judge the mess.","file"],
-  ["Upload dashboard","Lights on the dash? No worries. We’ve seen worse.","file"],
-  ["What is your full name?","We need to know who to send the money to.","text"],
-  ["Your mobile number?","We text faster than your ex. Promise.","tel"],
-  ["Your email address?","No spam. No games. Just your offer in writing.","email"],
-  ["Want same-day pickup for $100 bonus?","We’ll bring the cash, you bring the keys — today!","text"]
-];
+
 let currentStep = 0;
 
 
-function renderStep() {
-  const [q, ad, type] = steps[currentStep];
-  const input = type === "file"
-    ? `<input type="file" accept="image/*" onchange='previewImage(event)' />
-       <img id='previewImg' style='display:none; margin-top:10px; max-width:100%; border-radius:8px;' />`
-    : `<input type='${type}' class='input-field' placeholder='Enter here...' style='margin-left: -10px; border: 3px solid #000; box-shadow: 0 0 20px rgba(0, 153, 255, 0.9);' />`;
+' class='input-field' placeholder='Enter here...' style='margin-left: -10px; border: 3px solid #000; box-shadow: 0 0 20px rgba(0, 153, 255, 0.9);' />`;
 
   document.getElementById("formContent").innerHTML = `
     <div class='fade-step'>
@@ -308,12 +268,6 @@ function detectVINorPlate(value) {
 }
 
 // Live Offer Feedback
-function maybeShowOfferFeedback() {
-  if (currentStep === 4) {
-    const offerEl = document.createElement('div');
-    offerEl.innerHTML = "<div style='background:#fff3cd; padding:1rem; border:2px solid #ffeeba; border-radius:10px; margin-top:1rem; font-weight:bold;'>Estimated Offer Range: <span style='color:#d80000;'>$420 – $870</span><br><small>(Based on preliminary answers)</small></div>";
-    document.querySelector(".form-container").appendChild(offerEl);
-  }
 }
 
 // Detect $100 Bonus Eligibility
@@ -400,12 +354,6 @@ function attachLiveValidation() {
 }
 
 // 3. Animated Offer Reveal after Step 5
-function maybeShowOfferFeedback() {
-  if (currentStep === 4) {
-    const offerEl = document.createElement('div');
-    offerEl.innerHTML = "<div style='background:#fff3cd; padding:1rem; border:2px solid #ffeeba; border-radius:10px; margin-top:1rem; font-weight:bold;'>AI Offer Estimate: <span style='color:#d80000;'>$680 – $890</span><br><small>(based on images and input)</small></div>";
-    document.querySelector(".form-container").appendChild(offerEl);
-  }
 }
 
 // 4. Sticky Progress Tracker
@@ -445,6 +393,170 @@ function saveCurrentInput() {
   saved[currentStep] = input.value;
   localStorage.setItem('recarra_last_inputs', JSON.stringify(saved));
 }
+</script>
+
+
+<script>
+
+let currentStep = 0;
+
+
+
+ catch (e) {
+    console.error("Step error:", e);
+    alert("There was an issue moving to the next step.");
+  }
+}
+
+window.onload = () => renderStep();
+</script>
+
+
+<script>
+const steps = [
+  ["What is your license plate or VIN?","No VIN? No win. Let’s ID that ride!","text"],
+  ["What year is your vehicle?","Was it born in the 1900s? We still want it!","text"],
+  ["What is the make of your vehicle?","If it has a name, we’ll make it rain.","text"],
+  ["What model is it?","Even if it’s a Mysterymobile, we’ll price it!","text"],
+  ["What is the overall condition of the vehicle?","Runs like a dream or screams like a nightmare — we’ll still pay.","text"],
+  ["Upload front view","Say cheese! Show us that beautiful bumper.","file"],
+  ["Upload rear view","Back that cash up. We need to see the rear.","file"],
+  ["Upload right side","We don’t pick sides… but we still need this one.","file"],
+  ["Upload left side","Left side strong side. Let’s check it out.","file"],
+  ["Upload engine","Lift the hood — we won’t judge the mess.","file"],
+  ["Upload dashboard","Lights on the dash? No worries. We’ve seen worse.","file"],
+  ["What is your full name?","We need to know who to send the money to.","text"],
+  ["Your mobile number?","We text faster than your ex. Promise.","tel"],
+  ["Your email address?","No spam. No games. Just your offer in writing.","email"],
+  ["Want same-day pickup for $100 bonus?","We’ll bring the cash, you bring the keys — today!","text"]
+];
+let currentStep = 0;
+
+function detectVINorPlate(value) {
+  if (!value) return '';
+  const cleaned = value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+  if (cleaned.length === 17) return 'VIN';
+  if (cleaned.length >= 5 && cleaned.length <= 8) return 'Plate';
+  return '';
+}
+
+function maybeShowOfferFeedback() {
+  if (currentStep === 4) {
+    const offerEl = document.createElement('div');
+    offerEl.innerHTML = "<div style='background:#fff3cd; padding:1rem; border:2px solid #ffeeba; border-radius:10px; margin-top:1rem; font-weight:bold;'>AI Offer Estimate: <span style='color:#d80000;'>$680 – $890</span><br><small>(based on images and input)</small></div>";
+    document.querySelector(".form-container").appendChild(offerEl);
+  }
+}
+
+function saveCurrentInput() {
+  const input = document.querySelector(".input-field");
+  if (!input) return;
+  const saved = JSON.parse(localStorage.getItem('recarra_last_inputs') || '{}');
+  saved[currentStep] = input.value;
+  localStorage.setItem('recarra_last_inputs', JSON.stringify(saved));
+}
+
+function restoreLastInputs() {
+  const saved = JSON.parse(localStorage.getItem('recarra_last_inputs') || '{}');
+  const input = document.querySelector(".input-field");
+  if (input && saved[currentStep]) {
+    input.value = saved[currentStep];
+  }
+}
+
+function updateStickyProgress() {
+  let tracker = document.getElementById('stickyStep');
+  if (!tracker) {
+    tracker = document.createElement('div');
+    tracker.id = 'stickyStep';
+    tracker.style.position = 'fixed';
+    tracker.style.top = '0';
+    tracker.style.left = '0';
+    tracker.style.width = '100%';
+    tracker.style.background = '#111';
+    tracker.style.color = 'white';
+    tracker.style.fontSize = '0.9rem';
+    tracker.style.textAlign = 'center';
+    tracker.style.padding = '6px 0';
+    tracker.style.zIndex = '999';
+    document.body.appendChild(tracker);
+  }
+  tracker.textContent = `Step ${currentStep + 1} of ${steps.length}`;
+}
+
+function attachLiveValidation() {
+  const input = document.querySelector(".input-field");
+  if (!input) return;
+
+  const feedback = document.createElement('div');
+  feedback.id = 'inputFeedback';
+  feedback.style.fontSize = '0.85rem';
+  feedback.style.marginTop = '-1rem';
+  feedback.style.color = '#d80000';
+
+  input.addEventListener('input', () => {
+    const val = input.value.trim().toUpperCase();
+    if (val.length === 17) {
+      feedback.textContent = 'Looks like a VIN number';
+      feedback.style.color = 'green';
+    } else if (val.length >= 5 && val.length <= 8) {
+      feedback.textContent = 'Looks like a license plate';
+      feedback.style.color = 'orange';
+    } else {
+      feedback.textContent = 'Too short or invalid';
+      feedback.style.color = '#d80000';
+    }
+  });
+
+  input.insertAdjacentElement('afterend', feedback);
+}
+
+function renderStep() {
+  const [q, ad, type] = steps[currentStep];
+  const input = type === "file"
+    ? `<input type="file" accept="image/*" onchange='previewImage(event)' />
+       <img id='previewImg' style='display:none; margin-top:10px; max-width:100%; border-radius:8px;' />`
+    : `<input type='${type}' class='input-field' placeholder='Enter here...' style='margin-left: -10px; border: 3px solid #000; box-shadow: 0 0 20px rgba(0, 153, 255, 0.9);' />`;
+
+  document.getElementById("formContent").innerHTML = `
+    <div class='fade-step'>
+      <div class='question'>${q}</div>
+      <div class='ad-line'>${ad}</div>${input}
+    </div>
+  `;
+
+  document.getElementById("scanBtns").innerHTML = currentStep === 0 ? `
+    <button onclick="alert('Scanning VIN...')" style="background: linear-gradient(to right, #003366, #00aaff); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(0,170,255,0.8); animation: glowBlue 2s infinite alternate;">Scan VIN</button>
+    <button onclick="alert('Scanning Plate...')" style="background: linear-gradient(to right, #990000, #ff4444); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(255,68,68,0.8); animation: glowRed 2s infinite alternate;">Scan Plate</button>
+  ` : "";
+
+  document.getElementById("backBtn")?.style?.display = currentStep > 0 ? "inline-block" : "none";
+  document.getElementById("nextBtn").textContent = currentStep === steps.length - 1 ? "Submit" : "Next";
+  document.getElementById("progressBar").style.width = ((currentStep + 1) / steps.length * 100) + "%";
+
+  attachLiveValidation();
+  updateStickyProgress();
+  restoreLastInputs();
+}
+
+function nextStep() {
+  saveCurrentInput();
+  const inputVal = document.querySelector(".input-field")?.value || "";
+  if (currentStep === 0) {
+    const type = detectVINorPlate(inputVal);
+    console.log("Detected:", type || "unknown format");
+  }
+  if (currentStep === steps.length - 2) {
+    alert("You’re eligible for the $100 Same-Day Pickup Bonus!");
+  }
+  if (currentStep < steps.length - 1) {
+    currentStep++;
+    renderStep();
+    maybeShowOfferFeedback();
+  }
+}
+
+window.onload = () => renderStep();
 </script>
 
 </body>
