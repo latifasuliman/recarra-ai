@@ -447,5 +447,29 @@ function saveCurrentInput() {
 }
 </script>
 
+
+<script>
+function nextStep() {
+  const input = document.querySelector(".input-field");
+  if (input && input.value.trim() === "") {
+    alert("Please fill in the field before continuing.");
+    return;
+  }
+
+  saveCurrentInput();
+
+  if (currentStep < steps.length - 1) {
+    currentStep++;
+    renderStep();
+    maybeShowOfferFeedback();
+    checkBonusEligibility();
+  } else {
+    document.querySelector(".form-container").style.display = "none";
+    document.getElementById("successScreen").style.display = "flex";
+    submitOfferData(); // final submission
+  }
+}
+</script>
+
 </body>
 </html>
