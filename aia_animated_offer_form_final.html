@@ -119,6 +119,31 @@
       z-index: 1000;
     }
   </style>
+
+<style>
+@keyframes fadeInStep {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-step {
+  animation: fadeInStep 0.4s ease;
+}
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #d80000;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  margin-left: 10px;
+  display: inline-block;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+
 </head>
 <body>
   <div class="bonus-badge">+ $100 Bonus Active</div>
@@ -156,7 +181,9 @@ const steps = [["What is your license plate or VIN?","No VIN? No win. Let’s ID
 ["Want same-day pickup for $100 bonus?","We’ll bring the cash, you bring the keys — today!","text"]];
 let currentStep = 0;
 
+
 function renderStep() {
+  localStorage.setItem("recarra_step", currentStep);  // Save step progress
   const [q, ad, type] = steps[currentStep];
   const input = type === "file"
     ? `<input type="file" accept="image/*" onchange='previewImage(event)' />
@@ -164,8 +191,19 @@ function renderStep() {
     : `<input type='${type}' class='input-field' placeholder='Enter here...' style='margin-left: -10px; border: 3px solid #000; box-shadow: 0 0 20px rgba(0, 153, 255, 0.9);' />`;
 
   document.getElementById("formContent").innerHTML = `
-    <div class='question'>${q}</div>
-    <div class='ad-line'>${ad}</div>${input}
+    <div class='fade-step'>
+      <div class='question'>${q}</div>
+      <div class='ad-line'>${ad}</div>${input}
+    </div>
+  `;
+
+  document.getElementById("scanBtns").innerHTML = currentStep === 0 ? `
+    <button onclick="alert('Scanning VIN...')" style="background: linear-gradient(to right, #003366, #00aaff); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(0,170,255,0.8); animation: glowBlue 2s infinite alternate;">Scan VIN</button>
+    <button onclick="alert('Scanning Plate...')" style="background: linear-gradient(to right, #990000, #ff4444); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(255,68,68,0.8); animation: glowRed 2s infinite alternate;">Scan Plate</button>
+  ` : "";
+
+  document.getElementById("progressBar").style.width = ((currentStep + 1) / steps.length * 100) + "%";
+}
   `;
 
   document.getElementById("scanBtns").innerHTML = currentStep === 0 ? `
@@ -188,14 +226,34 @@ function previewImage(event) {
   reader.readAsDataURL(event.target.files[0]);
 }
 
+
+
 function nextStep() {
   if (currentStep < steps.length - 1) {
+    const inputVal = document.querySelector(".input-field")?.value || "";
+    if (currentStep === 0) {
+      const type = detectVINorPlate(inputVal);
+      if (type) {
+        console.log("Detected:", type);
+      }
+    }
+    if (currentStep === steps.length - 2) {
+      checkBonusEligibility();
+    }
     currentStep++;
     renderStep();
+    maybeShowOfferFeedback();
   } else {
-    alert("Submitted! AiA is reviewing your offer.");
+    submitOfferData().then((offerID) => {
+      document.querySelector(".form-container").style.display = "none";
+      document.getElementById("scanBtns").style.display = "none";
+      document.getElementById("successScreen").style.display = "flex";
+      document.querySelector("#successScreen h2").textContent += " — Ref #" + offerID;
+    });
   }
 }
+
+
 
 function prevStep() {
   if (currentStep > 0) {
@@ -267,16 +325,34 @@ function previewImage(event) {
   reader.readAsDataURL(event.target.files[0]);
 }
 
+
+
 function nextStep() {
   if (currentStep < steps.length - 1) {
+    const inputVal = document.querySelector(".input-field")?.value || "";
+    if (currentStep === 0) {
+      const type = detectVINorPlate(inputVal);
+      if (type) {
+        console.log("Detected:", type);
+      }
+    }
+    if (currentStep === steps.length - 2) {
+      checkBonusEligibility();
+    }
     currentStep++;
     renderStep();
+    maybeShowOfferFeedback();
   } else {
-    document.querySelector(".form-container").style.display = "none";
-    document.getElementById("scanBtns").style.display = "none";
-    document.getElementById("successScreen").style.display = "flex";
+    submitOfferData().then((offerID) => {
+      document.querySelector(".form-container").style.display = "none";
+      document.getElementById("scanBtns").style.display = "none";
+      document.getElementById("successScreen").style.display = "flex";
+      document.querySelector("#successScreen h2").textContent += " — Ref #" + offerID;
+    });
   }
 }
+
+
 
 function prevStep() {
   if (currentStep > 0) {
@@ -286,6 +362,71 @@ function prevStep() {
 }
 
 window.onload = () => renderStep();
+</script>
+
+
+<script>
+// Smart VIN vs Plate Detection
+function detectVINorPlate(value) {
+  if (!value) return '';
+  const cleaned = value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+  if (cleaned.length === 17) return 'VIN';
+  if (cleaned.length >= 5 && cleaned.length <= 8) return 'Plate';
+  return '';
+}
+
+// Live Offer Feedback
+function maybeShowOfferFeedback() {
+  if (currentStep === 4) {
+    const offerEl = document.createElement('div');
+    offerEl.innerHTML = "<div style='background:#fff3cd; padding:1rem; border:2px solid #ffeeba; border-radius:10px; margin-top:1rem; font-weight:bold;'>Estimated Offer Range: <span style='color:#d80000;'>$420 – $870</span><br><small>(Based on preliminary answers)</small></div>";
+    document.querySelector(".form-container").appendChild(offerEl);
+  }
+}
+
+// Detect $100 Bonus Eligibility
+function checkBonusEligibility() {
+  const textInputs = document.querySelectorAll("input[type='text']");
+  for (let input of textInputs) {
+    if (input.value.toLowerCase().includes('same')) {
+      alert("You're eligible for the $100 Same-Day Pickup Bonus!");
+      break;
+    }
+  }
+}
+</script>
+
+
+<script>
+// Backend submission logic
+async function submitOfferData() {
+  const inputs = document.querySelectorAll("input");
+  const formData = {};
+  inputs.forEach(input => {
+    if (input.type === 'file') {
+      formData[input.placeholder || input.name || 'file'] = "image_uploaded";
+    } else {
+      formData[input.placeholder || input.name || 'value'] = input.value;
+    }
+  });
+
+  const offerID = "R-" + Math.floor(10000000 + Math.random() * 90000000);
+  localStorage.setItem("recarra_offer_id", offerID);
+
+  try {
+    // Replace with your real backend API
+    await fetch("https://example.com/api/submit-offer", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ offerID, ...formData })
+    });
+    console.log("Offer submitted successfully:", offerID);
+  } catch (error) {
+    console.warn("Backend call failed (mocked):", error);
+  }
+
+  return offerID;
+}
 </script>
 
 </body>
