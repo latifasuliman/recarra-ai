@@ -375,6 +375,17 @@ function detectVINorPlate(value) {
   return '';
 }
 
+// Smart VIN vs Plate Detection
+
+function detectVINorPlate(value) {
+  if (!value) return '';
+  const cleaned = value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+  if (cleaned.length === 17) return 'VIN';
+  if (cleaned.length >= 5 && cleaned.length <= 8) return 'Plate';
+  return '';
+}
+
+
 // Live Offer Feedback
 function maybeShowOfferFeedback() {
   if (currentStep === 4) {
