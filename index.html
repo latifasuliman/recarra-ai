@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Recarra | Instant Car Offer</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f8f8;
+      color: #111;
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      font-size: 1.6rem;
+      color: #d80000;
+    }
+    .hero {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    .hero h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      color: #444;
+    }
+    .cta-button {
+      margin-top: 2rem;
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 30px;
+      color: white;
+      background: linear-gradient(to right, #ff0000, #cc0000);
+      box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);
+      cursor: pointer;
+    }
+    #iframeOverlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      background: rgba(0, 0, 0, 0.9);
+    }
+    #iframeOverlay iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    #closeIframe {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      background: #ff3333;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      font-size: 20px;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      z-index: 10000;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Recarra</h1>
+  <button class="cta-button" onclick="openIframe()">Get Instant Offer</button>
+</header>
+
+<section class="hero">
+  <h2>Sell Your Car in Seconds</h2>
+  <p>Real offers. Same-day cash. Free pickup. Bonus active today.</p>
+  <button class="cta-button" onclick="openIframe()">Start Now</button>
+</section>
+
+<div id="iframeOverlay">
+  <button id="closeIframe" onclick="closeIframe()">×</button>
+  <iframe src="https://latifasuliman.github.io/recarra-ai/recarra_aia_offer_form_v2_1.html"></iframe>
+</div>
+
+<script>
+function openIframe() {
+  document.getElementById("iframeOverlay").style.display = "block";
+}
+function closeIframe() {
+  document.getElementById("iframeOverlay").style.display = "none";
+}
+</script>
+
+<section id="how-it-works" style="padding: 4rem 2rem; background: #fff;">
+  <h2 style="text-align:center; color:#d80000;">How Recarra Works</h2>
+  <div style="display:flex; flex-wrap:wrap; justify-content:space-around; margin-top:2rem;">
+    <div style="flex:1; min-width:250px; max-width:300px; margin:1rem; text-align:center;">
+      <h3>Step 1</h3>
+      <p>Enter your VIN or plate. Our AI evaluates your vehicle instantly.</p>
+    </div>
+    <div style="flex:1; min-width:250px; max-width:300px; margin:1rem; text-align:center;">
+      <h3>Step 2</h3>
+      <p>Receive a live offer and choose pickup time.</p>
+    </div>
+    <div style="flex:1; min-width:250px; max-width:300px; margin:1rem; text-align:center;">
+      <h3>Step 3</h3>
+      <p>We arrive, pay you cash, and tow your car for free.</p>
+    </div>
+  </div>
+</section>
+
+<section id="why-recarra" style="padding: 4rem 2rem; background: #f4f4f4;">
+  <h2 style="text-align:center; color:#111;">Why Choose Recarra?</h2>
+  <ul style="max-width:800px; margin:auto; font-size:1.1rem;">
+    <li>Real-time AI cash offers — no gimmicks</li>
+    <li>Guaranteed pickups, even same-day</li>
+    <li>Top payouts and loyalty bonuses</li>
+    <li>Licensed, bonded, and insured</li>
+  </ul>
+</section>
+
+<section id="bonus" style="padding: 4rem 2rem; background: #fff;">
+  <h2 style="text-align:center; color:#d80000;">$100 Same-Day Pickup Bonus</h2>
+  <p style="text-align:center; font-size:1.1rem;">Accept your offer and schedule same-day pickup to qualify for an additional $100 bonus — no catch.</p>
+</section>
+
+<section id="faq" style="padding: 4rem 2rem; background: #f4f4f4;">
+  <h2 style="text-align:center; color:#111;">Frequently Asked Questions</h2>
+  <div style="max-width:800px; margin:auto;">
+    <details style="margin-bottom:1rem;"><summary>How fast do I get paid?</summary><p>We pay you cash on the spot during pickup — same day if available.</p></details>
+    <details style="margin-bottom:1rem;"><summary>Is there a fee to use Recarra?</summary><p>No fees, no hidden charges — our offer includes pickup.</p></details>
+    <details style="margin-bottom:1rem;"><summary>What if I lost my title?</summary><p>We can help process a no-title sale in many cases. Call us to confirm.</p></details>
+  </div>
+</section>
+
+<section id="contact" style="padding: 4rem 2rem; background: #fff;">
+  <h2 style="text-align:center; color:#d80000;">Contact Us</h2>
+  <p style="text-align:center; font-size:1.1rem;">Call: <a href="tel:3462740071">346-274-0071</a> | Email: <a href="mailto:support@recarra.com">support@recarra.com</a></p>
+</section>
+
+<footer style="background:#111; color:#fff; text-align:center; padding:2rem 1rem;">
+  <p>&copy; 2025 Recarra. All rights reserved.</p>
+  <p><a href="#how-it-works" style="color:#ff4444;">How It Works</a> | <a href="#faq" style="color:#ff4444;">FAQ</a> | <a href="#contact" style="color:#ff4444;">Contact</a></p>
+</footer>
+
+</body>
+</html>
