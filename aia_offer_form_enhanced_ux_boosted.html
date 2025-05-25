@@ -1,14 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Recarra AiA Smart Offer V2</title>
+  <title>Recarra Sale Starter – Step 1</title>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to bottom right, #ff0040, #ffd700);
+      background: black;
+      color: white;
       margin: 0;
       padding: 0;
       display: flex;
@@ -17,65 +17,32 @@
       min-height: 100vh;
     }
     .form-container {
-      background: white;
+      background: #111;
       border-radius: 14px;
       padding: 2rem;
       margin: 2rem;
-      max-width: 400px;
+      max-width: 420px;
       width: 90%;
-      box-shadow: 0 0 18px rgba(0,0,0,0.2);
-      position: relative;
+      box-shadow: 0 0 18px red;
       text-align: center;
     }
-    #aiaFormExit {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 32px;
-      height: 32px;
-      background: #ff3333;
-      color: white;
-      font-size: 20px;
-      font-weight: bold;
-      border: none;
-      border-radius: 50%;
-      box-shadow: 0 0 8px rgba(0,0,0,0.3);
-      cursor: pointer;
-    }
-    .progress-bar {
-      height: 10px;
-      background: #eee;
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 1.5rem;
-    }
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(to right, #ffaa00, #ffcc00);
-      transition: width 0.4s ease-in-out;
-      border-radius: 8px;
-    }
     .question {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: bold;
-      margin-bottom: 0.5rem;
-    }
-    .ad-line {
-      font-size: 0.95rem;
-      color: #555;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
     .input-field {
       width: 100%;
       padding: 12px;
       font-size: 1rem;
-      margin-bottom: 1rem;
-      border-radius: 10px;
-      border: 2px solid #000;
+      margin-bottom: 1.2rem;
+      border-radius: 8px;
+      border: 2px solid #ff0040;
+      background: white;
+      color: black;
     }
     .btn {
-      background: linear-gradient(to right, #00f0ff, #ff00cc);
+      background: linear-gradient(to right, red, #ff0040);
       border: none;
       padding: 12px 20px;
       font-size: 1rem;
@@ -83,116 +50,60 @@
       border-radius: 30px;
       color: white;
       cursor: pointer;
-      margin: 0 0.5rem;
+      box-shadow: 0 0 12px red;
+    }
+    .session-info {
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      color: #ffcc00;
     }
   </style>
 </head>
 <body>
   <div class="form-container">
-    <button id="aiaFormExit" onclick="location.reload()">×</button>
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressBar"></div>
+    <div class="session-info">Sale Number: <strong>R-33BCD7F6</strong></div>
+    <div id="formStep">
+      <div class="question">What is your VIN or License Plate?</div>
+      <input type="text" class="input-field" placeholder="e.g. 1HGCM82633A... or ABC123"/>
+      <button class="btn" onclick="nextStep()">Next</button>
     </div>
-    <div id="formContent"></div>
-    <div style="margin-top: 1.5rem;">
-      <button id="backBtn" class="btn" onclick="prevStep()" style="display:none;">Back</button>
-      <button id="nextBtn" class="btn" onclick="nextStep()">Next</button>
-    </div>
-  </div>
-
-  <div id="successScreen" style="display:none; text-align:center; padding:2rem;">
-    <h2 style="color:green;">Thank you!</h2>
-    <p>Your offer is being reviewed. You’ll get a text shortly with next steps.</p>
-    <button onclick="location.reload()" class="btn" style="margin-top:1rem;">Restart</button>
   </div>
 
   <script>
-    let currentStep = 0;
-
     const steps = [
-      {
-        question: "What is your license plate or VIN?",
-        adLine: "No VIN? No win. Let’s ID that ride!",
-        placeholder: "ABC123 or 1HGCM82633A...",
-        type: "text"
-      },
-      {
-        question: "ZIP Code of the car’s location?",
-        adLine: "ZIP it good. This helps with valuation.",
-        placeholder: "e.g. 77001",
-        type: "text"
-      },
-      {
-        question: "Does the car start and drive?",
-        adLine: "Be honest, we love all kinds.",
-        placeholder: "Yes / No / Starts Only",
-        type: "text"
-      },
-      {
-        question: "Mileage (approx)?",
-        adLine: "Mileage helps us price it right.",
-        placeholder: "e.g. 120000",
-        type: "text"
-      },
-      {
-        question: "Upload a car photo (optional)",
-        adLine: "Visuals help our AI offer better.",
-        placeholder: "",
-        type: "file"
-      }
+      "Owner’s Name",
+      "Vehicle Year",
+      "Make",
+      "Model",
+      "Trim (if known)",
+      "Color",
+      "Is it a... (Car / Truck / SUV / Van)",
+      "ZIP Code of the Car’s Location",
+      "Does it Start and Drive?",
+      "Pickup Address (Optional)",
+      "Can we text or call you with your instant offer?",
+      "Phone Number",
+      "Preferred Payment (Cash / Zelle / PayPal / Check)",
+      "Would you like a $100 Same-Day Pickup Bonus?",
+      "Would you like a $100 Photo Bonus with a Sign?",
+      "Want a $100 Referral Code to Share with Friends?"
     ];
 
-    function renderStep() {
-      const step = steps[currentStep];
-      const inputField = step.type === "file"
-        ? `<input type="file" class="input-field">`
-        : `<input type="text" class="input-field" placeholder="${step.placeholder}">`;
-
-      
-    let extraHTML = "";
-    if (currentStep === 0) {
-      extraHTML = `
-        <div id="scanBtns" style="display:flex; justify-content:center; gap:1rem; margin-top:1rem;">
-          <button onclick="alert('Scanning VIN...')" style="background: linear-gradient(to right, #003366, #00aaff); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(0,170,255,0.8); animation: glowBlue 2s infinite alternate;">Scan VIN</button>
-          <button onclick="alert('Scanning Plate...')" style="background: linear-gradient(to right, #990000, #ff4444); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(255,68,68,0.8); animation: glowRed 2s infinite alternate;">Scan Plate</button>
-        </div>`;
-    }
-    document.getElementById("formContent").innerHTML = `
-      <div class="question">${step.question}</div>
-      <div class="ad-line">${step.adLine}</div>
-      ${inputField}
-      ${extraHTML}
-    `;
-    
-
-      document.getElementById("backBtn").style.display = currentStep === 0 ? "none" : "inline-block";
-      document.getElementById("progressBar").style.width = ((currentStep + 1) / steps.length) * 100 + "%";
-    }
+    let stepIndex = 0;
 
     function nextStep() {
-      const input = document.querySelector(".input-field");
-      if (input && input.type !== 'file' && input.value.trim() === "") {
-        alert("Please fill in the field.");
+      const container = document.getElementById("formStep");
+      if (stepIndex >= steps.length) {
+        container.innerHTML = '<div class="question">Thank you! We’ll text your offer soon.</div>';
         return;
       }
-
-      if (currentStep < steps.length - 1) {
-        currentStep++;
-        renderStep();
-      } else {
-        document.querySelector(".form-container").style.display = "none";
-        document.getElementById("successScreen").style.display = "block";
-      }
+      container.innerHTML = `
+        <div class="question">${steps[stepIndex]}</div>
+        <input type="text" class="input-field" placeholder="Type here..."/>
+        <button class="btn" onclick="nextStep()">Next</button>
+      `;
+      stepIndex++;
     }
-
-    function prevStep() {
-      if (currentStep > 0) {
-        currentStep--;
-        renderStep();
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", renderStep);
   </script>
 </body>
 </html>
