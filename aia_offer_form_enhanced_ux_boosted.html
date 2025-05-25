@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,7 +62,7 @@
 </head>
 <body>
   <div class="form-container">
-    <div class="session-info">Sale Number: <strong>R-33BCD7F6</strong></div>
+    <div class="session-info" id="saleNumberDisplay"></div>
     <div id="formStep">
       <div class="question">What is your VIN or License Plate?</div>
       <input type="text" class="input-field" placeholder="e.g. 1HGCM82633A... or ABC123"/>
@@ -70,6 +71,14 @@
   </div>
 
   <script>
+    function generateSaleNumber() {
+      const random = Math.random().toString(36).substring(2, 10).toUpperCase();
+      return "R-" + random;
+    }
+
+    const saleNumber = generateSaleNumber();
+    document.getElementById("saleNumberDisplay").innerHTML = `Sale Number: <strong>${saleNumber}</strong>`;
+
     const steps = [
       "Owner’s Name",
       "Vehicle Year",
@@ -85,8 +94,7 @@
       "Phone Number",
       "Preferred Payment (Cash / Zelle / PayPal / Check)",
       "Would you like a $100 Same-Day Pickup Bonus?",
-      "Would you like a $100 Photo Bonus with a Sign?",
-      "Want a $100 Referral Code to Share with Friends?"
+      "Would you like a $50 Bonus for Sending a Photo Holding a Sign?"
     ];
 
     let stepIndex = 0;
