@@ -1,11 +1,12 @@
 
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Recarra AiA Smart Offer</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Recarra AiA Smart Offer</title>
+<style>
 
 #aiaFormExit {
   position: absolute;
@@ -119,7 +120,6 @@
       z-index: 1000;
     }
   </style>
-
 <style>
 @keyframes fadeInStep {
   from { opacity: 0; transform: translateY(10px); }
@@ -143,56 +143,30 @@
   100% { transform: rotate(360deg); }
 }
 </style>
-
 </head>
 <body>
-  <div class="bonus-badge">+ $100 Bonus Active</div>
-  <div class="form-container">
-    <div class="progress-bar"><div class="progress-fill" id="progressBar"></div></div>
-    <div id="formContent">
-      <div class="question">What is your license plate or VIN?</div>
-      <div class="ad-line">No VIN? No win. Let’s ID that ride!</div>
-      <input type="text" class="input-field" style="margin-left: -10px; border: 3px solid #000; box-shadow: 0 0 20px rgba(0, 153, 255, 0.9);" placeholder="ABC123 or 1HGCM82633A..." />
-    </div>
-    <div id="scanBtns" style="display:flex; justify-content:center; gap:1rem; margin-top:1rem;">
-      <button onclick="alert('Scanning VIN...')" style="background: linear-gradient(to right, #003366, #00aaff); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(0,170,255,0.8); animation: glowBlue 2s infinite alternate;">Scan VIN</button>
-      <button onclick="alert('Scanning Plate...')" style="background: linear-gradient(to right, #990000, #ff4444); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(255,68,68,0.8); animation: glowRed 2s infinite alternate;">Scan Plate</button>
-    </div>
-    <div style="display: flex; justify-content: center; margin-top: 2rem;">
-      <button id="backBtn" class="btn" onclick="prevStep()" style="display:none;">Back</button>
-      <button id="nextBtn" class="btn" onclick="nextStep()">Next</button>
-    </div>
-  </div>
-
-
-
-
-<div id="successScreen" style="display:none; justify-content:center; align-items:center; flex-direction:column; height:100%; text-align:center; padding:2rem;">
-  <h2 style="font-size:2rem; color:green;">Thank you!</h2>
-  <p style="font-size:1.2rem; max-width:400px;">Your offer is being reviewed. Expect a text message soon with next steps and your $100 bonus confirmation.</p>
-  <button onclick="location.reload()" style="margin-top:2rem; padding:0.8rem 1.5rem; font-size:1rem; border:none; border-radius:30px; background:linear-gradient(to right, #ff0000, #cc0000); color:white; cursor:pointer;">Return to Start</button>
+<div class="bonus-badge">+ $100 Bonus Active</div>
+<div class="form-container">
+<div class="progress-bar"><div class="progress-fill" id="progressBar"></div></div>
+<div id="formContent">
+<div class="question">What is your license plate or VIN?</div>
+<div class="ad-line">No VIN? No win. Let’s ID that ride!</div>
+<input class="input-field" placeholder="ABC123 or 1HGCM82633A..." style="margin-left: -10px; border: 3px solid #000; box-shadow: 0 0 20px rgba(0, 153, 255, 0.9);" type="text"/>
 </div>
-
-
-
-
-
-<script>
-// Smart VIN vs Plate Detection
-function detectVINorPlate(value) {
-  if (!value) return '';
-  const cleaned = value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
-  if (cleaned.length === 17) return 'VIN';
-  if (cleaned.length >= 5 && cleaned.length <= 8) return 'Plate';
-  return '';
-}
-
-// Live Offer Feedback
-
-  }
-}
-</script>
-
+<div id="scanBtns" style="display:flex; justify-content:center; gap:1rem; margin-top:1rem;">
+<button onclick="alert('Scanning VIN...')" style="background: linear-gradient(to right, #003366, #00aaff); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(0,170,255,0.8); animation: glowBlue 2s infinite alternate;">Scan VIN</button>
+<button onclick="alert('Scanning Plate...')" style="background: linear-gradient(to right, #990000, #ff4444); border: none; padding: 12px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 15px rgba(255,68,68,0.8); animation: glowRed 2s infinite alternate;">Scan Plate</button>
+</div>
+<div style="display: flex; justify-content: center; margin-top: 2rem;">
+<button class="btn" id="backBtn" onclick="prevStep()" style="display:none;">Back</button>
+<button class="btn" id="nextBtn" onclick="nextStep()">Next</button>
+</div>
+</div>
+<div id="successScreen" style="display:none; justify-content:center; align-items:center; flex-direction:column; height:100%; text-align:center; padding:2rem;">
+<h2 style="font-size:2rem; color:green;">Thank you!</h2>
+<p style="font-size:1.2rem; max-width:400px;">Your offer is being reviewed. Expect a text message soon with next steps and your $100 bonus confirmation.</p>
+<button onclick="location.reload()" style="margin-top:2rem; padding:0.8rem 1.5rem; font-size:1rem; border:none; border-radius:30px; background:linear-gradient(to right, #ff0000, #cc0000); color:white; cursor:pointer;">Return to Start</button>
+</div>
 
 <script>
 // Backend submission logic
@@ -225,8 +199,6 @@ async function submitOfferData() {
   return offerID;
 }
 </script>
-
-
 <script>
 // 1. Auto-focus the input field on every step
 function focusInput() {
@@ -311,8 +283,6 @@ function saveCurrentInput() {
   localStorage.setItem('recarra_last_inputs', JSON.stringify(saved));
 }
 </script>
-
-
 <script>
 function nextStep() {
   const input = document.querySelector(".input-field");
@@ -336,5 +306,81 @@ function nextStep() {
 }
 </script>
 
+<script>
+// Track which step user is on
+let currentStep = 0;
+
+// Define all steps
+const steps = [
+  {
+    question: "What is your license plate or VIN?",
+    adLine: "No VIN? No win. Let’s ID that ride!",
+    placeholder: "ABC123 or 1HGCM82633A...",
+    type: "text"
+  },
+  {
+    question: "ZIP Code of the car’s location?",
+    adLine: "ZIP it good. This helps with valuation.",
+    placeholder: "e.g. 77001",
+    type: "text"
+  },
+  {
+    question: "Does the car start and drive?",
+    adLine: "Be honest, we love all kinds.",
+    placeholder: "Yes / No / Starts Only",
+    type: "text"
+  },
+  {
+    question: "Mileage (approx)?",
+    adLine: "Mileage helps us price it right.",
+    placeholder: "e.g. 120000",
+    type: "text"
+  },
+  {
+    question: "Upload a car photo (optional)",
+    adLine: "Visuals help our AI offer better.",
+    placeholder: "",
+    type: "file"
+  }
+];
+
+// Show correct step
+function renderStep() {
+  const step = steps[currentStep];
+  const formContent = document.getElementById("formContent");
+
+  const inputType = step.type === "file" ? "file" : "text";
+  const placeholder = step.placeholder ? \`placeholder="\${step.placeholder}"\` : "";
+
+  formContent.innerHTML = \`
+    <div class="question">\${step.question}</div>
+    <div class="ad-line">\${step.adLine}</div>
+    <input type="\${inputType}" class="input-field" \${placeholder} />
+  \`;
+
+  // Show/hide back button
+  document.getElementById("backBtn").style.display = currentStep === 0 ? "none" : "inline-block";
+
+  // Update progress bar
+  const progress = document.getElementById("progressBar");
+  progress.style.width = ((currentStep + 1) / steps.length) * 100 + "%";
+
+  focusInput();
+  attachLiveValidation();
+  updateStickyProgress();
+  restoreLastInputs();
+}
+
+// Back button logic
+function prevStep() {
+  if (currentStep > 0) {
+    currentStep--;
+    renderStep();
+  }
+}
+
+// Ensure form loads step 1 when page loads
+window.onload = renderStep;
+</script>
 </body>
 </html>
