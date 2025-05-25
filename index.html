@@ -77,7 +77,43 @@
       cursor: pointer;
       z-index: 10000;
     }
-  </style>
+  
+#drawer {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 100%;
+  max-width: 460px;
+  height: 100%;
+  background: black;
+  z-index: 9999;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.7);
+  transition: right 0.4s ease;
+}
+#drawer iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+#drawer.open {
+  right: 0;
+}
+#closeDrawer {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #ff3333;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  z-index: 10000;
+}
+
+</style>
 </head>
 <body>
 
@@ -146,68 +182,21 @@
   <p><a href="#how-it-works" style="color:#ff4444;">How It Works</a> | <a href="#faq" style="color:#ff4444;">FAQ</a> | <a href="#contact" style="color:#ff4444;">Contact</a></p>
 </footer>
 
-<div class="form-container">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-      <h1 style="color: white; font-size: 1.5rem; margin: 0; font-weight: 900;">INSTANT CAR OFFER</h1>
-      <span style="background: red; color: white; padding: 5px 12px; border-radius: 6px; font-weight: bold;">FAQ</span>
-    </div>
-    <h2 style="color: red; font-size: 2rem; margin-bottom: 1rem;">Recarra AiA</h2>
-    <p style="margin-bottom: 1rem;">Let’s get started! Please provide your VIN or license plate.</p>
-    <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
-      <button class="btn" style="background: black; color: white;">Scan VIN</button>
-      <button class="btn" style="background: red; color: white;">Scan License Plate</button>
-    </div>
 
-    <div class="session-info" id="saleNumberDisplay"></div>
-    <div id="formStep">
-      <div class="question">What is your VIN or License Plate?</div>
-      <input type="text" class="input-field" placeholder="e.g. 1HGCM82633A... or ABC123"/>
-      <button class="btn" onclick="nextStep()">Next</button>
-    </div>
-  </div>
 
-  <script>
-    function generateSaleNumber() {
-      const random = Math.random().toString(36).substring(2, 10).toUpperCase();
-      return "R-" + random;
-    }
+<div id="drawer">
+  <button id="closeDrawer" onclick="closeDrawer()">×</button>
+  <iframe src="aia_offer_form_enhanced_ux_boosted.html"></iframe>
+</div>
 
-    const saleNumber = generateSaleNumber();
-    document.getElementById("saleNumberDisplay").innerHTML = `Sale Number: <strong>${saleNumber}</strong>`;
+<script>
+  function openIframe() {
+    document.getElementById("drawer").classList.add("open");
+  }
+  function closeDrawer() {
+    document.getElementById("drawer").classList.remove("open");
+  }
+</script>
 
-    const steps = [
-      "Owner’s Name",
-      "Vehicle Year",
-      "Make",
-      "Model",
-      "Trim (if known)",
-      "Color",
-      "Is it a... (Car / Truck / SUV / Van)",
-      "ZIP Code of the Car’s Location",
-      "Does it Start and Drive?",
-      "Pickup Address (Optional)",
-      "Can we text or call you with your instant offer?",
-      "Phone Number",
-      "Preferred Payment (Cash / Zelle / PayPal / Check)",
-      "Would you like a $100 Same-Day Pickup Bonus?",
-      "Would you like a $50 Bonus for Sending a Photo Holding a Sign?"
-    ];
-
-    let stepIndex = 0;
-
-    function nextStep() {
-      const container = document.getElementById("formStep");
-      if (stepIndex >= steps.length) {
-        container.innerHTML = '<div class="question">Thank you! We’ll text your offer soon.</div>';
-        return;
-      }
-      container.innerHTML = `
-        <div class="question">${steps[stepIndex]}</div>
-        <input type="text" class="input-field" placeholder="Type here..."/>
-        <button class="btn" onclick="nextStep()">Next</button>
-      `;
-      stepIndex++;
-    }
-  </script>
 </body>
 </html>
