@@ -380,7 +380,8 @@ function prevStep() {
 }
 
 // Ensure form loads step 1 when page loads
-window.onload = renderStep;
+document.addEventListener("DOMContentLoaded", renderStep);
+renderStep();
 </script>
 </body>
 </html>
