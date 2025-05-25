@@ -68,14 +68,30 @@
       <span style="background: red; color: white; padding: 5px 12px; border-radius: 6px; font-weight: bold;">FAQ</span>
     </div>
     <h2 style="color: red; font-size: 2rem; margin-bottom: 1rem;">Recarra AiA</h2>
-    <p style="margin-bottom: 1rem;">Let’s get started! Please provide your VIN or license plate.</p>
-    <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+    <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem;">
       <button class="btn" style="background: black; color: white;">Scan VIN</button>
       <button class="btn" style="background: red; color: white;">Scan License Plate</button>
     </div>
 
-    <div class="session-info" id="saleNumberDisplay"></div>
-    <div id="formStep">
+    <div id="modeSelector" style="text-align:center; margin-bottom: 2rem;">
+      <h2 style="color: #ff0040;">How do you want to start?</h2>
+      <div style="margin-bottom: 1rem;">
+        <button class="btn" onclick="chooseMode('drawer')">Step-by-Step Questions</button>
+      </div>
+      <div>
+        <button class="btn" onclick="chooseMode('full')">Quick Full Form</button>
+      </div>
+    </div>
+
+    <div id="drawerMode" style="display:none;">
+      <div class="session-info" id="saleNumberDisplayDrawer"></div>
+      <div id="formStep" style="display: none;"></div>
+    </div>
+
+    <div id="fullMode" style="display:none;">
+      <div class="session-info" id="saleNumberDisplayFull"></div>
+      <form id="fullForm"></form>
+    </div>
       <div class="question">What is your VIN or License Plate?</div>
       <input type="text" class="input-field" placeholder="e.g. 1HGCM82633A... or ABC123"/>
       <button class="btn" onclick="nextStep()">Next</button>
@@ -112,6 +128,7 @@
     let stepIndex = 0;
 
     function nextStep() {
+      document.getElementById("formStep").style.display = "block";
       const container = document.getElementById("formStep");
       if (stepIndex >= steps.length) {
         container.innerHTML = '<div class="question">Thank you! We’ll text your offer soon.</div>';
@@ -124,6 +141,55 @@
       `;
       stepIndex++;
     }
-  </script>
+  
+    const allQuestions = [
+  "What is your VIN or License Plate?",
+      "Owner’s Name",
+      "Vehicle Year",
+      "Make",
+      "Model",
+      "Trim (if known)",
+      "Color",
+      "Is it a... (Car / Truck / SUV / Van)",
+      "ZIP Code of the Car’s Location",
+      "Does it Start and Drive?",
+      "Pickup Address (Optional)",
+      "Can we text or call you with your instant offer?",
+      "Phone Number",
+      "Preferred Payment (Cash / Zelle / PayPal / Check)",
+      "Would you like a $100 Same-Day Pickup Bonus?",
+      "Would you like a $50 Bonus for Sending a Photo Holding a Sign?"
+    ];
+
+    function chooseMode(mode) {
+      document.getElementById("modeSelector").style.display = "none";
+      const saleNumber = generateSaleNumber();
+
+      if (mode === "drawer") {
+        document.getElementById("drawerMode").style.display = "block";
+        document.getElementById("saleNumberDisplayDrawer").innerHTML = `Sale Number: <strong>${saleNumber}</strong>`;
+        stepIndex = 0;
+        nextStep();
+      } else {
+        document.getElementById("fullMode").style.display = "block";
+        document.getElementById("saleNumberDisplayFull").innerHTML = `Sale Number: <strong>${saleNumber}</strong>`;
+        generateFullForm();
+      }
+    }
+
+    function generateFullForm() {
+      const form = document.getElementById("fullForm");
+      form.innerHTML = "";
+      allQuestions.forEach(question => {
+        form.innerHTML += `
+          <div class="question">${question}</div>
+          <input type="text" class="input-field" placeholder="Type here..."/>
+        `;
+      });
+      form.innerHTML += `<button class="btn" type="submit">Submit Offer</button>`;
+    }
+
+    const steps = allQuestions;
+</script>
 </body>
 </html>
