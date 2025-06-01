@@ -82,6 +82,13 @@
     .hidden {
       display: none;
     }
+    .success {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: green;
+      margin-top: 1.5rem;
+    }
   </style>
 </head>
 <body>
@@ -151,10 +158,11 @@
       </div>
       <div class="photo-upload">
         <label>Upload Car Photos</label>
-        <input type="file" multiple accept="image/*" />
+        <input type="file" id="photos" multiple accept="image/*" />
         <small>Front, Rear, Left, Right, Engine, Damage</small>
       </div>
       <button class="btn" id="confirmPickup">Confirm Pickup</button>
+      <div class="success hidden" id="successMessage">✅ Pickup Confirmed! Driver will call you shortly.</div>
     </div>
   </div>
 
@@ -188,6 +196,22 @@
     toStep2Btn.addEventListener("click", () => {
       document.getElementById("step1").classList.add("hidden");
       document.getElementById("step2").classList.remove("hidden");
+    });
+
+    document.getElementById("confirmPickup").addEventListener("click", () => {
+      const address = document.getElementById("address").value.trim();
+      const pickupTime = document.getElementById("pickupTime").value;
+      const hasTitle = document.getElementById("hasTitle").value;
+      const hasKeys = document.getElementById("hasKeys").value;
+      const carStarts = document.getElementById("carStarts").value;
+
+      if (!address || !pickupTime || !hasTitle || !hasKeys || !carStarts) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+
+      document.getElementById("successMessage").classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   </script>
 </body>
