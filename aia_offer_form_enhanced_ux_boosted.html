@@ -4,128 +4,160 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Recarra – Sell Your Car</title>
+  <title>Recarra Smart Offer</title>
   <style>
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
       background-color: #f8f8f8;
-      color: #111; font-weight: bold; font-weight: bold;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+      color: #111;
     }
-    .form-wrapper {
-      width: 100%;
-      max-width: 420px;
-      background: white;
+    .container {
+      max-width: 460px;
+      margin: auto;
       padding: 2rem;
-      border-radius: 14px;
+      background: white;
+      border-radius: 12px;
       box-shadow: 0 0 14px rgba(0,0,0,0.1);
+      margin-top: 4rem;
     }
     h1 {
-      color: #d80000;
       text-align: center;
-      margin-bottom: 1rem;
+      color: #d80000;
+    }
+    .step {
+      display: none;
+    }
+    .step.active {
+      display: block;
     }
     .input-group {
-      margin-bottom: 1.4rem;
+      margin: 1rem 0;
     }
-    .input-group input { font-weight: bold; color: #111;
+    .input-group label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+    .input-group input, .input-group select {
       width: 100%;
       padding: 12px;
-      font-size: 1rem;
-      border: 2px solid #ccc;
       border-radius: 8px;
-      background: #fff;
-      color: #111; font-weight: bold; font-weight: bold;
+      border: 2px solid #ccc;
+      font-weight: bold;
+      font-size: 1rem;
+      color: #111;
     }
     .btn {
       width: 100%;
       padding: 14px;
-      font-size: 1rem;
-      font-weight: bold;
-      color: white;
+      margin-top: 1.2rem;
       background: linear-gradient(to right, #ff0000, #cc0000);
+      color: white;
       border: none;
       border-radius: 30px;
+      font-weight: bold;
+      font-size: 1rem;
       cursor: pointer;
-      box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
     }
-    .hidden {
-      display: none;
-    }
-    .checkbox-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 1rem;
+    .bonus, .countdown {
+      text-align: center;
+      color: #008800;
+      margin: 0.5rem 0;
+      font-weight: bold;
     }
     .confirmation {
       text-align: center;
-      font-size: 1.1rem;
       color: #006600;
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-top: 2rem;
     }
   </style>
 </head>
 <body>
-  <div class="form-wrapper">
-    <h1>Instant Car Offer</h1>
+<div class="container">
+  <h1>Instant Car Offer</h1>
 
-    <div id="step1">
+  <form id="smartForm" onsubmit="event.preventDefault();">
+    <!-- Step 1 -->
+    <div class="step active" id="step1">
       <div class="input-group">
-        <input type="tel" id="phone" placeholder="Your Phone Number" required />
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" required placeholder="e.g. 555-123-4567">
       </div>
       <div class="input-group">
-        <input type="text" id="vin" placeholder="VIN or License Plate" required />
+        <label for="vin">VIN or Plate</label>
+        <input type="text" id="vin" name="vin" required placeholder="17-digit VIN or plate">
       </div>
-      <button class="btn" onclick="showOffer()">Get Instant Offer</button>
+      <div class="input-group">
+        <label><input type="checkbox" required> I agree to be contacted via call/text</label>
+      </div>
+      <p class="bonus">🎁 $100 Same-Day Pickup Bonus Available</p>
+      <button class="btn" type="button" onclick="nextStep(2)">Get My Offer</button>
     </div>
 
-    <div id="step2" class="hidden">
-      <h2 style="text-align:center;">Offer: $400 – $1,100</h2>
-      <div class="checkbox-group">
+    <!-- Step 2 -->
+    <div class="step" id="step2">
+      <h2 style="text-align:center;">🔥 Offer Range: $450 – $1,050</h2>
+      <p class="countdown" id="timer">Offer valid for 30 minutes</p>
+      <div class="input-group">
         <label><input type="checkbox" checked> $100 Same-Day Pickup</label>
-        <label><input type="checkbox"> $50 Selfie Bonus</label>
+        <label><input type="checkbox"> $50 Photo Bonus</label>
       </div>
-      <button class="btn" onclick="acceptOffer()">Accept Offer</button>
+      <button class="btn" type="button" onclick="nextStep(3)">Accept Offer</button>
     </div>
 
-    <div id="step3" class="hidden">
+    <!-- Step 3 -->
+    <div class="step" id="step3">
       <div class="input-group">
-        <input type="text" id="name" placeholder="Your Full Name" />
+        <label for="name">Your Full Name</label>
+        <input type="text" id="name" name="name" required>
       </div>
       <div class="input-group">
-        <input type="text" id="zip" placeholder="ZIP Code" />
+        <label for="zip">ZIP Code</label>
+        <input type="text" id="zip" name="zip" inputmode="numeric" required>
       </div>
       <div class="input-group">
-        <input type="text" id="payment" placeholder="Preferred Payment (Cash/Zelle/PayPal)" />
+        <label for="payment">Payment Method</label>
+        <select id="payment" name="payment">
+          <option value="cash">Cash</option>
+          <option value="zelle">Zelle</option>
+          <option value="paypal">PayPal</option>
+        </select>
       </div>
-      <button class="btn" onclick="submitForm()">Schedule Pickup</button>
+      <div class="input-group">
+        <label for="date">Preferred Pickup Date</label>
+        <input type="date" id="date" name="date">
+      </div>
+      <div class="input-group">
+        <label for="time">Preferred Time</label>
+        <input type="time" id="time" name="time">
+      </div>
+      <div class="input-group">
+        <label for="photo">Upload Car Photo (Optional)</label>
+        <input type="file" id="photo" name="photo" accept="image/*">
+      </div>
+      <button class="btn" type="button" onclick="nextStep(4)">Schedule Pickup</button>
     </div>
 
-    <div id="step4" class="hidden confirmation">
-      ✅ Your offer has been accepted. We'll contact you shortly to confirm pickup.
+    <!-- Step 4 -->
+    <div class="step" id="step4">
+      <p class="confirmation">
+        ✅ Offer Locked! Our rep will contact you shortly. You're almost paid.
+      </p>
     </div>
-  </div>
+  </form>
+</div>
 
-  <script>
-    function showOffer() {
-      document.getElementById("step1").classList.add("hidden");
-      document.getElementById("step2").classList.remove("hidden");
-    }
+<script>
+  function nextStep(step) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step' + step).classList.add('active');
+  }
 
-    function acceptOffer() {
-      document.getElementById("step2").classList.add("hidden");
-      document.getElementById("step3").classList.remove("hidden");
-    }
-
-    function submitForm() {
-      // Simulate submission logic here
-      document.getElementById("step3").classList.add("hidden");
-      document.getElementById("step4").classList.remove("hidden");
-    }
-  </script>
+  // Timer countdown logic placeholder (optional functionality)
+</script>
 </body>
 </html>
