@@ -86,7 +86,25 @@
       cursor: pointer;
       z-index: 10000;
     }
-  </style>
+  
+#topBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 0.8rem 1.4rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(to right, #ff0000, #cc0000);
+  border: none;
+  border-radius: 30px;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+  cursor: pointer;
+  display: none;
+  z-index: 1000;
+}
+
+</style>
 </head>
 <body>
 <header>
@@ -160,6 +178,18 @@
   function closeDrawer() {
     document.getElementById("drawer").classList.remove("open");
   }
+
+window.onscroll = function () {
+  const btn = document.getElementById("topBtn");
+  btn.style.display = window.scrollY > 300 ? "block" : "none";
+};
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 </script>
+
+<button id="topBtn" onclick="scrollToTop()">↑ Top</button>
 </body>
 </html>
