@@ -136,8 +136,20 @@
         <input type="time" id="time" name="time">
       </div>
       <div class="input-group">
-        <label for="photo">Upload Car Photo (Optional)</label>
-        <input type="file" id="photo" name="photo" accept="image/*">
+        
+      <label for="photo_front">Front of Car Photo</label>
+      <input type="file" id="photo_front" name="photo_front" accept="image/*">
+      <label for="photo_rear">Rear of Car Photo</label>
+      <input type="file" id="photo_rear" name="photo_rear" accept="image/*">
+      <label for="photo_right">Right Side Photo</label>
+      <input type="file" id="photo_right" name="photo_right" accept="image/*">
+      <label for="photo_left">Left Side Photo</label>
+      <input type="file" id="photo_left" name="photo_left" accept="image/*">
+      <label for="photo_engine">Engine Photo</label>
+      <input type="file" id="photo_engine" name="photo_engine" accept="image/*">
+      <label for="photo_damage">Damage Photos</label>
+      <input type="file" id="photo_damage" name="photo_damage" accept="image/*" multiple>
+    
       </div>
       <button class="btn" type="button" onclick="nextStep(4)">Schedule Pickup</button>
     </div>
