@@ -2,15 +2,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recarra Smart Form – AI Offer</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Recarra – Sell Your Car</title>
   <style>
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background-color: #f8f8f8; color: #111;
-      color: white;
+      background-color: #f8f8f8;
+      color: #111; font-weight: bold; font-weight: bold;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -18,29 +18,28 @@
     }
     .form-wrapper {
       width: 100%;
-      max-width: 400px;
-      background: #111;
+      max-width: 420px;
+      background: white;
       padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);
+      border-radius: 14px;
+      box-shadow: 0 0 14px rgba(0,0,0,0.1);
     }
-    h1, h2 {
-      text-align: center;
+    h1 {
       color: #d80000;
+      text-align: center;
       margin-bottom: 1rem;
     }
     .input-group {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.4rem;
     }
-    .input-group input {
+    .input-group input { font-weight: bold; color: #111;
       width: 100%;
       padding: 12px;
       font-size: 1rem;
+      border: 2px solid #ccc;
       border-radius: 8px;
-      border: 2px solid #ff0000;
-      outline: none;
-      background: white;
-      color: black;
+      background: #fff;
+      color: #111; font-weight: bold; font-weight: bold;
     }
     .btn {
       width: 100%;
@@ -63,78 +62,70 @@
       gap: 8px;
       margin-bottom: 1rem;
     }
-    .checkbox-group label {
-      font-size: 0.95rem;
-    }
     .confirmation {
       text-align: center;
-      font-size: 1.2rem;
-      color: #ffcc00;
+      font-size: 1.1rem;
+      color: #006600;
     }
   </style>
 </head>
 <body>
+  <div class="form-wrapper">
+    <h1>Instant Car Offer</h1>
 
-<div class="form-wrapper">
-  <h1>Recarra AI Offer</h1>
+    <div id="step1">
+      <div class="input-group">
+        <input type="tel" id="phone" placeholder="Your Phone Number" required />
+      </div>
+      <div class="input-group">
+        <input type="text" id="vin" placeholder="VIN or License Plate" required />
+      </div>
+      <button class="btn" onclick="showOffer()">Get Instant Offer</button>
+    </div>
 
-  <div id="step1">
-    <div class="input-group">
-      <input type="tel" id="phone" placeholder="Your Phone Number" required />
+    <div id="step2" class="hidden">
+      <h2 style="text-align:center;">Offer: $400 – $1,100</h2>
+      <div class="checkbox-group">
+        <label><input type="checkbox" checked> $100 Same-Day Pickup</label>
+        <label><input type="checkbox"> $50 Selfie Bonus</label>
+      </div>
+      <button class="btn" onclick="acceptOffer()">Accept Offer</button>
     </div>
-    <div class="input-group">
-      <input type="text" id="vin" placeholder="VIN or License Plate" required />
+
+    <div id="step3" class="hidden">
+      <div class="input-group">
+        <input type="text" id="name" placeholder="Your Full Name" />
+      </div>
+      <div class="input-group">
+        <input type="text" id="zip" placeholder="ZIP Code" />
+      </div>
+      <div class="input-group">
+        <input type="text" id="payment" placeholder="Preferred Payment (Cash/Zelle/PayPal)" />
+      </div>
+      <button class="btn" onclick="submitForm()">Schedule Pickup</button>
     </div>
-    <button class="btn" onclick="showOffer()">Get My Instant Offer</button>
+
+    <div id="step4" class="hidden confirmation">
+      ✅ Your offer has been accepted. We'll contact you shortly to confirm pickup.
+    </div>
   </div>
 
-  <div id="step2" class="hidden">
-    <h2>Offer: $400 – $1,100</h2>
-    <p style="text-align:center;">Bonus available for today only:</p>
-    <div class="checkbox-group">
-      <label><input type="checkbox" checked> $100 Same-Day Pickup</label>
-      <label><input type="checkbox"> $50 Selfie Bonus</label>
-    </div>
-    <button class="btn" onclick="acceptOffer()">Accept Offer</button>
-  </div>
+  <script>
+    function showOffer() {
+      document.getElementById("step1").classList.add("hidden");
+      document.getElementById("step2").classList.remove("hidden");
+    }
 
-  <div id="step3" class="hidden">
-    <div class="input-group">
-      <input type="text" id="name" placeholder="Full Name" />
-    </div>
-    <div class="input-group">
-      <input type="text" id="zip" placeholder="ZIP Code" />
-    </div>
-    <div class="input-group">
-      <input type="text" id="payment" placeholder="Preferred Payment Method" />
-    </div>
-    <button class="btn" onclick="submitPickup()">Schedule Pickup</button>
-  </div>
+    function acceptOffer() {
+      document.getElementById("step2").classList.add("hidden");
+      document.getElementById("step3").classList.remove("hidden");
+    }
 
-  <div id="step4" class="hidden confirmation">
-    ✅ Offer accepted! We’ll contact you shortly to confirm pickup.
-  </div>
-</div>
-
-<script>
-  function showOffer() {
-    document.getElementById("step1").classList.add("hidden");
-    document.getElementById("step2").classList.remove("hidden");
-  }
-
-  function acceptOffer() {
-    document.getElementById("step2").classList.add("hidden");
-    document.getElementById("step3").classList.remove("hidden");
-  }
-
-  function submitPickup() {
-    // simulate submission
-    document.getElementById("step3").classList.add("hidden");
-    document.getElementById("step4").classList.remove("hidden");
-
-    // You can replace this with a real fetch() call to your backend later
-  }
-</script>
-
+    function submitForm() {
+      // Simulate submission logic here
+      document.getElementById("step3").classList.add("hidden");
+      document.getElementById("step4").classList.remove("hidden");
+    }
+  </script>
 </body>
 </html>
