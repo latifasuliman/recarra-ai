@@ -90,7 +90,41 @@
       color: green;
       margin-top: 1.5rem;
     }
-  </style>
+  
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.input-group input,
+.input-group select,
+.input-group textarea {
+  text-align: center;
+}
+.flash-bonus {
+  animation: flash 1s infinite;
+  color: #d80000;
+  font-weight: bold;
+  margin-left: 8px;
+}
+@keyframes flash {
+  0% { opacity: 1; }
+  50% { opacity: 0.1; }
+  100% { opacity: 1; }
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+  width: 100% !important;
+  height: 48px !important;
+  box-sizing: border-box;
+}
+.input-group textarea {
+  height: 96px !important;
+  resize: vertical;
+}
+</style>
 </head>
 <body>
 <div class="container">
@@ -132,10 +166,10 @@
 <input id="zip" readonly="" type="text"/>
 </div>
 <div class="input-group">
-<label for="pickupTime">Preferred Pickup Time</label>
+<label for="pickupTime">Preferred Pickup Time</label><span class="flash-bonus">$100 Bonus!</span>
 <select id="pickupTime" required="">
 <option value="">Select one</option>
-<option value="same_day">Same-day</option>
+<option value="same_day">Same-day ($100.00 Bonus)</option>
 <option value="tomorrow">Tomorrow</option>
 <option value="flexible">Flexible</option>
 </select>
@@ -168,7 +202,14 @@
 <label for="notes">Additional Notes (optional)</label>
 <textarea id="notes" rows="3"></textarea>
 </div>
-<div class="photo-upload">
+<div class="input-group">
+<label for="selfieBonus">Willing to take a selfie with “I sold my car to Recarra” for a $50 bonus? (Driver will take the picture and we may post it on our site)</label>
+<select id="selfieBonus" required="">
+<option value="">Select</option>
+<option>Yes, I'm in for $50 more!</option>
+<option>No, thank you</option>
+</select>
+</div><div class="photo-upload">
 <label>Upload Car Photos</label>
 <input accept="image/*" id="photos" multiple="" type="file"/>
 <small>Front, Rear, Left, Right, Engine, Damage</small>
@@ -233,7 +274,7 @@
       componentRestrictions: { country: "us" }
     });
 
-    autocomplete.setFields(["address_component", "formatted_address"]);
+    
 
     autocomplete.addListener("place_changed", () => {
       const place = autocomplete.getPlace();
@@ -259,7 +300,6 @@
   }
 </script>
 <script async="" defer="" src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&amp;libraries=places&amp;callback=initSmartAddress"></script>
-
 <script>
   function validateAddressMatch() {
     const zip = document.getElementById("zip").value;
