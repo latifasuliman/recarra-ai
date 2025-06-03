@@ -607,5 +607,44 @@ function runOCR(input, targetId) {
   reader.readAsDataURL(input.files[0]);
 }
 </script>
+
+<script>
+window.addEventListener("message", function(event) {
+  if (!event.data || !event.data.action) return;
+
+  if (event.data.action === "jumpTo") {
+    const section = event.data.section;
+    if (section === "vin") {
+      alert("Coming soon: VIN scan will launch.");
+    } else if (section === "plate") {
+      alert("Coming soon: License plate scan will launch.");
+    }
+  }
+});
+</script>
+
+
+<script>
+let currentStep = 1;
+
+function nextStep() {
+  document.querySelector(`#step${currentStep}`).classList.remove('active');
+  currentStep++;
+  document.querySelector(`#step${currentStep}`).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+
+<script>
+function handleAddressVisibility() {
+  const addressFilled = document.getElementById("autocomplete").value.length > 4;
+  ["city", "state", "zip"].forEach(id => {
+    const elem = document.getElementById(id).parentElement;
+    if (elem) elem.style.display = addressFilled ? 'block' : 'none';
+  });
+}
+</script>
+
 </body>
 </html>
