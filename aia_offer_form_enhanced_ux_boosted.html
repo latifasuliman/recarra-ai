@@ -124,6 +124,17 @@
   height: 96px !important;
   resize: vertical;
 }
+
+.flash-red {
+  color: #d80000;
+  font-weight: bold;
+  animation: flashRed 1s infinite;
+}
+@keyframes flashRed {
+  0% { opacity: 1; }
+  50% { opacity: 0.1; }
+  100% { opacity: 1; }
+}
 </style>
 </head>
 <body>
@@ -203,7 +214,7 @@
 <textarea id="notes" rows="3"></textarea>
 </div>
 <div class="input-group">
-<label for="selfieBonus">Willing to take a selfie with “I sold my car to Recarra” for a $50 bonus? (Driver will take the picture and we may post it on our site)</label>
+<label for="selfieBonus">Willing to take a selfie with “I sold my car to Recarra” for a <span class="flash-red">$50 bonus</span>? (Driver will take the picture and we may post it on our site)</label>
 <select id="selfieBonus" required="">
 <option value="">Select</option>
 <option>Yes, I'm in for $50 more!</option>
@@ -211,8 +222,14 @@
 </select>
 </div><div class="photo-upload">
 <label>Upload Car Photos</label>
-<input accept="image/*" id="photos" multiple="" type="file"/>
-<small>Front, Rear, Left, Right, Engine, Damage</small>
+<div class="smart-upload">
+<label>Front Photo<input accept="image/*" name="photo_front" type="file"/></label><br/><br/>
+<label>Rear Photo<input accept="image/*" name="photo_rear" type="file"/></label><br/><br/>
+<label>Left Side<input accept="image/*" name="photo_left" type="file"/></label><br/><br/>
+<label>Right Side<input accept="image/*" name="photo_right" type="file"/></label><br/><br/>
+<label>Engine<input accept="image/*" name="photo_engine" type="file"/></label><br/><br/>
+<label>Damage (if any)<input accept="image/*" name="photo_damage" type="file"/></label>
+</div>
 </div>
 <button class="btn" id="confirmPickup">Confirm Pickup</button>
 <div class="success hidden" id="successMessage">✅ Pickup Confirmed! Driver will call you shortly.</div>
