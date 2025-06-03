@@ -136,26 +136,242 @@
   100% { opacity: 1; }
 }
 </style>
+<style>
+  .scan-btn {
+    background-color: #d80000;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    margin: 8px 5px 0 0;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .scan-btn:hover {
+    background-color: #a00000;
+  }
+  .upload-input {
+    display: inline-block;
+    margin-top: 10px;
+  }
+</style>
+<style>
+  .cta-button {
+    background-color: #d80000;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+  }
+  .cta-button:hover {
+    background-color: #b00000;
+  }
+</style>
 </head>
-<body>
+<style>
+  .scan-group {
+    margin-top: 15px;
+    margin-bottom: 25px;
+  }
+  .scan-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  .scan-group input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  .scan-actions {
+    display: flex;
+    gap: 10px;
+  }
+  .scan-btn-red {
+    background-color: #d80000;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .scan-btn-blue {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .scan-btn-red:hover { background-color: #a00000; }
+  .scan-btn-blue:hover { background-color: #0056b3; }
+</style>
+<style>
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    color: #222;
+  }
+
+  .input-block {
+    margin-bottom: 25px;
+  }
+
+  .input-block label {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #444;
+  }
+
+  .input-block input[type="text"] {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+  }
+
+  .scan-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn-scan, .btn-upload {
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-scan {
+    background-color: #b30000;
+    color: white;
+  }
+
+  .btn-scan:hover {
+    background-color: #8b0000;
+  }
+
+  .btn-upload {
+    background-color: #0056b3;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-upload input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+</style>
+<div class="section-title">Vehicle Information</div>
+<style>
+  .scan-card {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+  .scan-card label {
+    display: block;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  .scan-card input[type="text"] {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 15px;
+    margin-bottom: 14px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  .scan-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .scan-button {
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .scan-camera {
+    background-color: #d80000;
+    color: white;
+  }
+  .scan-camera:hover {
+    background-color: #a00000;
+  }
+  .scan-upload {
+    background-color: #0056b3;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .scan-upload input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+</style>
+<body><form>
+<style>
+.step { display: none; }
+.step.active { display: block; }
+.step button { margin-top: 20px; }
+</style>
+<script>
+function nextStep(num) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step' + num).classList.add('active');
+}
+</script>
+<div class="step active" id="step1"><h2 style="color:#d80000;">Instant Car Offer</h2>
+<div style="margin-bottom: 20px; text-align: center;">
+<div style="display: inline-block; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px 16px; border-radius: 6px; font-size: 16px; font-weight: bold;">
+    🎁 $100 Same-Day Pickup Bonus Available
+  </div>
+</div>
+<div class="form-group"><label for="phone" style="font-weight:bold;">Phone Number</label><input id="phone" name="phone" placeholder="e.g. 555-123-4567" required="true" style="width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;border:1px solid #ccc;" type="tel"/></div><button class="cta-button" onclick="nextStep(2)" style="margin-top: 20px; display: block; width: 100%; text-align: center;" type="button">Next</button></div><div class="step" id="step2"><button class="cta-button" onclick="nextStep(3)" style="margin-top: 20px; display: block; width: 100%; text-align: center;" type="button">Next</button></div><div class="step" id="step3"></div></form>
 <div class="container">
 <!-- Step 1 -->
 <div id="step1">
 <h1>Instant Car Offer</h1>
-<div class="input-group">
-<label for="phone">Phone Number</label>
-<input id="phone" placeholder="e.g. 555-123-4567" required="" type="tel"/>
-</div>
-<div class="input-group">
-<label for="vin">VIN or Plate</label>
-<input id="vin" placeholder="17-digit VIN or plate" required="" type="text"/>
-<div class="microcopy" id="vinError" style="color:red; font-size:0.85rem;"></div>
-</div>
-<div class="consent">
-<label><input id="consent" required="" type="checkbox"/> I agree to be contacted via call/text</label>
-</div>
 <div class="bonus-box">🎁 $100 Same-Day Pickup Bonus Available</div>
-<button class="btn" disabled="" id="toStep2">Get My Offer</button>
 </div>
 <!-- Step 2 -->
 <div class="hidden" id="step2">
@@ -222,14 +438,6 @@
 </select>
 </div><div class="photo-upload">
 <label>Upload Car Photos</label>
-<div class="smart-upload">
-<label>Front Photo<input accept="image/*" name="photo_front" type="file"/></label><br/><br/>
-<label>Rear Photo<input accept="image/*" name="photo_rear" type="file"/></label><br/><br/>
-<label>Left Side<input accept="image/*" name="photo_left" type="file"/></label><br/><br/>
-<label>Right Side<input accept="image/*" name="photo_right" type="file"/></label><br/><br/>
-<label>Engine<input accept="image/*" name="photo_engine" type="file"/></label><br/><br/>
-<label>Damage (if any)<input accept="image/*" name="photo_damage" type="file"/></label>
-</div>
 </div>
 <button class="btn" id="confirmPickup">Confirm Pickup</button>
 <div class="success hidden" id="successMessage">✅ Pickup Confirmed! Driver will call you shortly.</div>
@@ -362,6 +570,42 @@
       }
     });
   }
+</script>
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@2/dist/tesseract.min.js"></script>
+<script>
+function startScan(targetId) {
+  const scannerDiv = document.createElement("div");
+  scannerDiv.id = "scanner";
+  document.body.appendChild(scannerDiv);
+  const html5QrCode = new Html5Qrcode("scanner");
+  Html5Qrcode.getCameras().then(devices => {
+    if (devices && devices.length) {
+      html5QrCode.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: 250 },
+        text => {
+          document.getElementById(targetId).value = text;
+          html5QrCode.stop();
+          scannerDiv.remove();
+        },
+        err => {}
+      );
+    }
+  }).catch(err => console.error(err));
+}
+
+function runOCR(input, targetId) {
+  if (input.files.length === 0) return;
+  const reader = new FileReader();
+  reader.onload = function() {
+    Tesseract.recognize(reader.result, 'eng')
+      .then(({ data: { text } }) => {
+        document.getElementById(targetId).value = text.trim();
+      });
+  };
+  reader.readAsDataURL(input.files[0]);
+}
 </script>
 </body>
 </html>
