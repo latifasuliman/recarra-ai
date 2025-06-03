@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Recarra Smart Form</title>
+<style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f8f8;
+      color: #111;
+    }
+    .container {
+      max-width: 460px;
+      margin: 3rem auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #d80000;
+      margin-bottom: 1.5rem;
+    }
+    .input-group {
+      margin-bottom: 1.2rem;
+    }
+    .input-group label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+    .input-group input,
+    .input-group select,
+    .input-group textarea {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #111;
+    }
+    .consent {
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .bonus-box {
+      background: #e6ffe6;
+      border: 1px solid #00aa00;
+      color: #006600;
+      padding: 0.75rem;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(to right, #ff0000, #cc0000);
+      border: none;
+      border-radius: 30px;
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);
+      margin-top: 1rem;
+    }
+    .photo-upload {
+      margin-bottom: 1rem;
+    }
+    .photo-upload label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+    .hidden {
+      display: none;
+    }
+    .success {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: green;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+<!-- Step 1 -->
+<div id="step1">
+<h1>Instant Car Offer</h1>
+<div class="input-group">
+<label for="phone">Phone Number</label>
+<input id="phone" placeholder="e.g. 555-123-4567" required="" type="tel"/>
+</div>
+<div class="input-group">
+<label for="vin">VIN or Plate</label>
+<input id="vin" placeholder="17-digit VIN or plate" required="" type="text"/>
+<div class="microcopy" id="vinError" style="color:red; font-size:0.85rem;"></div>
+</div>
+<div class="consent">
+<label><input id="consent" required="" type="checkbox"/> I agree to be contacted via call/text</label>
+</div>
+<div class="bonus-box">🎁 $100 Same-Day Pickup Bonus Available</div>
+<button class="btn" disabled="" id="toStep2">Get My Offer</button>
+</div>
+<!-- Step 2 -->
+<div class="hidden" id="step2">
+<h1>Step 2: Pickup &amp; Car Info</h1>
+<div class="input-group">
+<label for="autocomplete">Street Address</label>
+<input autocomplete="off" id="autocomplete" placeholder="Start typing your address..." required="" type="text"/>
+</div>
+<div class="input-group">
+<label for="city">City</label>
+<input id="city" readonly="" type="text"/>
+</div>
+<div class="input-group">
+<label for="state">State</label>
+<input id="state" readonly="" type="text"/>
+</div>
+<div class="input-group">
+<label for="zip">ZIP Code</label>
+<input id="zip" readonly="" type="text"/>
+</div>
+<div class="input-group">
+<label for="pickupTime">Preferred Pickup Time</label>
+<select id="pickupTime" required="">
+<option value="">Select one</option>
+<option value="same_day">Same-day</option>
+<option value="tomorrow">Tomorrow</option>
+<option value="flexible">Flexible</option>
+</select>
+</div>
+<div class="input-group">
+<label>Do you have the title?</label>
+<select id="hasTitle" required="">
+<option value="">Select</option>
+<option>Yes</option>
+<option>No</option>
+</select>
+</div>
+<div class="input-group">
+<label>Do you have the keys?</label>
+<select id="hasKeys" required="">
+<option value="">Select</option>
+<option>Yes</option>
+<option>No</option>
+</select>
+</div>
+<div class="input-group">
+<label>Does the car start?</label>
+<select id="carStarts" required="">
+<option value="">Select</option>
+<option>Yes</option>
+<option>No</option>
+</select>
+</div>
+<div class="input-group">
+<label for="notes">Additional Notes (optional)</label>
+<textarea id="notes" rows="3"></textarea>
+</div>
+<div class="photo-upload">
+<label>Upload Car Photos</label>
+<input accept="image/*" id="photos" multiple="" type="file"/>
+<small>Front, Rear, Left, Right, Engine, Damage</small>
+</div>
+<button class="btn" id="confirmPickup">Confirm Pickup</button>
+<div class="success hidden" id="successMessage">✅ Pickup Confirmed! Driver will call you shortly.</div>
+</div>
+</div>
+<script>
+    const phoneInput = document.getElementById("phone");
+    const vinInput = document.getElementById("vin");
+    const consentInput = document.getElementById("consent");
+    const toStep2Btn = document.getElementById("toStep2");
+    const vinError = document.getElementById("vinError");
+
+    function validateStep1() {
+      const phone = phoneInput.value.trim();
+      const vin = vinInput.value.trim();
+      const consent = consentInput.checked;
+      let isValid = true;
+
+      if (vin.length < 5) {
+        vinError.textContent = "Please enter at least 5 characters.";
+        isValid = false;
+      } else {
+        vinError.textContent = "";
+      }
+
+      toStep2Btn.disabled = !(phone.length > 6 && isValid && consent);
+    }
+
+    phoneInput.addEventListener("input", validateStep1);
+    vinInput.addEventListener("input", validateStep1);
+    consentInput.addEventListener("change", validateStep1);
+
+    toStep2Btn.addEventListener("click", () => {
+      document.getElementById("step1").classList.add("hidden");
+      document.getElementById("step2").classList.remove("hidden");
+    });
+
+    document.getElementById("confirmPickup").addEventListener("click", () => {
+      const address = document.getElementById("address").value.trim();
+      const pickupTime = document.getElementById("pickupTime").value;
+      const hasTitle = document.getElementById("hasTitle").value;
+      const hasKeys = document.getElementById("hasKeys").value;
+      const carStarts = document.getElementById("carStarts").value;
+
+      if (!address || !pickupTime || !hasTitle || !hasKeys || !carStarts) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+
+      document.getElementById("successMessage").classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+<script>
+  function initSmartAddress() {
+    const input = document.getElementById("autocomplete");
+    const autocomplete = new google.maps.places.Autocomplete(input, {
+      types: ["address"],
+      componentRestrictions: { country: "us" }
+    });
+
+    autocomplete.setFields(["address_component", "formatted_address"]);
+
+    autocomplete.addListener("place_changed", () => {
+      const place = autocomplete.getPlace();
+      const components = place.address_components;
+
+      let city = "", state = "", zip = "";
+
+      for (const comp of components) {
+        const types = comp.types;
+        if (types.includes("locality")) {
+          city = comp.long_name;
+        } else if (types.includes("administrative_area_level_1")) {
+          state = comp.short_name;
+        } else if (types.includes("postal_code")) {
+          zip = comp.long_name;
+        }
+      }
+
+      document.getElementById("city").value = city;
+      document.getElementById("state").value = state;
+      document.getElementById("zip").value = zip;
+    });
+  }
+</script>
+<script async="" defer="" src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&amp;libraries=places&amp;callback=initSmartAddress"></script>
+
+<script>
+  function validateAddressMatch() {
+    const zip = document.getElementById("zip").value;
+    const state = document.getElementById("state").value;
+
+    // Simple ZIP prefix to state mapping (basic check)
+    const zipStateMap = {
+      "1": "NY", "2": "DC", "3": "FL", "4": "GA", "5": "IL",
+      "6": "OH", "7": "TX", "8": "CO", "9": "CA"
+    };
+
+    const zipPrefix = zip.charAt(0);
+    const expectedState = zipStateMap[zipPrefix];
+
+    if (expectedState && expectedState !== state) {
+      alert("ZIP code does not appear to match the state. Please double-check your address.");
+      return false;
+    }
+
+    return true;
+  }
+
+  function handleAddressVisibility() {
+    const addressFilled = document.getElementById("autocomplete").value.length > 4;
+    document.getElementById("city").parentElement.style.display = addressFilled ? 'block' : 'none';
+    document.getElementById("state").parentElement.style.display = addressFilled ? 'block' : 'none';
+    document.getElementById("zip").parentElement.style.display = addressFilled ? 'block' : 'none';
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const addressInput = document.getElementById("autocomplete");
+    addressInput.addEventListener("input", handleAddressVisibility);
+    handleAddressVisibility(); // run on load
+  });
+
+  // Hook into pickup confirmation
+  const confirmBtn = document.getElementById("confirmPickup");
+  if (confirmBtn) {
+    confirmBtn.addEventListener("click", (e) => {
+      if (!validateAddressMatch()) {
+        e.preventDefault();
+        return;
+      }
+    });
+  }
+</script>
+</body>
+</html>
