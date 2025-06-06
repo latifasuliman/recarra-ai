@@ -1,17 +1,16 @@
 
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Recarra | Instant Car Offer</title>
-<style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recarra | Sell Your Car Fast</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
     body {
-      font-family: 'Poppins', sans-serif;
       margin: 0;
-      padding: 0;
-      background-color: #f8f8f8;
+      font-family: 'Poppins', sans-serif;
+      background: #f8f8f8;
       color: #111;
     }
     header {
@@ -21,49 +20,68 @@
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
     header h1 {
-      font-size: 1.6rem;
       color: #d80000;
+      font-size: 1.8rem;
+      margin: 0;
     }
-    .section, .hero {
+    .cta-button {
+      padding: 0.75rem 1.5rem;
+      font-weight: bold;
+      background: linear-gradient(to right, #ff0000, #cc0000);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(255,0,0,0.3);
+      font-size: 1rem;
+    }
+    section {
       padding: 4rem 2rem;
       text-align: center;
     }
-    .section h2 {
+    section h2 {
+      color: #d80000;
       font-size: 2rem;
       margin-bottom: 1rem;
-      color: #d80000;
     }
-    .section p, .hero p {
+    section p {
       font-size: 1.1rem;
       color: #444;
-      max-width: 800px;
+      max-width: 700px;
       margin: auto;
+      margin-bottom: 1.5rem;
     }
-    .cta-button {
-      margin-top: 2rem;
-      padding: 1rem 2rem;
-      font-size: 1rem;
-      font-weight: bold;
-      border: none;
-      border-radius: 30px;
+    ul {
+      list-style: none;
+      padding: 0;
+      max-width: 600px;
+      margin: auto;
+      text-align: left;
+      font-size: 1.1rem;
+    }
+    ul li {
+      margin-bottom: 0.75rem;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: #111;
       color: white;
-      background: linear-gradient(to right, #ff0000, #cc0000);
-      box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);
-      cursor: pointer;
     }
     #drawer {
       position: fixed;
       top: 0;
       right: -100%;
-      width: 100vw;
-      max-width: 100%;
+      width: 100%;
       height: 100%;
-      background: black;
-      z-index: 9999;
-      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.7);
+      background: #000;
       transition: right 0.4s ease;
+      z-index: 9999;
     }
     #drawer iframe {
       width: 100%;
@@ -87,120 +105,93 @@
       cursor: pointer;
       z-index: 10000;
     }
-  
-#topBtn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 0.8rem 1.4rem;
-  font-size: 1rem;
-  font-weight: bold;
-  color: white;
-  background: linear-gradient(to right, #ff0000, #cc0000);
-  border: none;
-  border-radius: 30px;
-  box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
-  cursor: pointer;
-  display: none;
-  z-index: 1000;
-}
-
-</style>
+    #topBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 0.8rem 1.4rem;
+      font-size: 1rem;
+      font-weight: bold;
+      color: white;
+      background: linear-gradient(to right, #ff0000, #cc0000);
+      border: none;
+      border-radius: 30px;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+      cursor: pointer;
+      display: none;
+      z-index: 1000;
+    }
+  </style>
 </head>
 <body>
-<header>
-<h1>Recarra</h1>
-<button class="cta-button" onclick="document.getElementById('offerForm').scrollIntoView({behavior: 'smooth'});">Get Instant Offer</button>
-</header>
-<section class="hero">
-<h2>Sell Your Car in Seconds</h2>
-<p>Get a real cash offer instantly. We pick up for free and pay you same-day. Bonus offers available now.</p>
-<button class="cta-button" onclick="openIframe()">Start Now</button>
+  <header>
+    <h1>Recarra</h1>
+    <button class="cta-button" onclick="openDrawer()">💰 Get Instant Offer</button>
+  </header>
 
-<div style="margin-top: 20px; text-align:center;">
-<button class="cta-button" onclick="openDrawerWith('vin')">📷 Scan VIN</button>
-<button class="cta-button" onclick="openDrawerWith('plate')">📸 Scan License Plate</button>
-</div>
-</section><section class="section" id="offerForm" style="background:#fff;">
-<h2 style="color:#d80000;">Smart Offer Form (Step-by-Step)</h2>
-<p style="max-width:500px;margin:auto;">Fill in your details below. You can scan or upload your VIN, enter your address, and schedule pickup — all in under a minute.</p>
-<div style="text-align:center; margin-top:2rem;">
-<button class="cta-button" onclick="openIframe()">Start Smart Form</button>
-</div>
-</section>
-<section class="section" style="background:#fff;">
-<h2>How It Works</h2>
-<p>Enter your VIN or Plate Number. We evaluate it instantly and show you a real offer based on market data.</p>
-<p>Accept the offer, choose your preferred payment method, and schedule a free pickup.</p>
-<button class="cta-button" onclick="openIframe()">Get Started</button>
-</section>
-<section class="section" style="background:#f0f0f0;">
-<h2>Why Recarra?</h2>
-<p>We use AI to give you better offers. Fast payouts, free pickup, no hidden fees, and friendly support.</p>
-<ul style="text-align:left; max-width:800px; margin:auto; font-size:1.1rem;">
-<li>✔️ Instant Quotes</li>
-<li>✔️ Free Same-Day Pickup</li>
-<li>✔️ Cash / Zelle / PayPal Payment</li>
-<li>✔️ $100 Bonus for Same-Day Tows</li>
-<li>✔️ Licensed &amp; Insured Nationwide Network</li>
-</ul>
-<div style="text-align:center;">
-<button class="cta-button" onclick="openIframe()">Get My Offer</button>
-</div>
-</section>
-<section class="section" style="background:#fff;">
-<h2>What We Buy</h2>
-<p>We buy all kinds of vehicles — even if they don’t run or have damage. Titles are preferred but not required in some states.</p>
-<ul style="text-align:left; max-width:800px; margin:auto; font-size:1.1rem;">
-<li>🚗 Junk Cars</li>
-<li>🚙 Used Cars</li>
-<li>🚛 Trucks, SUVs, Vans</li>
-<li>🔥 Wrecked / Totaled / Flooded Cars</li>
-<li>🪪 Vehicles with or without Title</li>
-</ul>
-<div style="text-align:center;">
-<button class="cta-button" onclick="openIframe()">See What Yours is Worth</button>
-</div>
-</section>
-<section class="section" style="background:#f0f0f0;">
-<h2>Contact &amp; Support</h2>
-<p>Have questions? Call or message us. Our team is here to help.</p>
-<p>📞 <a href="tel:3462740071">346-274-0071</a>   |   📧 <a href="mailto:support@recarra.com">support@recarra.com</a></p>
-<button class="cta-button" onclick="openIframe()">Get an Instant Offer</button>
-</section>
-<footer style="text-align:center; padding:2rem; background:#111; color:white;">
-  © 2025 Recarra. All rights reserved.
-</footer>
-<div id="drawer">
-<button id="closeDrawer" onclick="closeDrawer()">×</button>
-<iframe src="recarra_step_by_step_form.html"></iframe>
-</div>
-<script>
-  function openIframe() {
-    document.getElementById("drawer").classList.add("open");
-  }
-  function closeDrawer() {
-    document.getElementById("drawer").classList.remove("open");
-  }
+  <section>
+    <h2>Sell Your Car in 30 Seconds</h2>
+    <p>Instant cash offers. Free same-day pickup. $100 bonus guaranteed.</p>
+    <button class="cta-button" onclick="openDrawer()">Start Now</button>
+  </section>
 
-window.onscroll = function () {
-  const btn = document.getElementById("topBtn");
-  btn.style.display = window.scrollY > 300 ? "block" : "none";
-};
+  <section style="background:#fff;">
+    <h2>How It Works</h2>
+    <p>We use AI and market data to give you the best possible cash offer. Accept, schedule pickup, and get paid fast.</p>
+    <ul>
+      <li>✔️ Real-time Cash Offers</li>
+      <li>✔️ Free Pickup Same-Day</li>
+      <li>✔️ $100 Bonus for Same-Day Tows</li>
+      <li>✔️ Zelle, PayPal, or Cash Payment</li>
+      <li>✔️ Licensed & Insured Nationwide</li>
+    </ul>
+    <button class="cta-button" onclick="openDrawer()">Get My Offer</button>
+  </section>
 
-function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+  <section>
+    <h2>What We Buy</h2>
+    <p>We buy cars in any condition — even if they don’t start or are missing the title.</p>
+    <ul>
+      <li>🚗 Junk & Used Cars</li>
+      <li>🚙 SUVs, Vans, and Trucks</li>
+      <li>🔥 Wrecked or Flooded Vehicles</li>
+      <li>🪪 With or Without Title</li>
+    </ul>
+    <button class="cta-button" onclick="openDrawer()">Check My Car Value</button>
+  </section>
 
-</script>
-<button id="topBtn" onclick="scrollToTop()">↑ Top</button>
-<script>
-function openDrawerWith(type) {
-  document.getElementById("drawer").classList.add("open");
-  const iframe = document.querySelector("#drawer iframe");
-  if (iframe && iframe.src.includes("recarra_form_drawer_final.html")) {
-    iframe.contentWindow.postMessage({ action: "jumpTo", section: type }, "*");
-  }
-}
-</script></body>
+  <section style="background:#fff;">
+    <h2>Contact Us</h2>
+    <p>Questions? Our team is ready to help.</p>
+    <p>📞 <a href="tel:3462740071">346-274-0071</a> | 📧 <a href="mailto:support@recarra.com">support@recarra.com</a></p>
+    <button class="cta-button" onclick="openDrawer()">Chat & Offer</button>
+  </section>
+
+  <footer>
+    © 2025 Recarra. All rights reserved.
+  </footer>
+
+  <div id="drawer">
+    <button id="closeDrawer" onclick="closeDrawer()">×</button>
+    <iframe src="redesigned_aia_offer_form.html"></iframe>
+  </div>
+
+  <button id="topBtn" onclick="scrollToTop()">↑ Top</button>
+
+  <script>
+    function openDrawer() {
+      document.getElementById('drawer').classList.add('open');
+    }
+    function closeDrawer() {
+      document.getElementById('drawer').classList.remove('open');
+    }
+    window.onscroll = function () {
+      const btn = document.getElementById("topBtn");
+      btn.style.display = window.scrollY > 300 ? "block" : "none";
+    };
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
 </html>

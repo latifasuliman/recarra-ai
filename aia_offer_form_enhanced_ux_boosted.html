@@ -1,667 +1,183 @@
 
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Recarra Smart Form</title>
-<style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recarra | Smart Car Offer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background-color: #f8f8f8;
+      background-color: #f7f7f7;
       color: #111;
     }
+
     .container {
-      max-width: 460px;
-      margin: 3rem auto;
-      background: #fff;
+      max-width: 480px;
+      margin: 2rem auto;
+      background: white;
       padding: 2rem;
       border-radius: 12px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
-    h1 {
+
+    .header {
       text-align: center;
-      color: #d80000;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
+
+    .header h1 {
+      color: #d80000;
+      font-size: 1.8rem;
+      margin: 0.5rem 0;
+    }
+
+    .bonus-box {
+      background: #ffeaea;
+      color: #b30000;
+      padding: 0.75rem;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      animation: flash 1.2s infinite;
+    }
+
+    @keyframes flash {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
     .input-group {
       margin-bottom: 1.2rem;
     }
+
     .input-group label {
-      font-weight: bold;
       display: block;
       margin-bottom: 0.4rem;
+      font-weight: bold;
     }
-    .input-group input,
-    .input-group select,
-    .input-group textarea {
+
+    .input-group input, .input-group select, .input-group textarea {
       width: 100%;
       padding: 12px;
       font-size: 1rem;
       border: 2px solid #ccc;
       border-radius: 8px;
-      font-weight: bold;
-      color: #111;
+      box-sizing: border-box;
     }
-    .consent {
-      margin: 1rem 0;
-      font-size: 0.95rem;
-    }
-    .bonus-box {
-      background: #e6ffe6;
-      border: 1px solid #00aa00;
-      color: #006600;
-      padding: 0.75rem;
-      border-radius: 10px;
-      text-align: center;
-      font-weight: bold;
-      margin-bottom: 1rem;
-    }
+
     .btn {
       width: 100%;
       padding: 14px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: white;
       background: linear-gradient(to right, #ff0000, #cc0000);
       border: none;
       border-radius: 30px;
-      color: white;
-      font-size: 1rem;
-      font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);
-      margin-top: 1rem;
+      margin-top: 1.2rem;
     }
-    .photo-upload {
-      margin-bottom: 1rem;
+
+    .btn:hover {
+      background: #a00000;
     }
-    .photo-upload label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: bold;
-    }
-    .hidden {
+
+    .step {
       display: none;
     }
-    .success {
-      text-align: center;
-      font-size: 1.2rem;
-      font-weight: bold;
+
+    .step.active {
+      display: block;
+    }
+
+    .success-message {
       color: green;
-      margin-top: 1.5rem;
+      text-align: center;
+      font-weight: bold;
+      margin-top: 1rem;
     }
-  
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.input-group input,
-.input-group select,
-.input-group textarea {
-  text-align: center;
-}
-.flash-bonus {
-  animation: flash 1s infinite;
-  color: #d80000;
-  font-weight: bold;
-  margin-left: 8px;
-}
-@keyframes flash {
-  0% { opacity: 1; }
-  50% { opacity: 0.1; }
-  100% { opacity: 1; }
-}
-
-.input-group input,
-.input-group select,
-.input-group textarea {
-  width: 100% !important;
-  height: 48px !important;
-  box-sizing: border-box;
-}
-.input-group textarea {
-  height: 96px !important;
-  resize: vertical;
-}
-
-.flash-red {
-  color: #d80000;
-  font-weight: bold;
-  animation: flashRed 1s infinite;
-}
-@keyframes flashRed {
-  0% { opacity: 1; }
-  50% { opacity: 0.1; }
-  100% { opacity: 1; }
-}
-</style>
-<style>
-  .scan-btn {
-    background-color: #d80000;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    margin: 8px 5px 0 0;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  .scan-btn:hover {
-    background-color: #a00000;
-  }
-  .upload-input {
-    display: inline-block;
-    margin-top: 10px;
-  }
-</style>
-<style>
-  .cta-button {
-    background-color: #d80000;
-    color: white;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    padding: 14px 24px;
-    font-size: 16px;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 20px;
-  }
-  .cta-button:hover {
-    background-color: #b00000;
-  }
-</style>
+  </style>
 </head>
-<style>
-  .scan-group {
-    margin-top: 15px;
-    margin-bottom: 25px;
-  }
-  .scan-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  .scan-group input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    margin-bottom: 10px;
-  }
-  .scan-actions {
-    display: flex;
-    gap: 10px;
-  }
-  .scan-btn-red {
-    background-color: #d80000;
-    color: white;
-    border: none;
-    padding: 10px;
-    font-size: 14px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  .scan-btn-blue {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    padding: 10px;
-    font-size: 14px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  .scan-btn-red:hover { background-color: #a00000; }
-  .scan-btn-blue:hover { background-color: #0056b3; }
-</style>
-<style>
-  .section-title {
-    font-size: 20px;
-    font-weight: 700;
-    margin-top: 30px;
-    margin-bottom: 10px;
-    color: #222;
-  }
-
-  .input-block {
-    margin-bottom: 25px;
-  }
-
-  .input-block label {
-    display: block;
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #444;
-  }
-
-  .input-block input[type="text"] {
-    width: 100%;
-    padding: 12px 14px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    margin-bottom: 12px;
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
-  }
-
-  .scan-actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .btn-scan, .btn-upload {
-    padding: 10px 18px;
-    font-size: 14px;
-    font-weight: 600;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .btn-scan {
-    background-color: #b30000;
-    color: white;
-  }
-
-  .btn-scan:hover {
-    background-color: #8b0000;
-  }
-
-  .btn-upload {
-    background-color: #0056b3;
-    color: white;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .btn-upload input[type="file"] {
-    position: absolute;
-    opacity: 0;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-  }
-</style>
-<div class="section-title">Vehicle Information</div>
-<style>
-  .scan-card {
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    margin: 20px 0;
-  }
-  .scan-card label {
-    display: block;
-    font-weight: 600;
-    font-size: 16px;
-    margin-bottom: 8px;
-  }
-  .scan-card input[type="text"] {
-    width: 100%;
-    padding: 10px 14px;
-    font-size: 15px;
-    margin-bottom: 14px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-  }
-  .scan-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .scan-button {
-    padding: 10px 16px;
-    font-size: 14px;
-    font-weight: 600;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  .scan-camera {
-    background-color: #d80000;
-    color: white;
-  }
-  .scan-camera:hover {
-    background-color: #a00000;
-  }
-  .scan-upload {
-    background-color: #0056b3;
-    color: white;
-    position: relative;
-    overflow: hidden;
-  }
-  .scan-upload input[type="file"] {
-    position: absolute;
-    opacity: 0;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-  }
-</style>
-<body><form>
-<style>
-.step { display: none; }
-.step.active { display: block; }
-.step button { margin-top: 20px; }
-</style>
-<script>
-function nextStep(num) {
-  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-  document.getElementById('step' + num).classList.add('active');
-}
-</script>
-<div class="step active" id="step1">
-<div id="ai-assistant" style="text-align:center;margin-top:20px;">
-  <div id="typing-msg" style="display:inline-block;padding:10px 20px;background:#fff4f4;color:#d80000;border-radius:20px;font-weight:bold;box-shadow:0 0 10px rgba(255,0,0,0.2);">
-    🤖 Recarra AI is thinking...
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Instant Car Offer</h1>
+      <div class="bonus-box">🎁 $100 Same-Day Pickup Bonus</div>
+    </div>
+    <form id="offerForm">
+      <div class="step active" id="step1">
+        <div class="input-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" placeholder="e.g. 555-123-4567" required />
+        </div>
+        <div class="input-group">
+          <label><input type="checkbox" id="consent" required /> I consent to be contacted for my offer</label>
+        </div>
+        <button type="button" class="btn" onclick="nextStep(2)">Get My Offer</button>
+      </div>
+      <div class="step" id="step2">
+        <div class="input-group">
+          <label for="address">Pickup Address</label>
+          <input type="text" id="address" placeholder="Start typing address..." required />
+        </div>
+        <div class="input-group">
+          <label for="pickupTime">Preferred Pickup Time</label>
+          <select id="pickupTime" required>
+            <option value="">Select one</option>
+            <option value="same_day">Same-Day (+$100)</option>
+            <option value="tomorrow">Tomorrow</option>
+            <option value="flexible">Flexible</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="hasTitle">Do you have the title?</label>
+          <select id="hasTitle" required>
+            <option value="">Select</option>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="hasKeys">Do you have the keys?</label>
+          <select id="hasKeys" required>
+            <option value="">Select</option>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="carStarts">Does the car start?</label>
+          <select id="carStarts" required>
+            <option value="">Select</option>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="selfieBonus">Willing to take a $50 bonus selfie?</label>
+          <select id="selfieBonus" required>
+            <option value="">Select</option>
+            <option>Yes, add $50 bonus</option>
+            <option>No, thanks</option>
+          </select>
+        </div>
+        <button type="button" class="btn" onclick="nextStep(3)">Next</button>
+      </div>
+      <div class="step" id="step3">
+        <p class="success-message">✅ Pickup Confirmed! We'll contact you shortly.</p>
+      </div>
+    </form>
   </div>
-</div>
-<script>
-function showAssistantTyping(message, delay = 1000) {
-  const msg = document.getElementById("typing-msg");
-  msg.textContent = "🤖 " + message;
-  msg.style.opacity = 1;
-  setTimeout(() => {
-    msg.style.opacity = 0;
-  }, delay + 1500);
-}
-</script>
-<h2 style="color:#d80000;">Instant Car Offer</h2>
-<div style="margin-bottom: 20px; text-align: center;">
-<div style="display: inline-block; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px 16px; border-radius: 6px; font-size: 16px; font-weight: bold;">
-    🎁 $100 Same-Day Pickup Bonus Available
-  </div>
-</div>
-<div class="form-group"><label for="phone" style="font-weight:bold;">Phone Number</label><input id="phone" name="phone" placeholder="e.g. 555-123-4567" required="true" style="width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;border:1px solid #ccc;" type="tel"/></div><button class="cta-button" onclick="nextStep(2)" style="margin-top: 20px; display: block; width: 100%; text-align: center;" type="button">Next</button></div><div class="step" id="step2"><button class="cta-button" onclick="nextStep(3)" style="margin-top: 20px; display: block; width: 100%; text-align: center;" type="button">Next</button></div><div class="step" id="step3"></div></form>
-<div class="container">
-<!-- Step 1 -->
-<div id="step1">
-<h1>Instant Car Offer</h1>
-<div class="bonus-box">🎁 $100 Same-Day Pickup Bonus Available</div>
-</div>
-<!-- Step 2 -->
-<div class="hidden" id="step2">
-<h1>Step 2: Pickup &amp; Car Info</h1>
-<div class="input-group">
-<label for="autocomplete">Street Address</label>
-<input autocomplete="off" id="autocomplete" placeholder="Start typing your address..." required="" type="text"/>
-</div>
-<div class="input-group">
-<label for="city">City</label>
-<input id="city" readonly="" type="text"/>
-</div>
-<div class="input-group">
-<label for="state">State</label>
-<input id="state" readonly="" type="text"/>
-</div>
-<div class="input-group">
-<label for="zip">ZIP Code</label>
-<input id="zip" readonly="" type="text"/>
-</div>
-<div class="input-group">
-<label for="pickupTime">Preferred Pickup Time</label><span class="flash-bonus">$100 Bonus!</span>
-<select id="pickupTime" required="">
-<option value="">Select one</option>
-<option value="same_day">Same-day ($100.00 Bonus)</option>
-<option value="tomorrow">Tomorrow</option>
-<option value="flexible">Flexible</option>
-</select>
-</div>
-<div class="input-group">
-<label>Do you have the title?</label>
-<select id="hasTitle" required="">
-<option value="">Select</option>
-<option>Yes</option>
-<option>No</option>
-</select>
-</div>
-<div class="input-group">
-<label>Do you have the keys?</label>
-<select id="hasKeys" required="">
-<option value="">Select</option>
-<option>Yes</option>
-<option>No</option>
-</select>
-</div>
-<div class="input-group">
-<label>Does the car start?</label>
-<select id="carStarts" required="">
-<option value="">Select</option>
-<option>Yes</option>
-<option>No</option>
-</select>
-</div>
-<div class="input-group">
-<label for="notes">Additional Notes (optional)</label>
-<textarea id="notes" rows="3"></textarea>
-</div>
-<div class="input-group">
-<label for="selfieBonus">Willing to take a selfie with “I sold my car to Recarra” for a <span class="flash-red">$50 bonus</span>? (Driver will take the picture and we may post it on our site)</label>
-<select id="selfieBonus" required="">
-<option value="">Select</option>
-<option>Yes, I'm in for $50 more!</option>
-<option>No, thank you</option>
-</select>
-</div><div class="photo-upload">
-<label>Upload Car Photos</label>
-</div>
-<button class="btn" id="confirmPickup">Confirm Pickup</button>
-<div class="success hidden" id="successMessage">✅ Pickup Confirmed! Driver will call you shortly.</div>
-</div>
-</div>
-<script>
-    const phoneInput = document.getElementById("phone");
-    const vinInput = document.getElementById("vin");
-    const consentInput = document.getElementById("consent");
-    const toStep2Btn = document.getElementById("toStep2");
-    const vinError = document.getElementById("vinError");
-
-    function validateStep1() {
-      const phone = phoneInput.value.trim();
-      const vin = vinInput.value.trim();
-      const consent = consentInput.checked;
-      let isValid = true;
-
-      if (vin.length < 5) {
-        vinError.textContent = "Please enter at least 5 characters.";
-        isValid = false;
-      } else {
-        vinError.textContent = "";
-      }
-
-      toStep2Btn.disabled = !(phone.length > 6 && isValid && consent);
-    }
-
-    phoneInput.addEventListener("input", validateStep1);
-    vinInput.addEventListener("input", validateStep1);
-    consentInput.addEventListener("change", validateStep1);
-
-    toStep2Btn.addEventListener("click", () => {
-      document.getElementById("step1").classList.add("hidden");
-      document.getElementById("step2").classList.remove("hidden");
-    });
-
-    document.getElementById("confirmPickup").addEventListener("click", () => {
-      const address = document.getElementById("address").value.trim();
-      const pickupTime = document.getElementById("pickupTime").value;
-      const hasTitle = document.getElementById("hasTitle").value;
-      const hasKeys = document.getElementById("hasKeys").value;
-      const carStarts = document.getElementById("carStarts").value;
-
-      if (!address || !pickupTime || !hasTitle || !hasKeys || !carStarts) {
-        alert("Please fill in all required fields.");
-        return;
-      }
-
-      document.getElementById("successMessage").classList.remove("hidden");
+  <script>
+    function nextStep(num) {
+      document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+      document.getElementById('step' + num).classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    }
   </script>
-<script>
-  function initSmartAddress() {
-    const input = document.getElementById("autocomplete");
-    const autocomplete = new google.maps.places.Autocomplete(input, {
-      types: ["address"],
-      componentRestrictions: { country: "us" }
-    });
-
-    
-
-    autocomplete.addListener("place_changed", () => {
-      const place = autocomplete.getPlace();
-      const components = place.address_components;
-
-      let city = "", state = "", zip = "";
-
-      for (const comp of components) {
-        const types = comp.types;
-        if (types.includes("locality")) {
-          city = comp.long_name;
-        } else if (types.includes("administrative_area_level_1")) {
-          state = comp.short_name;
-        } else if (types.includes("postal_code")) {
-          zip = comp.long_name;
-        }
-      }
-
-      document.getElementById("city").value = city;
-      document.getElementById("state").value = state;
-      document.getElementById("zip").value = zip;
-    });
-  }
-</script>
-<script async="" defer="" src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&amp;libraries=places&amp;callback=initSmartAddress"></script>
-<script>
-  function validateAddressMatch() {
-    const zip = document.getElementById("zip").value;
-    const state = document.getElementById("state").value;
-
-    // Simple ZIP prefix to state mapping (basic check)
-    const zipStateMap = {
-      "1": "NY", "2": "DC", "3": "FL", "4": "GA", "5": "IL",
-      "6": "OH", "7": "TX", "8": "CO", "9": "CA"
-    };
-
-    const zipPrefix = zip.charAt(0);
-    const expectedState = zipStateMap[zipPrefix];
-
-    if (expectedState && expectedState !== state) {
-      alert("ZIP code does not appear to match the state. Please double-check your address.");
-      return false;
-    }
-
-    return true;
-  }
-
-  function handleAddressVisibility() {
-    const addressFilled = document.getElementById("autocomplete").value.length > 4;
-    document.getElementById("city").parentElement.style.display = addressFilled ? 'block' : 'none';
-    document.getElementById("state").parentElement.style.display = addressFilled ? 'block' : 'none';
-    document.getElementById("zip").parentElement.style.display = addressFilled ? 'block' : 'none';
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const addressInput = document.getElementById("autocomplete");
-    addressInput.addEventListener("input", handleAddressVisibility);
-    handleAddressVisibility(); // run on load
-  });
-
-  // Hook into pickup confirmation
-  const confirmBtn = document.getElementById("confirmPickup");
-  if (confirmBtn) {
-    confirmBtn.addEventListener("click", (e) => {
-      if (!validateAddressMatch()) {
-        e.preventDefault();
-        return;
-      }
-    });
-  }
-</script>
-<script src="https://unpkg.com/html5-qrcode"></script>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@2/dist/tesseract.min.js"></script>
-<script>
-function startScan(targetId) {
-  const scannerDiv = document.createElement("div");
-  scannerDiv.id = "scanner";
-  document.body.appendChild(scannerDiv);
-  const html5QrCode = new Html5Qrcode("scanner");
-  Html5Qrcode.getCameras().then(devices => {
-    if (devices && devices.length) {
-      html5QrCode.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: 250 },
-        text => {
-          document.getElementById(targetId).value = text;
-          html5QrCode.stop();
-          scannerDiv.remove();
-        },
-        err => {}
-      );
-    }
-  }).catch(err => console.error(err));
-}
-
-function runOCR(input, targetId) {
-  if (input.files.length === 0) return;
-  const reader = new FileReader();
-  reader.onload = function() {
-    Tesseract.recognize(reader.result, 'eng')
-      .then(({ data: { text } }) => {
-        document.getElementById(targetId).value = text.trim();
-      });
-  };
-  reader.readAsDataURL(input.files[0]);
-}
-</script>
-
-<script>
-window.addEventListener("message", function(event) {
-  if (!event.data || !event.data.action) return;
-
-  if (event.data.action === "jumpTo") {
-    const section = event.data.section;
-    if (section === "vin") {
-      alert("Coming soon: VIN scan will launch.");
-    } else if (section === "plate") {
-      alert("Coming soon: License plate scan will launch.");
-    }
-  }
-});
-</script>
-
-
-<script>
-let currentStep = 1;
-
-function nextStep() {
-  showAssistantTyping("Analyzing your car... Getting the best offer ready!", 2000);
-  document.querySelector(`#step${currentStep}`).classList.remove('active');
-  currentStep++;
-  document.querySelector(`#step${currentStep}`).classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-</script>
-
-
-<script>
-function handleAddressVisibility() {
-  const addressFilled = document.getElementById("autocomplete").value.length > 4;
-  ["city", "state", "zip"].forEach(id => {
-    const elem = document.getElementById(id).parentElement;
-    if (elem) elem.style.display = addressFilled ? 'block' : 'none';
-  });
-}
-</script>
-
 </body>
 </html>
