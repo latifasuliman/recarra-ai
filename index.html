@@ -127,6 +127,32 @@
       font-size: 0.88rem;
       color: color-mix(in oklab, #f4f1ea 70%, transparent);
     }
+    .desk {
+      margin-top: 1.5rem;
+      border: 1px solid color-mix(in oklab, #f4f1ea 12%, transparent);
+      border-radius: 20px;
+      background: color-mix(in oklab, #f4f1ea 6%, transparent);
+      overflow: hidden;
+    }
+    .desk-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem 0.35rem;
+    }
+    .desk-top span { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; color: var(--accent); }
+    .desk-top em { font-style: normal; font-size: 0.72rem; color: color-mix(in oklab, #f4f1ea 55%, transparent); }
+    .desk-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.75rem;
+      padding: 0.7rem 1rem;
+      border-top: 1px solid color-mix(in oklab, #f4f1ea 10%, transparent);
+    }
+    .desk-row strong { display: block; font-weight: 600; font-size: 0.95rem; }
+    .desk-row small { color: color-mix(in oklab, #f4f1ea 70%, transparent); }
+    .desk-row .st { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: var(--accent); white-space: nowrap; }
     .player { margin-top: 0; }
     @media (max-width: 959px) {
       .player { margin-top: 0.25rem; }
@@ -362,6 +388,10 @@
         <a class="btn btn-ghost" href="tel:+13462740071">Call (346) 274-0071</a>
       </div>
       <p class="hours-line">Monday–Saturday, 8 a.m.–6 p.m. · We call back.</p>
+      <div class="desk">
+        <div class="desk-top"><span>On the desk</span><em>Pending and being bought</em></div>
+        <div id="deskRows"></div>
+      </div>
       </div>
       <div class="player" id="buyPlayer">
         <div class="player-top"><span>Recently bought</span><em id="buyCount">1 / 4</em></div>
@@ -506,6 +536,48 @@
   </footer>
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
+    (function desk() {
+      const seed = [
+        { year: "2015", make: "Chevrolet", model: "Malibu", city: "Houston", status: "Offer out" },
+        { year: "2010", make: "Dodge", model: "Charger", city: "Katy", status: "Pickup pending" },
+        { year: "2008", make: "Nissan", model: "Rogue", city: "Pasadena", status: "Pending review" },
+        { year: "2012", make: "Ford", model: "Escape", city: "Alief", status: "On the truck" }
+      ];
+      function publicStatus(status) {
+        const s = String(status || "").toLowerCase();
+        if (s.indexOf("collect") >= 0) return "On the truck";
+        if (s.indexOf("pickup") >= 0 || s.indexOf("accepted") >= 0) return "Pickup pending";
+        if (s.indexOf("offer") >= 0 || s.indexOf("negotiat") >= 0) return "Offer out";
+        return "Pending review";
+      }
+      const closed = { "Buyer Paid": 1, Completed: 1, "Lost or Rejected": 1, Paid: 1, Passed: 1 };
+      let rows = seed;
+      try {
+        const live = JSON.parse(localStorage.getItem("recarra-leads-v1") || "[]")
+          .filter(function (lead) { return lead && !closed[lead.status]; })
+          .slice(0, 6)
+          .map(function (lead) {
+            return {
+              year: lead.year,
+              make: lead.make,
+              model: lead.model,
+              city: lead.city || lead.zip || "Houston",
+              status: publicStatus(lead.status)
+            };
+          });
+        if (live.length) rows = live;
+      } catch (err) {}
+      const box = document.getElementById("deskRows");
+      rows.forEach(function (row) {
+        const el = document.createElement("div");
+        el.className = "desk-row";
+        el.innerHTML = "<div><strong></strong><small></small></div><span class='st'></span>";
+        el.querySelector("strong").textContent = [row.year, row.make, row.model].join(" ");
+        el.querySelector("small").textContent = row.city;
+        el.querySelector(".st").textContent = row.status;
+        box.appendChild(el);
+      });
+    })();
     (function cityBuys() {
       const buys = [
         { city: "Houston", car: "2011 Nissan Altima", paid: "Paid $375 after pickup and verify.", video: "videos/buys/houston.mp4", poster: "images/buys/altima.jpg" },
