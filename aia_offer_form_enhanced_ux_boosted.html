@@ -159,7 +159,10 @@
         <input id="zip" inputmode="numeric" autocomplete="postal-code" required />
         <p id="zipHint" class="muted"></p>
         <label for="address">Pickup street address</label>
-        <input id="address" autocomplete="street-address" placeholder="1234 Main St, Houston" />
+        <button class="link" type="button" id="useLoc" style="margin:0 0 0.35rem">Use my location</button>
+        <input id="address" autocomplete="street-address" placeholder="Start typing the street" />
+        <ul id="addrHits" class="list" hidden></ul>
+        <p id="addrHint" class="muted">Houston streets load as you type. Or use your location.</p>
         <label for="pickup">Pickup window</label>
         <select id="pickup">
           <option value="soonest">Soonest you can come</option>
@@ -353,6 +356,66 @@
     };
     document.getElementById("running").onchange = showRange;
     document.getElementById("title").onchange = showRange;
+    function formatAddr(p) {
+      const line = [p.housenumber, p.street || p.name].filter(Boolean).join(" ");
+      if (!line) return null;
+      const city = p.city || p.locality || "Houston";
+      const zip = p.postcode || "";
+      return { line: line, zip: zip, label: [line, city, zip].filter(Boolean).join(", ") };
+    }
+    async function searchAddr(q) {
+      const zip = document.getElementById("zip").value.trim();
+      const query = [q.trim(), zip, "Houston TX"].filter(Boolean).join(" ");
+      const res = await fetch("https://photon.komoot.io/api/?limit=6&lat=29.7604&lon=-95.3698&q=" + encodeURIComponent(query));
+      const data = await res.json();
+      return (data.features || []).map(function (f) { return formatAddr(f.properties || {}); }).filter(Boolean);
+    }
+    function showAddrHits(hits) {
+      const box = document.getElementById("addrHits");
+      if (!hits.length) { box.hidden = true; box.innerHTML = ""; return; }
+      box.hidden = false;
+      box.innerHTML = hits.map(function (h) {
+        return "<li><button type='button'>" + h.label + "</button></li>";
+      }).join("");
+      box.querySelectorAll("button").forEach(function (btn, i) {
+        btn.onclick = function () {
+          document.getElementById("address").value = hits[i].line;
+          if (hits[i].zip) document.getElementById("zip").value = hits[i].zip;
+          box.hidden = true;
+          document.getElementById("addrHint").textContent = hits[i].label + " — loaded.";
+        };
+      });
+    }
+    function fillFromLocation() {
+      const hint = document.getElementById("addrHint");
+      if (!navigator.geolocation) { hint.textContent = "Location is not available on this device."; return; }
+      hint.textContent = "Finding this street…";
+      navigator.geolocation.getCurrentPosition(async function (pos) {
+        try {
+          const res = await fetch("https://photon.komoot.io/reverse?lon=" + pos.coords.longitude + "&lat=" + pos.coords.latitude);
+          const data = await res.json();
+          const hit = data.features && data.features[0] ? formatAddr(data.features[0].properties || {}) : null;
+          if (!hit) { hint.textContent = "Could not read a street from this location."; return; }
+          document.getElementById("address").value = hit.line;
+          if (hit.zip) document.getElementById("zip").value = hit.zip;
+          document.getElementById("addrHits").hidden = true;
+          hint.textContent = hit.label + " — loaded from this device.";
+        } catch (err) { hint.textContent = "Could not read a street from this location."; }
+      }, function () { hint.textContent = "Allow location to fill the pickup street."; }, { enableHighAccuracy: true, timeout: 12000 });
+    }
+    let addrTimer = 0;
+    document.getElementById("address").addEventListener("input", function (e) {
+      const q = e.target.value;
+      window.clearTimeout(addrTimer);
+      if (q.trim().length < 3) { document.getElementById("addrHits").hidden = true; return; }
+      addrTimer = window.setTimeout(async function () {
+        try { showAddrHits(await searchAddr(q)); } catch (err) {}
+      }, 280);
+    });
+    document.getElementById("address").addEventListener("focus", function () {
+      if (!document.getElementById("address").value.trim()) fillFromLocation();
+    });
+    document.getElementById("useLoc").onclick = fillFromLocation;
     document.getElementById("zip").addEventListener("input", async (e) => {
       const zip = e.target.value.trim();
       const hint = document.getElementById("zipHint");

@@ -146,6 +146,10 @@
     .badge.off { background:#f4f6f8; color:var(--muted); }
     .row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
     h1, h2 { letter-spacing: -0.03em; margin: 0 0 0.4rem; }
+    .list { list-style:none; margin:0.3rem 0 0; padding:0; border:1px solid var(--border); border-radius:8px; background:#fff; max-height:180px; overflow:auto; }
+    .list button { width:100%; text-align:left; border:0; background:transparent; padding:0.55rem 0.7rem; cursor:pointer; min-height:40px; }
+    .list button:hover { background:#e8eef4; }
+    .linkish { background:none; border:0; color:var(--accent); font-weight:700; cursor:pointer; padding:0; min-height:0; }
   </style>
 </head>
 <body>
@@ -363,7 +367,11 @@
         "</div>" +
         "<h2 style='margin-top:1.4rem'>Pickup, pay, and tow</h2>" +
         "<p class='muted'>" + escapeHtml(l.address || "No street yet") + (l.pickupWindow ? " · window " + l.pickupWindow : "") + "</p>" +
-        "<label>Pickup street</label><input id='opsAddress' value='" + escapeHtml(l.address || "") + "' placeholder='1234 Main St' />" +
+        "<label>Pickup street</label>" +
+        "<button class='linkish' type='button' id='useLocOps'>Use my location</button>" +
+        "<input id='opsAddress' value='" + escapeHtml(l.address || "") + "' placeholder='Start typing the street' autocomplete='street-address' />" +
+        "<ul id='opsAddrHits' class='list' hidden></ul>" +
+        "<p class='muted' id='opsAddrHint'>Houston streets load as you type.</p>" +
         "<label>Pay method</label><select id='payMethod'>" +
           ["unpaid","cash","zelle","cashier-check","wire"].map(function (m) {
             return "<option value='" + m + "'" + ((l.payMethod || "unpaid") === m ? " selected" : "") + ">" + m + "</option>";
@@ -512,6 +520,56 @@
         addLog("ops", "Pickup / pay / tow saved for " + (l.trackCode || l.id), { offerNo: l.trackCode || l.id });
         render();
       };
+      (function bindAddress() {
+        const input = document.getElementById("opsAddress");
+        const box = document.getElementById("opsAddrHits");
+        const hint = document.getElementById("opsAddrHint");
+        if (!input) return;
+        let t = 0;
+        function formatAddr(p) {
+          const line = [p.housenumber, p.street || p.name].filter(Boolean).join(" ");
+          if (!line) return null;
+          const city = p.city || p.locality || "Houston";
+          return { line: line, zip: p.postcode || "", label: [line, city, p.postcode].filter(Boolean).join(", ") };
+        }
+        input.addEventListener("input", function () {
+          window.clearTimeout(t);
+          if (input.value.trim().length < 3) { box.hidden = true; return; }
+          t = window.setTimeout(async function () {
+            try {
+              const q = [input.value.trim(), l.zip, "Houston TX"].filter(Boolean).join(" ");
+              const res = await fetch("https://photon.komoot.io/api/?limit=6&lat=29.7604&lon=-95.3698&q=" + encodeURIComponent(q));
+              const data = await res.json();
+              const hits = (data.features || []).map(function (f) { return formatAddr(f.properties || {}); }).filter(Boolean);
+              if (!hits.length) { box.hidden = true; return; }
+              box.hidden = false;
+              box.innerHTML = hits.map(function (h) { return "<li><button type='button'>" + h.label + "</button></li>"; }).join("");
+              box.querySelectorAll("button").forEach(function (btn, i) {
+                btn.onclick = function () {
+                  input.value = hits[i].line;
+                  box.hidden = true;
+                  hint.textContent = hits[i].label + " — loaded.";
+                };
+              });
+            } catch (err) {}
+          }, 280);
+        });
+        document.getElementById("useLocOps").onclick = function () {
+          if (!navigator.geolocation) { hint.textContent = "Location is not available."; return; }
+          hint.textContent = "Finding this street…";
+          navigator.geolocation.getCurrentPosition(async function (pos) {
+            try {
+              const res = await fetch("https://photon.komoot.io/reverse?lon=" + pos.coords.longitude + "&lat=" + pos.coords.latitude);
+              const data = await res.json();
+              const hit = data.features && data.features[0] ? formatAddr(data.features[0].properties || {}) : null;
+              if (!hit) { hint.textContent = "Could not read a street."; return; }
+              input.value = hit.line;
+              box.hidden = true;
+              hint.textContent = hit.label + " — loaded from this device.";
+            } catch (err) { hint.textContent = "Could not read a street."; }
+          }, function () { hint.textContent = "Allow location to fill the street."; });
+        };
+      })();
     }
 
     function currentAssign(l) {
