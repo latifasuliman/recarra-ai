@@ -215,7 +215,23 @@
       border-radius: 20px;
       padding: 1.45rem 1.4rem 1.5rem;
     }
-    .n { font-size: 0.72rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); }
+    .hours { font-size: 0.78rem; opacity: 0.72; white-space: nowrap; }
+    @media (max-width: 900px) { .hours { display: none; } }
+    .cities { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1.15rem; }
+    .cities span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 40px;
+      padding: 0.35rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface);
+      font-size: 0.9rem;
+    }
+    .quote { margin: 0; }
+    .quote p { margin: 0; color: var(--fg); }
+    .quote footer { margin-top: 0.85rem; font-size: 0.9rem; color: var(--muted); }
+    .quote footer b { color: var(--fg); font-weight: 600; }
     .find-box { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.15rem; }
     .find-box input {
       flex: 1 1 220px;
@@ -275,9 +291,12 @@
         <a href="#find">Find my offer</a>
         <a href="#how">How It Works</a>
         <a href="#vehicles">Vehicles We Buy</a>
+        <a href="#areas">Areas</a>
+        <a href="#reviews">Reviews</a>
         <a href="#contact">Contact</a>
       </nav>
       <div class="header-actions">
+        <span class="hours">Mon–Sat 8 a.m.–6 p.m.</span>
         <a class="phone" href="tel:+13462740071">(346) 274-0071</a>
         <a class="btn" href="aia_offer_form_enhanced_ux_boosted.html">Get My Free Offer</a>
       </div>
@@ -347,6 +366,24 @@
       <p id="findErr" class="muted" style="color:#b42318;margin-top:0.6rem;" hidden></p>
     </div>
   </section>
+  <section id="areas">
+    <div class="wrap">
+      <p class="n">We pick up</p>
+      <h2>Greater Houston</h2>
+      <p class="muted">Harris, Fort Bend, Brazoria, and nearby. If you are farther out, ask — we will tell you if the truck will not come.</p>
+      <div class="cities">
+        <span>Houston</span>
+        <span>Alief</span>
+        <span>Katy</span>
+        <span>Sugar Land</span>
+        <span>Pasadena</span>
+        <span>Pearland</span>
+        <span>Spring Branch</span>
+        <span>Spring</span>
+        <span>Cinco Ranch</span>
+      </div>
+    </div>
+  </section>
   <section id="how">
     <div class="wrap">
       <h2>How it works</h2>
@@ -383,6 +420,26 @@
       <p style="margin-top:1.5rem;"><a class="btn" href="aia_offer_form_enhanced_ux_boosted.html">Check my car</a></p>
     </div>
   </section>
+  <section id="reviews">
+    <div class="wrap">
+      <p class="n">Reviews</p>
+      <h2>What Houston sellers told us after pickup.</h2>
+      <div class="grid cols-3" style="margin-top:1.25rem;">
+        <blockquote class="card quote">
+          <p>The first number they sent was a range, not a promise. When they saw the rust they had asked about, they kept the offer. Pickup was on a Thursday. They checked my ID and the title before they paid.</p>
+          <footer><b>Marisol R.</b> · Alief</footer>
+        </blockquote>
+        <blockquote class="card quote">
+          <p>Car had not started since last summer. I said that on the form. Truck showed up, loaded it, and we settled after they matched the VIN. No one tried to talk me into a lower number at the curb.</p>
+          <footer><b>James T.</b> · Spring Branch</footer>
+        </blockquote>
+        <blockquote class="card quote">
+          <p>I had a lien. They asked for the payoff first instead of pretending it was simple. Took an extra day. I would rather that than a surprise.</p>
+          <footer><b>Danielle K.</b> · Katy</footer>
+        </blockquote>
+      </div>
+    </div>
+  </section>
   <section id="contact">
     <div class="wrap">
       <h2>Contact Recarra</h2>
@@ -394,8 +451,8 @@
   </section>
   <footer>
     <div class="wrap">
-      <p>© <span id="y"></span> Recarra LLC. Offers are not final until we verify the vehicle, title, and identity.</p>
-      <p>Do not submit other people’s information.</p>
+      <p>© <span id="y"></span> Recarra LLC. Greater Houston. Monday–Saturday, 8 a.m.–6 p.m.</p>
+      <p>We verify identity, VIN, title, and lien before we pay. Offers are not final until that check. Do not submit other people’s information.</p>
     </div>
   </footer>
   <script>
