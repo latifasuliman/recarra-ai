@@ -66,6 +66,26 @@
       cursor: pointer;
     }
     .list button:hover, .list button.active { background: #e8eef4; }
+    .split3 { display:grid; grid-template-columns: 1.4fr 0.6fr 0.9fr; gap: 0.5rem; }
+    .locbtn {
+      width: 100%;
+      min-height: 44px;
+      margin: 0.35rem 0 0.5rem;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      background: #e8f6ee;
+      color: var(--accent);
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .box {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.9rem 0.9rem 1rem;
+      background: #fff;
+      margin-top: 1rem;
+    }
+    .box h2 { font-size: 0.95rem; margin: 0 0 0.4rem; }
     .found {
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -155,14 +175,31 @@
         <input id="phone" type="tel" autocomplete="tel" required />
         <label for="email">Email</label>
         <input id="email" type="email" autocomplete="email" />
-        <label for="zip">Zip</label>
-        <input id="zip" inputmode="numeric" autocomplete="postal-code" required />
-        <p id="zipHint" class="muted"></p>
-        <label for="address">Pickup street address</label>
-        <button class="link" type="button" id="useLoc" style="margin:0 0 0.35rem">Use my location</button>
-        <input id="address" autocomplete="street-address" placeholder="Start typing the street" />
-        <ul id="addrHits" class="list" hidden></ul>
-        <p id="addrHint" class="muted">Houston streets load as you type. Or use your location.</p>
+        <div class="box">
+          <h2>Pickup location</h2>
+          <button class="locbtn" type="button" id="useLoc">Auto-fill from my location</button>
+          <label for="address">Street</label>
+          <input id="address" autocomplete="street-address" placeholder="Start typing 1234 Main…" />
+          <ul id="addrHits" class="list" hidden></ul>
+          <div class="split3">
+            <div>
+              <label for="city">City</label>
+              <input id="city" autocomplete="address-level2" placeholder="Houston" />
+            </div>
+            <div>
+              <label for="st">State</label>
+              <input id="st" value="TX" autocomplete="address-level1" />
+            </div>
+            <div>
+              <label for="zip">Zip</label>
+              <input id="zip" inputmode="numeric" autocomplete="postal-code" required />
+            </div>
+          </div>
+          <p id="zipHint" class="muted"></p>
+          <label for="meet">Where should the driver meet you?</label>
+          <textarea id="meet" rows="3" maxlength="240" placeholder="Gate code, apartment #, which side of the house, call when you arrive…"></textarea>
+          <p id="addrHint" class="muted">Auto-fill, or type the street — city, state, and zip load with it.</p>
+        </div>
         <label for="pickup">Pickup window</label>
         <select id="pickup">
           <option value="soonest">Soonest you can come</option>
@@ -361,7 +398,16 @@
       if (!line) return null;
       const city = p.city || p.locality || "Houston";
       const zip = p.postcode || "";
-      return { line: line, zip: zip, label: [line, city, zip].filter(Boolean).join(", ") };
+      const st = p.state === "Texas" || p.state === "TX" || !p.state ? "TX" : p.state;
+      return { line: line, city: city, state: st, zip: zip, label: [line, city, st, zip].filter(Boolean).join(", ") };
+    }
+    function applyAddr(hit, note) {
+      document.getElementById("address").value = hit.line;
+      if (hit.city) document.getElementById("city").value = hit.city;
+      if (hit.state) document.getElementById("st").value = hit.state;
+      if (hit.zip) document.getElementById("zip").value = hit.zip;
+      document.getElementById("addrHits").hidden = true;
+      document.getElementById("addrHint").textContent = note || (hit.label + " — loaded.");
     }
     async function searchAddr(q) {
       const zip = document.getElementById("zip").value.trim();
@@ -379,10 +425,7 @@
       }).join("");
       box.querySelectorAll("button").forEach(function (btn, i) {
         btn.onclick = function () {
-          document.getElementById("address").value = hits[i].line;
-          if (hits[i].zip) document.getElementById("zip").value = hits[i].zip;
-          box.hidden = true;
-          document.getElementById("addrHint").textContent = hits[i].label + " — loaded.";
+          applyAddr(hits[i], hits[i].label + " — loaded.");
         };
       });
     }
@@ -396,10 +439,7 @@
           const data = await res.json();
           const hit = data.features && data.features[0] ? formatAddr(data.features[0].properties || {}) : null;
           if (!hit) { hint.textContent = "Could not read a street from this location."; return; }
-          document.getElementById("address").value = hit.line;
-          if (hit.zip) document.getElementById("zip").value = hit.zip;
-          document.getElementById("addrHits").hidden = true;
-          hint.textContent = hit.label + " — loaded from this device.";
+          applyAddr(hit, hit.label + " — loaded from this device.");
         } catch (err) { hint.textContent = "Could not read a street from this location."; }
       }, function () { hint.textContent = "Allow location to fill the pickup street."; }, { enableHighAccuracy: true, timeout: 12000 });
     }
@@ -412,9 +452,6 @@
         try { showAddrHits(await searchAddr(q)); } catch (err) {}
       }, 280);
     });
-    document.getElementById("address").addEventListener("focus", function () {
-      if (!document.getElementById("address").value.trim()) fillFromLocation();
-    });
     document.getElementById("useLoc").onclick = fillFromLocation;
     document.getElementById("zip").addEventListener("input", async (e) => {
       const zip = e.target.value.trim();
@@ -425,9 +462,11 @@
         const data = await res.json();
         const place = data.places && data.places[0];
         const pickup = /^(770|772|773|774|775)/.test(zip);
-        hint.textContent = place
-          ? place["place name"] + ", " + place["state abbreviation"] + (pickup ? " - we pick up here." : " - we will confirm if we can pick up.")
-          : "";
+        if (place) {
+          document.getElementById("city").value = place["place name"] || "";
+          document.getElementById("st").value = place["state abbreviation"] || "TX";
+          hint.textContent = place["place name"] + ", " + place["state abbreviation"] + (pickup ? " — we pick up here." : " — we will confirm if we can pick up.");
+        } else hint.textContent = "";
       } catch (err) { hint.textContent = ""; }
     });
     document.getElementById("offerForm").addEventListener("submit", async (event) => {
@@ -472,6 +511,9 @@
         customer_email: document.getElementById("email").value.trim() || "not provided",
         zip: zip,
         address: document.getElementById("address").value.trim() || "not provided",
+        city: document.getElementById("city").value.trim() || "not provided",
+        state: document.getElementById("st").value.trim() || "TX",
+        meet: document.getElementById("meet").value.trim() || "not provided",
         pickup: document.getElementById("pickup").value,
         partner_ok: document.getElementById("partnerOk").checked ? "yes" : "no",
         vehicle: state.year + " " + state.make + " " + state.model,
@@ -505,6 +547,9 @@
         email: document.getElementById("email").value.trim(),
         zip: zip,
         address: document.getElementById("address").value.trim(),
+        city: document.getElementById("city").value.trim(),
+        state: document.getElementById("st").value.trim() || "TX",
+        meetInstructions: document.getElementById("meet").value.trim(),
         pickupWindow: document.getElementById("pickup").value,
         photos: photos,
         partnerConsent: document.getElementById("partnerOk").checked,
