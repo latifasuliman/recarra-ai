@@ -66,26 +66,35 @@
       cursor: pointer;
     }
     .list button:hover, .list button.active { background: #e8eef4; }
-    .split3 { display:grid; grid-template-columns: 1.4fr 0.6fr 0.9fr; gap: 0.5rem; }
+    .split3 { display:grid; grid-template-columns: 1fr 4rem 5.6rem; gap: 0.45rem; }
     .locbtn {
       width: 100%;
       min-height: 44px;
-      margin: 0.35rem 0 0.5rem;
-      border: 1px solid var(--accent);
+      margin: 0.2rem 0 0.65rem;
+      border: 0;
       border-radius: 8px;
-      background: #e8f6ee;
-      color: var(--accent);
+      background: var(--accent);
+      color: #fff;
       font-weight: 700;
       cursor: pointer;
     }
     .box {
-      border: 1px solid var(--border);
+      border: 2px solid var(--accent);
       border-radius: 12px;
-      padding: 0.9rem 0.9rem 1rem;
-      background: #fff;
+      padding: 1rem 0.95rem 1.05rem;
+      background: #e8f6ee;
       margin-top: 1rem;
     }
-    .box h2 { font-size: 0.95rem; margin: 0 0 0.4rem; }
+    .box h2 {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.95rem;
+      margin: 0 0 0.55rem;
+      color: var(--navy);
+    }
+    .box label { margin-top: 0.55rem; color: #0e1c2f; }
+    .box .muted { color: #2f6b48; }
     .found {
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -176,7 +185,10 @@
         <label for="email">Email</label>
         <input id="email" type="email" autocomplete="email" />
         <div class="box">
-          <h2>Pickup location</h2>
+          <h2>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#168a46" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            Pickup location
+          </h2>
           <button class="locbtn" type="button" id="useLoc">Auto-fill from my location</button>
           <label for="address">Street</label>
           <input id="address" autocomplete="street-address" placeholder="Start typing 1234 Main…" />
