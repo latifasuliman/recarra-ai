@@ -379,11 +379,11 @@
         "<input id='opsAddress' value='" + escapeHtml(l.address || "") + "' placeholder='Start typing 1234 Main…' autocomplete='street-address' />" +
         "<ul id='opsAddrHits' class='list' hidden></ul>" +
         "<div class='split3'><div><label>City</label><input id='opsCity' value='" + escapeHtml(l.city || "") + "' /></div>" +
-        "<div><label>State</label><input id='opsState' value='" + escapeHtml(l.state || "TX") + "' /></div>" +
+        "<div><label>State</label><input id='opsState' value='" + escapeHtml(l.state || "") + "' placeholder='TX' /></div>" +
         "<div><label>Zip</label><input id='opsZip' value='" + escapeHtml(l.zip || "") + "' /></div></div>" +
         "<label>Where should the driver meet you?</label>" +
         "<textarea id='opsMeet' rows='3' placeholder='Gate code, apartment #, which side of the house, call when you arrive…'>" + escapeHtml(l.meetInstructions || "") + "</textarea>" +
-        "<p class='muted' id='opsAddrHint'>Auto-fill, or type the street — city, state, and zip load with it.</p>" +
+        "<p class='muted' id='opsAddrHint'>Auto-fill, or type the street — matches load for any US city.</p>" +
         "<label>Pay method</label><select id='payMethod'>" +
           ["unpaid","cash","zelle","cashier-check","wire"].map(function (m) {
             return "<option value='" + m + "'" + ((l.payMethod || "unpaid") === m ? " selected" : "") + ">" + m + "</option>";
@@ -542,12 +542,17 @@
         const hint = document.getElementById("opsAddrHint");
         if (!input) return;
         let t = 0;
-        function formatAddr(p) {
-          const line = [p.housenumber, p.street || p.name].filter(Boolean).join(" ");
-          if (!line) return null;
-          const city = p.city || p.locality || "Houston";
-          const st = p.state === "Texas" || p.state === "TX" || !p.state ? "TX" : p.state;
-          return { line: line, city: city, state: st, zip: p.postcode || "", label: [line, city, st, p.postcode].filter(Boolean).join(", ") };
+        function formatAddr(p, typedNumber) {
+          if (p.countrycode && p.countrycode !== "US") return null;
+          const street = p.street || p.name || "";
+          if (!street) return null;
+          const num = p.housenumber || typedNumber || "";
+          const line = [num, street].filter(Boolean).join(" ");
+          const city = p.city || p.locality || p.district || "";
+          let st = p.state || "";
+          if (st === "Texas") st = "TX";
+          const zip = p.postcode || "";
+          return { line: line, city: city, state: st, zip: zip, label: [line, city, st, zip].filter(Boolean).join(", ") };
         }
         function applyHit(hit, note) {
           input.value = hit.line;
@@ -562,10 +567,19 @@
           if (input.value.trim().length < 3) { box.hidden = true; return; }
           t = window.setTimeout(async function () {
             try {
-              const q = [input.value.trim(), l.zip, "Houston TX"].filter(Boolean).join(" ");
-              const res = await fetch("https://photon.komoot.io/api/?limit=6&lat=29.7604&lon=-95.3698&q=" + encodeURIComponent(q));
+              const raw = input.value.trim();
+              const expanded = raw.replace(/\b(dr)\b/gi, "Drive").replace(/\b(st)\b/gi, "Street").replace(/\b(rd)\b/gi, "Road").replace(/\b(ave?)\b/gi, "Avenue");
+              const num = (raw.match(/^(\d+[A-Za-z]?)\b/) || [])[1] || "";
+              const zip = document.getElementById("opsZip").value.trim();
+              const q = [expanded, zip].filter(Boolean).join(" ");
+              const res = await fetch("https://photon.komoot.io/api/?limit=12&layer=house&layer=street&q=" + encodeURIComponent(q));
               const data = await res.json();
-              const hits = (data.features || []).map(function (f) { return formatAddr(f.properties || {}); }).filter(Boolean);
+              const seen = {};
+              const hits = (data.features || []).map(function (f) { return formatAddr(f.properties || {}, num); }).filter(function (h) {
+                if (!h || seen[h.label]) return false;
+                seen[h.label] = true;
+                return true;
+              });
               if (!hits.length) { box.hidden = true; return; }
               box.hidden = false;
               box.innerHTML = hits.map(function (h) { return "<li><button type='button'>" + h.label + "</button></li>"; }).join("");
