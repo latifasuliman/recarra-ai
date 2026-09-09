@@ -113,6 +113,7 @@
       <button class="tab on" type="button" data-tab="leads">Leads</button>
       <button class="tab" type="button" data-tab="partners">Verified partners</button>
       <button class="tab" type="button" data-tab="log">Partner log</button>
+      <button class="tab" type="button" data-tab="money">Money & backup</button>
     </div>
     <div id="tab-leads">
     <div class="grid">
@@ -144,11 +145,22 @@
         </section>
       </div>
     </div>
-    <div id="tab-log" hidden>
-      <div class="card">
-        <h2>Partner log</h2>
-        <p class="muted">Every assign, desk link, fee paid, and partner login.</p>
-        <div id="logList"></div>
+    <div id="tab-money" hidden>
+      <div class="grid">
+        <section class="card">
+          <h2>Cash flow</h2>
+          <div id="pnl"></div>
+        </section>
+        <section class="card">
+          <h2>Move this desk</h2>
+          <p class="muted">Download a Recarra desk file. Open it on another phone so leads and partners travel with you.</p>
+          <div class="row">
+            <button class="btn" type="button" id="dlDesk">Download desk file</button>
+            <label class="btn btn-ghost" style="display:inline-flex;align-items:center">Restore desk file
+              <input id="upDesk" type="file" accept="application/json" hidden />
+            </label>
+          </div>
+        </section>
       </div>
     </div>
   </main>
@@ -303,6 +315,30 @@
         "<button class='btn btn-ghost' id='copyFull' type='button'>Mark fee paid + copy full file</button>" +
         "<button class='btn btn-ghost' id='copyDesk' type='button'>Copy partner login link</button>" +
         "</div>" +
+        "<h2 style='margin-top:1.4rem'>Pickup, pay, and tow</h2>" +
+        "<p class='muted'>" + escapeHtml(l.address || "No street yet") + (l.pickupWindow ? " · window " + l.pickupWindow : "") + "</p>" +
+        "<label>Pickup street</label><input id='opsAddress' value='" + escapeHtml(l.address || "") + "' placeholder='1234 Main St' />" +
+        "<label>Pay method</label><select id='payMethod'>" +
+          ["unpaid","cash","zelle","cashier-check","wire"].map(function (m) {
+            return "<option value='" + m + "'" + ((l.payMethod || "unpaid") === m ? " selected" : "") + ">" + m + "</option>";
+          }).join("") + "</select>" +
+        "<label>Amount paid</label><input id='paidAmount' type='number' value='" + (l.paidAmount || "") + "' />" +
+        "<label>Pay note</label><input id='payNote' value='" + escapeHtml(l.payNote || "") + "' placeholder='Zelle to 346…' />" +
+        "<label>Tow / truck</label><input id='towCompany' value='" + escapeHtml(l.towCompany || "") + "' />" +
+        "<label>Tow time</label><input id='towAt' type='datetime-local' value='" + (l.towAt ? String(l.towAt).slice(0,16) : "") + "' />" +
+        "<label>Tow cost</label><input id='towCost' type='number' value='" + (l.towCost || "") + "' />" +
+        "<label>Tow status</label><select id='towStatus'>" +
+          ["none","scheduled","enroute","done"].map(function (m) {
+            return "<option" + ((l.towStatus || "none") === m ? " selected" : "") + ">" + m + "</option>";
+          }).join("") + "</select>" +
+        "<p class='muted' style='margin-top:0.8rem'>Verify before you pay</p>" +
+        [["idPhoto","Photo ID matches"],["titlePhoto","Title photo"],["vinMatch","VIN matches"],["lienClear","Lien checked"],["identityMatch","Seller is owner"],["keys","Keys present"]].map(function (row) {
+          const on = l.checklist && l.checklist[row[0]];
+          return "<label class='check' style='display:flex;gap:0.5rem;align-items:flex-start;margin:0.35rem 0'><input type='checkbox' data-check='" + row[0] + "'" + (on ? " checked" : "") + " /><span>" + row[1] + "</span></label>";
+        }).join("") +
+        "<div class='row'><button class='btn' id='saveOps' type='button'>Save pickup / pay / tow</button>" +
+        "<a class='btn btn-ghost' href='receipt.html?code=" + encodeURIComponent(track) + "' target='_blank'>Seller receipt</a>" +
+        "<a class='btn btn-ghost' href='assign-sign.html?code=" + encodeURIComponent(track) + "' target='_blank'>Partner sign-off</a></div>" +
         "<h2 style='margin-top:1.4rem'>Live seller chat</h2>" +
         "<div class='chat' id='chat'>" + msgs.map((m) =>
           "<div class='bubble " + m.from + "'><strong>" + (m.from === "recarra" ? "Recarra" : l.name) + "</strong><br>" +
@@ -404,6 +440,29 @@
         copyText(deskHref(p));
         addLog("desk_link", "Partner login link copied for " + p.id, { partnerId: p.id, offerNo: l.trackCode || l.id });
         document.getElementById("assignStatus").textContent = "Partner login link copied. They sign in with " + p.id + " and their PIN.";
+      };
+      document.getElementById("saveOps").onclick = function () {
+        const checklist = {};
+        document.querySelectorAll("[data-check]").forEach(function (el) {
+          checklist[el.getAttribute("data-check")] = el.checked;
+        });
+        const payMethod = document.getElementById("payMethod").value;
+        const paidAmount = Number(document.getElementById("paidAmount").value);
+        const towAt = document.getElementById("towAt").value;
+        patch(l.id, {
+          address: document.getElementById("opsAddress").value.trim(),
+          payMethod: payMethod,
+          paidAmount: paidAmount || undefined,
+          payNote: document.getElementById("payNote").value.trim(),
+          paidAt: payMethod !== "unpaid" ? (l.paidAt || new Date().toISOString()) : l.paidAt,
+          towCompany: document.getElementById("towCompany").value.trim(),
+          towAt: towAt ? new Date(towAt).toISOString() : "",
+          towCost: Number(document.getElementById("towCost").value) || 0,
+          towStatus: document.getElementById("towStatus").value,
+          checklist: checklist
+        });
+        addLog("ops", "Pickup / pay / tow saved for " + (l.trackCode || l.id), { offerNo: l.trackCode || l.id });
+        render();
       };
     }
 
@@ -574,7 +633,7 @@
       }).join("");
     }
     function showTab(name) {
-      ["leads", "partners", "log"].forEach(function (id) {
+      ["leads", "partners", "log", "money"].forEach(function (id) {
         const el = document.getElementById("tab-" + id);
         if (el) el.hidden = id !== name;
       });
@@ -583,8 +642,27 @@
       });
       if (name === "partners") renderPartners();
       if (name === "log") renderLog();
+      if (name === "money") renderMoney();
     }
-    function render() { renderList(); renderDetail(); renderPartners(); renderLog(); }
+    function renderMoney() {
+      const box = document.getElementById("pnl");
+      if (!box) return;
+      const items = leads();
+      let fees = 0, paid = 0, tow = 0, spend = Number(localStorage.getItem("recarra-ad-spend-v1") || 0);
+      items.forEach(function (l) {
+        if (l.assignmentPaidAt) fees += Number(l.assignmentFee || 0);
+        if (l.status === "Buyer Paid" || l.status === "Completed") paid += Number(l.paidAmount || l.offerAmount || 0);
+        tow += Number(l.towCost || 0);
+      });
+      box.innerHTML =
+        "<p>Assignment fees collected <strong>" + money(fees) + "</strong></p>" +
+        "<p>Paid to sellers <strong>" + money(paid) + "</strong></p>" +
+        "<p>Tow spend <strong>" + money(tow) + "</strong></p>" +
+        "<p>Ad spend <strong>" + money(spend) + "</strong></p>" +
+        "<p><strong>Desk net " + money(fees - paid - tow - spend) + "</strong></p>" +
+        "<p class='muted'>Texas dealer rules still apply. This is a desk, not a license.</p>";
+    }
+    function render() { renderList(); renderDetail(); renderPartners(); renderLog(); renderMoney(); }
     document.querySelectorAll(".tab").forEach(function (btn) {
       btn.onclick = function () { showTab(btn.getAttribute("data-tab")); };
     });
@@ -616,6 +694,36 @@
       document.getElementById("pNotes").value = "";
       renderPartners();
       alert("Verified. Code " + partner.id + " PIN " + partner.pin + ". Copy their login link.");
+    };
+    document.getElementById("dlDesk").onclick = function () {
+      const bag = { v: 1, recarra: "desk", exportedAt: new Date().toISOString() };
+      ["recarra-leads-v1","recarra-partners-v1","recarra-partner-log-v1","recarra-ad-spend-v1","recarra-open-track-v1"].forEach(function (k) {
+        const raw = localStorage.getItem(k);
+        if (!raw) return;
+        try { bag[k] = JSON.parse(raw); } catch (e) { bag[k] = raw; }
+      });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([JSON.stringify(bag, null, 2)], { type: "application/json" }));
+      a.download = "recarra-desk.json";
+      a.click();
+    };
+    document.getElementById("upDesk").onchange = function (ev) {
+      const file = ev.target.files && ev.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function () {
+        try {
+          const bag = JSON.parse(String(reader.result));
+          if (bag.recarra !== "desk") throw new Error("bad");
+          ["recarra-leads-v1","recarra-partners-v1","recarra-partner-log-v1","recarra-ad-spend-v1","recarra-open-track-v1"].forEach(function (k) {
+            if (bag[k] == null) return;
+            localStorage.setItem(k, typeof bag[k] === "string" ? bag[k] : JSON.stringify(bag[k]));
+          });
+          alert("Desk restored. Reloading.");
+          location.reload();
+        } catch (e) { alert("That file is not a Recarra desk backup."); }
+      };
+      reader.readAsText(file);
     };
     document.getElementById("deskSearch").addEventListener("input", function (e) {
       filter = e.target.value;

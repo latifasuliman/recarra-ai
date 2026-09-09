@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Recarra LLC partner assignment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { margin:0; font-family:"Plus Jakarta Sans",system-ui,sans-serif; background:#f4f6f8; color:#142033; }
+    .bar { background:#0e1c2f; color:#fff; padding:0.8rem 1.2rem; }
+    .bar a { color:#fff; font-weight:700; text-decoration:none; }
+    main { max-width:640px; margin:0 auto; padding:1.2rem; }
+    canvas { width:100%; height:180px; border:1px solid #d7dee6; border-radius:8px; background:#fff; touch-action:none; }
+    .btn { min-height:44px; padding:0.55rem 1rem; border:0; border-radius:8px; background:#168a46; color:#fff; font:inherit; font-weight:700; margin-top:0.7rem; }
+    .muted { color:#5b6b7c; }
+  </style>
+</head>
+<body>
+  <div class="bar"><a href="./">Recarra</a></div>
+  <main id="app"></main>
+  <script>
+    function load() { try { return JSON.parse(localStorage.getItem("recarra-leads-v1") || "[]"); } catch (e) { return []; } }
+    function save(rows) { localStorage.setItem("recarra-leads-v1", JSON.stringify(rows)); }
+    function money(n) { return "$" + Number(n || 0).toLocaleString(); }
+    function esc(s) { var el = document.createElement("span"); el.textContent = s == null ? "" : String(s); return el.innerHTML; }
+    var code = (new URLSearchParams(location.search).get("code") || "").toUpperCase();
+    var items = load();
+    var l = items.find(function (x) {
+      return String(x.trackCode || "").toUpperCase() === code || String(x.id || "").toUpperCase() === code;
+    });
+    var app = document.getElementById("app");
+    if (!l) {
+      app.innerHTML = "<h1>No assignment for that offer.</h1>";
+    } else {
+      app.innerHTML = "<p class='muted'>Recarra LLC assignment</p><h1>Partner sign-off</h1>" +
+        "<p>" + esc(l.assignedToName || l.assignedTo || "Partner") + " takes offer " + esc(l.trackCode || l.id) +
+        " (" + esc(l.year + " " + l.make + " " + l.model) + ") and owes Recarra LLC " + money(l.assignmentFee || 0) +
+        ". Seller contact stays with Recarra until that fee is paid. Circumvention fee $1,000 plus the assignment fee.</p>" +
+        "<ol><li>I buy the deal from Recarra, not the customer list.</li>" +
+        "<li>I will not contact the seller except through Recarra until released.</li>" +
+        "<li>The car is still subject to VIN, title, identity, and inspection.</li></ol>" +
+        "<p><strong>Partner signature</strong></p><canvas id='sig' width='640' height='180'></canvas>" +
+        "<div><button class='btn' type='button' id='sign'>Sign and lock</button> <button class='btn' type='button' onclick='print()'>Print</button></div>" +
+        "<p id='ok' class='muted'></p>";
+      var c = document.getElementById("sig");
+      var ctx = c.getContext("2d");
+      var draw = false;
+      function pt(e) { var r = c.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+      c.onpointerdown = function (e) { var p = pt(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); draw = true; c.setPointerCapture(e.pointerId); };
+      c.onpointermove = function (e) { if (!draw) return; var p = pt(e); ctx.lineWidth = 2; ctx.lineTo(p.x, p.y); ctx.stroke(); };
+      c.onpointerup = function () { draw = false; };
+      document.getElementById("sign").onclick = function () {
+        l.partnerSignedAt = new Date().toISOString();
+        save(items.map(function (x) { return x.id === l.id ? l : x; }));
+        document.getElementById("ok").textContent = "Signed. Recarra still releases the seller file only after the fee is marked paid.";
+      };
+    }
+  </script>
+</body>
+</html>

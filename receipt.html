@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Recarra LLC receipt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { margin:0; font-family:"Plus Jakarta Sans",system-ui,sans-serif; background:#e8edf2; color:#142033; }
+    .bar { background:#0e1c2f; color:#fff; padding:0.8rem 1.2rem; display:flex; justify-content:space-between; }
+    .bar a { color:#fff; font-weight:700; text-decoration:none; }
+    .actions { padding:0.8rem 1.2rem; }
+    .btn { min-height:44px; padding:0.55rem 1rem; border:0; border-radius:8px; background:#168a46; color:#fff; font:inherit; font-weight:700; }
+    .sheet { max-width:640px; margin:0 auto 2rem; background:#fbfaf6; padding:1.5rem; }
+    .cash { font-family:Fraunces,Georgia,serif; font-size:2.6rem; color:#168a46; margin:0.4rem 0; }
+    @media print { .bar,.actions { display:none; } body { background:#fff; } .sheet { margin:0; } }
+  </style>
+</head>
+<body>
+  <div class="bar"><a href="./">Recarra</a><span>Receipt</span></div>
+  <div class="actions"><button class="btn" type="button" onclick="print()">Print / save PDF</button></div>
+  <div id="app"></div>
+  <script>
+    function load() { try { return JSON.parse(localStorage.getItem("recarra-leads-v1") || "[]"); } catch (e) { return []; } }
+    function money(n) { return "$" + Number(n || 0).toLocaleString(); }
+    function esc(s) { var el = document.createElement("span"); el.textContent = s == null ? "" : String(s); return el.innerHTML; }
+    var code = (new URLSearchParams(location.search).get("code") || "").toUpperCase();
+    var l = load().find(function (x) {
+      return String(x.trackCode || "").toUpperCase() === code || String(x.id || "").toUpperCase() === code;
+    });
+    var app = document.getElementById("app");
+    if (!l) {
+      app.innerHTML = "<div class='sheet'><h1>No receipt for that offer.</h1></div>";
+    } else {
+      var amount = l.paidAmount || l.offerAmount || 0;
+      app.innerHTML = "<article class='sheet'><p style='font-family:Fraunces,Georgia,serif;font-size:1.8rem;margin:0'>Recarra LLC</p>" +
+        "<p style='color:#168a46'>Cash for cars · Houston</p><h1>Payment receipt</h1>" +
+        "<p>Offer " + esc(l.trackCode || l.id) + "</p>" +
+        "<p>Paid to <strong>" + esc(l.name) + "</strong><br>" + esc(l.phone) + (l.address ? "<br>" + esc(l.address) : "") + "</p>" +
+        "<p>Vehicle <strong>" + esc(l.year + " " + l.make + " " + l.model) + "</strong>" + (l.vin ? "<br>VIN " + esc(l.vin) : "") + "</p>" +
+        "<p class='cash'>" + money(amount) + "</p>" +
+        "<p>" + esc(l.payMethod && l.payMethod !== "unpaid" ? l.payMethod : "Method on file") + "</p>" +
+        (l.payNote ? "<p>" + esc(l.payNote) + "</p>" : "") +
+        "<p style='font-size:0.8rem;color:#5b6b7c'>Recarra LLC · (346) 274-0071 · offers@recarra.com. Payment after identity, VIN, title, and lien check as applicable.</p></article>";
+    }
+  </script>
+</body>
+</html>

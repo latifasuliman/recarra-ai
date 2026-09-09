@@ -158,14 +158,34 @@
         <label for="zip">Zip</label>
         <input id="zip" inputmode="numeric" autocomplete="postal-code" required />
         <p id="zipHint" class="muted"></p>
+        <label for="address">Pickup street address</label>
+        <input id="address" autocomplete="street-address" placeholder="1234 Main St, Houston" />
+        <label for="pickup">Pickup window</label>
+        <select id="pickup">
+          <option value="soonest">Soonest you can come</option>
+          <option value="am">Tomorrow morning</option>
+          <option value="pm">Tomorrow afternoon</option>
+          <option value="week">This week is fine</option>
+        </select>
+        <p class="muted" style="margin-top:0.8rem">Photos (optional). Front, VIN plate, dash — helps hold the range.</p>
+        <label for="photoFront">Front of car</label>
+        <input id="photoFront" type="file" accept="image/*" />
+        <label for="photoVin">VIN plate</label>
+        <input id="photoVin" type="file" accept="image/*" />
+        <label for="photoDash">Dash / odometer</label>
+        <input id="photoDash" type="file" accept="image/*" />
         <p id="rangeHint" hidden></p>
         <label class="check">
           <input id="sms" type="checkbox" />
           <span>Recarra may text me about this offer. Reply STOP to opt out. Consent is not required to get an offer by phone or email.</span>
         </label>
+        <label class="check">
+          <input id="partnerOk" type="checkbox" />
+          <span>Recarra may assign this request to a verified partner if Recarra does not buy the car. They will not get my phone or VIN until Recarra is paid.</span>
+        </label>
         <p id="error" class="error" hidden></p>
         <button class="btn" type="submit">Get My Free Offer</button>
-        <p class="muted">Submitting does not sell the car. We verify identity, VIN, title, and lien status before any purchase.</p>
+        <p class="muted">Submitting does not sell the car. We verify identity, VIN, title, and lien before any purchase. Recarra does not sell seller lists. A verified partner only sees your contact after Recarra is paid.</p>
       </form>
     </div>
     <div id="doneView" class="ok" hidden></div>
@@ -195,6 +215,24 @@
       return raw.charAt(0).toUpperCase() + raw.slice(1);
     }
     function money(n) { return "$" + n.toLocaleString(); }
+    function compressPhoto(file) {
+      return new Promise(function (resolve) {
+        if (!file) { resolve(""); return; }
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        img.onload = function () {
+          const canvas = document.createElement("canvas");
+          const max = 1200;
+          let w = img.width, h = img.height;
+          if (w > max) { h = Math.round(h * max / w); w = max; }
+          canvas.width = w; canvas.height = h;
+          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL("image/jpeg", 0.7));
+        };
+        img.onerror = function () { resolve(""); };
+        img.src = url;
+      });
+    }
     function estimate() {
       const age = new Date().getFullYear() - Number(state.year || 2008);
       let mid = age <= 6 ? 2400 : age <= 10 ? 1500 : age <= 16 ? 850 : age <= 24 ? 450 : 275;
@@ -341,6 +379,11 @@
       if (!/^\d{5}$/.test(zip)) { error.textContent = "Use a 5-digit Houston-area zip."; error.hidden = false; return; }
       if (!state.year || !state.make || !state.model) { error.textContent = "Type the year, make, and model - or paste the VIN."; error.hidden = false; return; }
       const r = estimate();
+      const photos = {
+        front: await compressPhoto(document.getElementById("photoFront").files[0]),
+        vin: await compressPhoto(document.getElementById("photoVin").files[0]),
+        dash: await compressPhoto(document.getElementById("photoDash").files[0])
+      };
       function newOfferNo() {
         const used = {};
         try {
@@ -365,6 +408,9 @@
         phone: document.getElementById("phone").value.trim(),
         customer_email: document.getElementById("email").value.trim() || "not provided",
         zip: zip,
+        address: document.getElementById("address").value.trim() || "not provided",
+        pickup: document.getElementById("pickup").value,
+        partner_ok: document.getElementById("partnerOk").checked ? "yes" : "no",
         vehicle: state.year + " " + state.make + " " + state.model,
         vin: state.vin || "not provided",
         running: document.getElementById("running").value,
@@ -395,6 +441,11 @@
         phone: document.getElementById("phone").value.trim(),
         email: document.getElementById("email").value.trim(),
         zip: zip,
+        address: document.getElementById("address").value.trim(),
+        pickupWindow: document.getElementById("pickup").value,
+        photos: photos,
+        partnerConsent: document.getElementById("partnerOk").checked,
+        smsConsent: document.getElementById("sms").checked,
         year: state.year,
         make: state.make,
         model: state.model,
@@ -403,7 +454,6 @@
         running: document.getElementById("running").value,
         title: document.getElementById("title").value,
         notes: "",
-        smsConsent: document.getElementById("sms").checked,
         offerLow: r.low,
         offerHigh: r.high,
         trackCode: trackCode,
