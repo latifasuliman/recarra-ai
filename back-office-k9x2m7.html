@@ -156,10 +156,13 @@
         "<label>Status (this is how you send them home)</label>" +
         "<select id='status'>" + STATUSES.map((s) => "<option" + (s === l.status ? " selected" : "") + ">" + s + "</option>").join("") + "</select>" +
         "<p class='muted'>" + (CLOSED.includes(l.status) ? "Deal closed — customer can return to the main site." : "Customer stays on tracking until you set Paid, Completed, or Lost.") + "</p>" +
-        "<label>Offer amount</label><input id='amount' type='number' value='" + (l.offerAmount || "") + "' />" +
-        "<label>Follow-up note</label><textarea id='note' rows='3' placeholder='Called, revised offer…'></textarea>" +
-        "<div class='row'><button class='btn' id='save'>Save follow-up</button>" +
-        "<a class='btn btn-ghost' href='tel:" + String(l.phone).replace(/\\D/g, "") + "'>Call seller</a></div>" +
+        "<label>Offer amount to send</label><input id='amount' type='number' min='1' value='" + (l.offerAmount || "") + "' placeholder='e.g. 250' />" +
+        "<p class='muted'>Type the dollar amount, then tap Send offer. The customer sees it in chat on their tracking page.</p>" +
+        "<label>Follow-up note (optional)</label><textarea id='note' rows='3' placeholder='Called, revised offer…'></textarea>" +
+        "<div class='row'>" +
+        "<button class='btn' id='sendOffer'>Send offer</button>" +
+        "<button class='btn btn-ghost' id='save' type='button'>Save follow-up only</button>" +
+        "<a class='btn btn-ghost' href='tel:" + String(l.phone).replace(/\D/g, "") + "'>Call seller</a></div>" +
         "<h2 style='margin-top:1.4rem'>Live seller chat</h2>" +
         "<div class='chat' id='chat'>" + msgs.map((m) =>
           "<div class='bubble " + m.from + "'><strong>" + (m.from === "recarra" ? "Recarra" : l.name) + "</strong><br>" +
@@ -177,6 +180,25 @@
           status,
           offerAmount: amount ? Number(amount) : l.offerAmount,
           followUps: [follow].concat(l.followUps || []),
+        });
+        render();
+      };
+      document.getElementById("sendOffer").onclick = () => {
+        const amount = Number(document.getElementById("amount").value);
+        if (!amount || amount < 1) {
+          alert("Type the offer amount first.");
+          return;
+        }
+        const now = new Date().toISOString();
+        const extra = document.getElementById("note").value.trim();
+        const text = "Recarra offer: $" + amount.toLocaleString() + ". This holds 7 days if the car, VIN, and title match. Not a locked payday until we inspect." + (extra ? " " + extra : "");
+        const current = get(l.id);
+        patch(l.id, {
+          status: "Offer Sent",
+          offerAmount: amount,
+          offerSentAt: now,
+          followUps: [{ at: now, note: extra || ("Offer sent $" + amount + "."), status: "Offer Sent" }].concat(current.followUps || []),
+          messages: (current.messages || []).concat([{ id: "m-" + Date.now(), at: now, from: "recarra", text: text }])
         });
         render();
       };
