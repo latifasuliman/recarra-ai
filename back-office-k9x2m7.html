@@ -886,8 +886,6 @@
     });
     document.getElementById("showAll").onclick = function () { listMode = "all"; renderList(); };
     document.getElementById("showWaiting").onclick = function () { listMode = "waiting"; renderList(); };
-      renderList();
-    });
     window.addEventListener("storage", (e) => { if (e.key === KEY) render(); });
     setInterval(renderList, 4000);
     render();
