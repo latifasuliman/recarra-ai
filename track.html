@@ -18,6 +18,7 @@
     h1 { letter-spacing:-0.03em; margin:0.2rem 0 0.6rem; }
     .btn { display:inline-flex; min-height:44px; align-items:center; padding:0.6rem 1rem; border:0; border-radius:8px; background:var(--accent); color:#fff; font-weight:700; text-decoration:none; cursor:pointer; font:inherit; }
     .btn-ghost { background:#fff; color:var(--fg); border:1px solid var(--border); }
+    .btn-decline { background:#fff; color:#b42318; border:1px solid #f0c9c5; }
     label { display:block; font-size:0.78rem; font-weight:700; margin:0.7rem 0 0.3rem; }
     textarea { width:100%; min-height:88px; padding:0.6rem 0.75rem; border:1px solid var(--border); border-radius:8px; font:inherit; }
     .chat { max-height:280px; overflow:auto; display:flex; flex-direction:column; gap:0.45rem; }
@@ -99,6 +100,21 @@
       var msgs = l.messages || [];
       var range = money(l.offerAmount || l.offerLow) + (l.offerAmount ? "" : "–" + money(l.offerHigh));
       var cashLabel = l.offerAmount ? "Your Recarra offer" : "Starting range";
+      var waiting = l.offerAmount && (l.status === "Offer Sent" || l.status === "Negotiating");
+      var letter = "";
+      if (l.offerAmount && waiting) {
+        letter =
+          "<div class='card' id='letter'>" +
+          "<p class='cash-label'>Offer letter</p>" +
+          "<p>Recarra will pay <strong class='cash' style='display:inline;font-size:1.35rem;padding:0;background:transparent'>" + money(l.offerAmount) + "</strong> for this " + escapeHtml(l.year + " " + l.make + " " + l.model) + " if the car, VIN, and title match.</p>" +
+          "<p class='muted'>Holds 7 days. Accepting is not a payday yet — we still inspect and verify identity before payment.</p>" +
+          "<div class='row'><button class='btn' id='accept' type='button'>Accept offer</button>" +
+          "<button class='btn btn-decline' id='decline' type='button'>Decline offer</button></div></div>";
+      } else if (l.status === "Offer Accepted") {
+        letter = "<div class='card'><p><strong>You accepted " + money(l.offerAmount) + ".</strong></p><p class='muted'>Next we schedule pickup. Payment is after we verify the vehicle, title, and identity.</p></div>";
+      } else if (l.status === "Lost or Rejected") {
+        letter = "<div class='card'><p><strong>You declined this offer.</strong></p><p class='muted'>No problem. You can submit a different car anytime.</p></div>";
+      }
       var chat = msgs.map(function (m) {
         return "<div class='bubble " + m.from + "'><strong>" + (m.from === "recarra" ? "Recarra" : escapeHtml(l.name)) + "</strong><br>" + escapeHtml(m.text) + "</div>";
       }).join("");
@@ -111,6 +127,7 @@
         "<p>" + escapeHtml(COPY[l.status] || l.status) + "</p>" +
         "<p class='cash-label'>" + cashLabel + "</p>" +
         "<p class='cash'>" + range + "</p>" +
+        letter +
         "<div class='card'><p><strong>Chat with Recarra</strong></p><div class='chat' id='chat'>" + chat + "</div>" +
         "<label for='msg'>Message</label><textarea id='msg' rows='3' placeholder='Ask about pickup, title, or the number…'></textarea>" +
         "<div class='row'><button class='btn' id='send' type='button'>Send</button></div></div>" +
@@ -133,6 +150,34 @@
         lastStamp = "";
         draw(true);
       };
+      var accept = document.getElementById("accept");
+      var decline = document.getElementById("decline");
+      if (accept) accept.onclick = function () { decide("Offer Accepted", "I accept the Recarra offer of " + money(l.offerAmount) + "."); };
+      if (decline) decline.onclick = function () {
+        if (!window.confirm("Decline this Recarra offer?")) return;
+        decide("Lost or Rejected", "I decline this offer.");
+      };
+    }
+    function decide(status, customerText) {
+      var l = find();
+      if (!l) return;
+      var now = new Date().toISOString();
+      var recarra = status === "Offer Accepted"
+        ? "You accepted. We will confirm pickup next. Payment is after we verify VIN, title, and identity."
+        : "Offer declined. This file is closed. Submit a new car anytime.";
+      save(load().map(function (item) {
+        if (item.id !== l.id) return item;
+        return Object.assign({}, item, {
+          status: status,
+          followUps: [{ at: now, note: customerText, status: status }].concat(item.followUps || []),
+          messages: (item.messages || []).concat([
+            { id: "m-" + Date.now(), at: now, from: "customer", text: customerText },
+            { id: "m-" + (Date.now() + 1), at: now, from: "recarra", text: recarra }
+          ])
+        });
+      }));
+      lastStamp = "";
+      draw(true);
     }
     window.addEventListener("storage", function () { lastStamp = ""; draw(true); });
     setInterval(function () { draw(false); }, 2000);
