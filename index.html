@@ -18,7 +18,7 @@
       --surface: #fbfaf6;
       --accent: #168a46;
       --accent-fg: #fff;
-      --border: color-mix(in oklab, #142033 12%, transparent);
+      --border: #ddd6c8;
       --display: "Fraunces", Georgia, serif;
       --sans: "Plus Jakarta Sans", system-ui, sans-serif;
     }
@@ -45,41 +45,44 @@
       margin: 0 auto;
       display: flex;
       align-items: center;
-      gap: 0.85rem;
-      padding: 0.7rem 1.1rem;
+      gap: 1rem;
+      padding: 0.65rem 1.25rem;
       min-height: 64px;
     }
     .logo {
       font-family: var(--display);
       font-weight: 500;
       letter-spacing: -0.04em;
-      font-size: clamp(1.2rem, 2vw, 1.5rem);
+      font-size: 1.4rem;
       text-decoration: none;
       flex: 0 0 auto;
     }
     nav {
       display: none;
+      align-items: center;
+      justify-content: flex-end;
+      flex: 1 1 auto;
       gap: 1.15rem;
-      font-size: 0.88rem;
+      font-size: 0.84rem;
       font-weight: 500;
       opacity: 0.88;
-      margin-left: auto;
     }
+    nav a { text-decoration: none; white-space: nowrap; }
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 0.65rem;
-      margin-left: auto;
+      gap: 0.75rem;
       flex: 0 0 auto;
     }
-    @media (min-width: 960px) {
+    @media (min-width: 900px) {
       nav { display: flex; }
-      .header-actions { margin-left: 0; }
     }
-    .phone { color: inherit; text-decoration: none; font-weight: 500; font-size: 0.92rem; letter-spacing: 0.01em; }
+    .phone { color: inherit; text-decoration: none; font-weight: 500; font-size: 0.9rem; }
     @media (max-width: 700px) { .phone { display: none; } }
-    @media (max-width: 480px) {
-      .header-actions .btn { min-height: 40px; padding: 0.5rem 0.8rem; font-size: 0.82rem; }
+    .header-actions .btn {
+      white-space: nowrap;
+      min-height: 40px;
+      padding: 0.5rem 0.95rem;
     }
     .btn {
       display: inline-flex;
@@ -104,26 +107,43 @@
     .hero {
       background: var(--navy);
       color: #f4f1ea;
-      padding: clamp(2rem, 5vw, 4.5rem) 1.1rem 2.75rem;
+      padding: clamp(2.25rem, 5vw, 4.25rem) 1.25rem 2.5rem;
     }
     .hero-inner, .wrap { width: min(1120px, 100%); margin: 0 auto; }
     .hero-inner {
       display: grid;
-      gap: 2rem;
+      gap: 2.25rem;
+      align-items: center;
     }
     @media (min-width: 960px) {
       .hero-inner {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-        gap: 3rem;
-        align-items: start;
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+        gap: 3.5rem;
       }
     }
+    .hero-copy .hours-line {
+      display: block;
+      margin-top: 1rem;
+      font-size: 0.88rem;
+      color: color-mix(in oklab, #f4f1ea 70%, transparent);
+    }
+    .player { margin-top: 0; }
+    @media (max-width: 959px) {
+      .player { margin-top: 0.25rem; }
+    }
+    .path {
+      background: var(--navy);
+      color: #f4f1ea;
+      padding: 0.5rem 1.25rem 3.5rem;
+    }
+    .path .wrap { max-width: 40rem; }
+    .path h2 { color: #f4f1ea; }
     .story {
       display: grid;
       grid-template-columns: 1fr;
-      gap: clamp(1rem, 2vw, 1.5rem);
+      gap: 1.15rem;
       width: 100%;
-      margin: 0;
+      margin: 1.15rem 0 0;
     }
     .story article {
       background: color-mix(in oklab, #f4f1ea 6%, transparent);
@@ -151,9 +171,9 @@
       max-width: 13ch;
     }
     .hero p { max-width: 36rem; color: color-mix(in oklab, #f4f1ea 78%, transparent); font-size: clamp(0.95rem, 1.4vw, 1.08rem); }
-    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.5rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 1.5rem; }
+    .hero-actions .btn { width: auto; }
     .player {
-      margin-top: 1.75rem;
       background: color-mix(in oklab, #f4f1ea 6%, transparent);
       border: 1px solid color-mix(in oklab, #f4f1ea 12%, transparent);
       border-radius: 20px;
@@ -194,7 +214,8 @@
     @media (max-width: 959px) {
       .path-kicker { margin-top: 0.5rem; }
     }
-    section { padding: clamp(3rem, 6vw, 5rem) 1.5rem; }
+    section { padding: clamp(2.75rem, 5vw, 4.5rem) 1.25rem; }
+    .band { background: #efeae0; }
     h2 {
       margin: 0 0 0.65rem;
       font-family: var(--display);
@@ -215,8 +236,7 @@
       border-radius: 20px;
       padding: 1.45rem 1.4rem 1.5rem;
     }
-    .hours { font-size: 0.78rem; opacity: 0.72; white-space: nowrap; }
-    @media (max-width: 900px) { .hours { display: none; } }
+    .hours { display: none; }
     .cities { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1.15rem; }
     .cities span {
       display: inline-flex;
@@ -232,7 +252,8 @@
     .quote p { margin: 0; color: var(--fg); }
     .quote footer { margin-top: 0.85rem; font-size: 0.9rem; color: var(--muted); }
     .quote footer b { color: var(--fg); font-weight: 600; }
-    .find-box { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.15rem; }
+    .find-box { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.15rem; max-width: 36rem; }
+    .find-box .btn { width: auto; margin-top: 0; min-width: 10rem; }
     .find-box input {
       flex: 1 1 220px;
       min-height: 48px;
@@ -288,17 +309,14 @@
     <div class="bar">
       <a class="logo" href="./">Recarra</a>
       <nav>
-        <a href="#find">Find my offer</a>
-        <a href="#how">How It Works</a>
-        <a href="#vehicles">Vehicles We Buy</a>
-        <a href="#areas">Areas</a>
-        <a href="#reviews">Reviews</a>
+        <a href="#find">Find offer</a>
+        <a href="#how">How it works</a>
+        <a href="#vehicles">Vehicles</a>
         <a href="#contact">Contact</a>
       </nav>
       <div class="header-actions">
-        <span class="hours">Mon–Sat 8 a.m.–6 p.m.</span>
         <a class="phone" href="tel:+13462740071">(346) 274-0071</a>
-        <a class="btn" href="aia_offer_form_enhanced_ux_boosted.html">Get My Free Offer</a>
+        <a class="btn" href="aia_offer_form_enhanced_ux_boosted.html">Get offer</a>
       </div>
     </div>
   </header>
@@ -310,8 +328,9 @@
       <p>Tell us the year, make, and model — or paste the VIN. We look the car up, send a starting offer, and pick it up after we verify title and identity. Offers are not guaranteed.</p>
       <div class="hero-actions">
         <a class="btn" href="aia_offer_form_enhanced_ux_boosted.html">Get My Free Offer</a>
-        <a class="btn btn-ghost" href="#find">Find my offer</a>
         <a class="btn btn-ghost" href="tel:+13462740071">Call (346) 274-0071</a>
+      </div>
+      <p class="hours-line">Monday–Saturday, 8 a.m.–6 p.m. · We call back.</p>
       </div>
       <div class="player" id="buyPlayer">
         <div class="player-top"><span>Recently bought</span><em id="buyCount">1 / 4</em></div>
@@ -329,10 +348,12 @@
           <div class="dots" id="buyDots"></div>
         </div>
       </div>
-      </div>
-      <div>
-      <p class="n path-kicker">Customer path — Recarra buys</p>
-      <h2 style="color:#f4f1ea;margin:0.35rem 0 1rem">From the form to cash in your hand.</h2>
+    </div>
+  </section>
+  <section class="path" id="path">
+    <div class="wrap">
+      <p class="n">Customer path — Recarra buys</p>
+      <h2>From the form to cash in your hand.</h2>
       <div class="story">
         <article>
           <video src="videos/01-you-send.mp4" muted playsinline autoplay loop preload="metadata"></video>
@@ -351,7 +372,6 @@
           <div class="cap"><strong>4 · You get paid</strong><span>Cash, Zelle, or check. Deal closed. Recarra bought it.</span></div>
         </article>
       </div>
-      </div>
     </div>
   </section>
   <section id="find">
@@ -366,7 +386,7 @@
       <p id="findErr" class="muted" style="color:#b42318;margin-top:0.6rem;" hidden></p>
     </div>
   </section>
-  <section id="areas">
+  <section id="areas" class="band">
     <div class="wrap">
       <p class="n">We pick up</p>
       <h2>Greater Houston</h2>
@@ -420,7 +440,7 @@
       <p style="margin-top:1.5rem;"><a class="btn" href="aia_offer_form_enhanced_ux_boosted.html">Check my car</a></p>
     </div>
   </section>
-  <section id="reviews">
+  <section id="reviews" class="band">
     <div class="wrap">
       <p class="n">Reviews</p>
       <h2>What Houston sellers told us after pickup.</h2>
