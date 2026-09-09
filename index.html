@@ -1,198 +1,229 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Recarra | Sell Your Car Fast</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <title>Sell My Junk Car Houston | Recarra</title>
+  <meta name="description" content="Sell your junk car for cash in Houston. Recarra buys damaged, non-running, and unwanted vehicles with free pickup after we verify title and identity." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --navy: #0e1c2f;
+      --fg: #142033;
+      --muted: #5b6b7c;
+      --bg: #f4f6f8;
+      --surface: #fff;
+      --accent: #168a46;
+      --accent-fg: #fff;
+      --border: #d7dee6;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: #f8f8f8;
-      color: #111;
+      font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.55;
     }
+    a { color: inherit; }
     header {
-      background: white;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       position: sticky;
       top: 0;
-      z-index: 1000;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.9rem 1.25rem;
+      background: var(--navy);
+      color: #fff;
     }
-    header h1 {
-      color: #d80000;
-      font-size: 1.8rem;
-      margin: 0;
+    .logo {
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      font-size: 1.25rem;
+      text-decoration: none;
     }
-    .cta-button {
-      padding: 0.75rem 1.5rem;
-      font-weight: bold;
-      background: linear-gradient(to right, #ff0000, #cc0000);
-      color: white;
-      border: none;
-      border-radius: 30px;
+    nav { display: none; gap: 1.1rem; font-size: 0.9rem; }
+    @media (min-width: 800px) { nav { display: flex; } }
+    .phone { color: #fff; text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0.7rem 1.15rem;
+      border: 0;
+      border-radius: 8px;
+      background: var(--accent);
+      color: var(--accent-fg);
+      font: inherit;
+      font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 0 10px rgba(255,0,0,0.3);
-      font-size: 1rem;
+      text-decoration: none;
     }
-    section {
-      padding: 4rem 2rem;
-      text-align: center;
+    .btn-ghost {
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.28);
     }
-    section h2 {
-      color: #d80000;
-      font-size: 2rem;
-      margin-bottom: 1rem;
+    .hero {
+      background: var(--navy);
+      color: #fff;
+      padding: 3.5rem 1.25rem 4rem;
     }
-    section p {
-      font-size: 1.1rem;
-      color: #444;
-      max-width: 700px;
-      margin: auto;
-      margin-bottom: 1.5rem;
+    .hero-inner, .wrap { max-width: 1100px; margin: 0 auto; }
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      letter-spacing: -0.04em;
+      line-height: 1.15;
+      max-width: 16ch;
     }
-    ul {
-      list-style: none;
-      padding: 0;
-      max-width: 600px;
-      margin: auto;
-      text-align: left;
-      font-size: 1.1rem;
+    .hero p { max-width: 38rem; color: rgba(255,255,255,.78); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+    section { padding: 3.5rem 1.25rem; }
+    h2 { margin: 0 0 0.75rem; letter-spacing: -0.03em; font-size: 1.65rem; }
+    .muted { color: var(--muted); }
+    .grid { display: grid; gap: 1rem; }
+    @media (min-width: 800px) {
+      .cols-3 { grid-template-columns: repeat(3, 1fr); }
+      .cols-2 { grid-template-columns: 1fr 1fr; }
     }
-    ul li {
-      margin-bottom: 0.75rem;
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
     }
+    .n { font-size: 0.75rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
     footer {
-      text-align: center;
-      padding: 2rem;
-      background: #111;
-      color: white;
+      background: var(--navy);
+      color: rgba(255,255,255,.75);
+      padding: 2rem 1.25rem;
+      font-size: 0.9rem;
     }
+    footer a { color: #fff; }
     #drawer {
       position: fixed;
+      inset: 0;
+      background: rgba(14,28,47,.55);
+      display: none;
+      z-index: 50;
+    }
+    #drawer.open { display: block; }
+    #drawer .sheet {
+      position: absolute;
       top: 0;
-      right: -100%;
-      width: 100%;
-      height: 100%;
-      background: #000;
-      transition: right 0.4s ease;
-      z-index: 9999;
-    }
-    #drawer iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-    #drawer.open {
       right: 0;
+      width: min(100%, 480px);
+      height: 100%;
+      background: #fff;
+      box-shadow: -12px 0 40px rgba(0,0,0,.2);
     }
+    #drawer iframe { width: 100%; height: 100%; border: 0; }
     #closeDrawer {
       position: absolute;
       top: 10px;
       left: 10px;
-      background: #ff3333;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      font-size: 20px;
-      width: 36px;
-      height: 36px;
+      z-index: 2;
+      width: 40px;
+      height: 40px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--navy);
+      color: #fff;
+      font-size: 1.4rem;
       cursor: pointer;
-      z-index: 10000;
-    }
-    #topBtn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 0.8rem 1.4rem;
-      font-size: 1rem;
-      font-weight: bold;
-      color: white;
-      background: linear-gradient(to right, #ff0000, #cc0000);
-      border: none;
-      border-radius: 30px;
-      box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
-      cursor: pointer;
-      display: none;
-      z-index: 1000;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Recarra</h1>
-    <button class="cta-button" onclick="openDrawer()">💰 Get Instant Offer</button>
+    <a class="logo" href="./">Recarra</a>
+    <nav>
+      <a href="#how">How It Works</a>
+      <a href="#vehicles">Vehicles We Buy</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="phone" href="tel:+13462740071">(346) 274-0071</a>
+    <button class="btn" type="button" onclick="openDrawer()">Get My Free Offer</button>
   </header>
-
-  <section>
-    <h2>Sell Your Car in 30 Seconds</h2>
-    <p>Instant cash offers. Free same-day pickup. $100 bonus guaranteed.</p>
-    <button class="cta-button" onclick="openDrawer()">Start Now</button>
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="n">Houston junk car buyer</p>
+      <h1>Sell your junk car for cash in Houston</h1>
+      <p>Tell us the year, make, and model — or paste the VIN. We look the car up, send a starting offer, and pick it up after we verify title and identity. Offers are not guaranteed.</p>
+      <div class="hero-actions">
+        <button class="btn" type="button" onclick="openDrawer()">Get My Free Offer</button>
+        <a class="btn btn-ghost" href="tel:+13462740071">Call (346) 274-0071</a>
+      </div>
+    </div>
   </section>
-
-  <section style="background:#fff;">
-    <h2>How It Works</h2>
-    <p>We use AI and market data to give you the best possible cash offer. Accept, schedule pickup, and get paid fast.</p>
-    
-<ul>
-  <li>✔️ $100 Bonus When We Pick Up Your Car Today – Fast Cash, No Waiting</li>
-  <li>✔️ Instant Payment via Cash or Digital – You Choose How You Get Paid</li>
-  <li>✔️ Take a Quick Ad Picture With You and Your Car Holding “I Sold It to Recarra” – Driver Provides the Sign, You Send It to Us, and Instantly Get $50 Added to Your Offer</li>
-  <li> 8 AM - 5 PM Mon to Sat</li>
-</ul>
-
-    <button class="cta-button" onclick="openDrawer()">Get My Offer</button>
+  <section id="how">
+    <div class="wrap">
+      <h2>How it works</h2>
+      <p class="muted">Three steps. No payment until we inspect and verify.</p>
+      <div class="grid cols-3" style="margin-top:1.25rem;">
+        <article class="card">
+          <p class="n">01</p>
+          <h3>Tell us about the car</h3>
+          <p class="muted">Year, make, model, zip, and how it runs. Photos help, but they are not required to start.</p>
+        </article>
+        <article class="card">
+          <p class="n">02</p>
+          <h3>We review and send an offer</h3>
+          <p class="muted">A person looks at what you sent. The first number is an offer to discuss — not a locked-in price.</p>
+        </article>
+        <article class="card">
+          <p class="n">03</p>
+          <h3>Pickup and pay after we verify</h3>
+          <p class="muted">We confirm identity, VIN, title, and any lien. Payment is arranged at pickup, after that check — not before.</p>
+        </article>
+      </div>
+    </div>
   </section>
-
-  <section>
-    <h2>What We Buy</h2>
-    <p>We buy cars in any condition — even if they don’t start or are missing the title.</p>
-    <ul>
-      <li>🚗 Junk & Used Cars</li>
-      <li>🚙 SUVs, Vans, and Trucks</li>
-      <li>🔥 Wrecked or Flooded Vehicles</li>
-      <li>🪪 With or Without Title</li>
-    </ul>
-    <button class="cta-button" onclick="openDrawer()">Check My Car Value</button>
+  <section id="vehicles">
+    <div class="wrap">
+      <h2>Vehicles we buy</h2>
+      <p class="muted">Junk, damaged, flood, and non-running cars across Greater Houston.</p>
+      <div class="grid cols-2" style="margin-top:1.25rem;">
+        <article class="card"><h3>Junk and unwanted</h3><p class="muted">High-mileage daily drivers and cars you do not want to repair.</p></article>
+        <article class="card"><h3>Damaged and wrecked</h3><p class="muted">Accident damage, failed inspections, hail, and cars insurance did not total.</p></article>
+        <article class="card"><h3>Non-running</h3><p class="muted">No start, no drive, or a car that has not moved in months. We bring the truck.</p></article>
+        <article class="card"><h3>With or without a title</h3><p class="muted">A clear title is simplest. Liens and missing titles are handled after we verify ownership.</p></article>
+      </div>
+      <p style="margin-top:1.5rem;"><button class="btn" type="button" onclick="openDrawer()">Check my car</button></p>
+    </div>
   </section>
-
-  <section style="background:#fff;">
-    <h2>Contact Us</h2>
-    <p>Questions? Our team is ready to help.</p>
-    <p>📞 <a href="tel:3462740071">346-274-0071</a> | 📧 <a href="mailto:support@recarra.com">support@recarra.com</a></p>
-    <button class="cta-button" onclick="openDrawer()">Chat & Offer</button>
+  <section id="contact">
+    <div class="wrap">
+      <h2>Contact Recarra</h2>
+      <p class="muted">Monday–Saturday, 8 a.m.–6 p.m. Greater Houston, Texas.</p>
+      <p><a href="tel:+13462740071">(346) 274-0071</a><br />
+      <a href="mailto:offers@recarra.com">offers@recarra.com</a></p>
+      <button class="btn" type="button" onclick="openDrawer()">Get My Free Offer</button>
+    </div>
   </section>
-
   <footer>
-    © 2025 Recarra. All rights reserved.
+    <div class="wrap">
+      <p>© <span id="y"></span> Recarra. Offers are not final until we verify the vehicle, title, and identity.</p>
+      <p>Do not submit other people’s information.</p>
+    </div>
   </footer>
-
   <div id="drawer">
-    <button id="closeDrawer" onclick="closeDrawer()">×</button>
-    <iframe src="https://latifasuliman.github.io/recarra-ai/aia_offer_form_enhanced_ux_boosted.html"></iframe>
+    <div class="sheet">
+      <button id="closeDrawer" type="button" onclick="closeDrawer()" aria-label="Close">×</button>
+      <iframe title="Get an offer" src="aia_offer_form_enhanced_ux_boosted.html"></iframe>
+    </div>
   </div>
-
-  <button id="topBtn" onclick="scrollToTop()">↑ Top</button>
-
   <script>
-    function openDrawer() {
-      document.getElementById('drawer').classList.add('open');
-    }
-    function closeDrawer() {
-      document.getElementById('drawer').classList.remove('open');
-    }
-    window.onscroll = function () {
-      const btn = document.getElementById("topBtn");
-      btn.style.display = window.scrollY > 300 ? "block" : "none";
-    };
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    document.getElementById("y").textContent = new Date().getFullYear();
+    function openDrawer() { document.getElementById("drawer").classList.add("open"); }
+    function closeDrawer() { document.getElementById("drawer").classList.remove("open"); }
   </script>
 </body>
 </html>
