@@ -176,6 +176,10 @@
       <aside class="card">
         <h2>Leads</h2>
         <input id="deskSearch" placeholder="Search RC-4821 or phone" style="margin:0.4rem 0 0.8rem" />
+        <div class="row" style="margin:0 0 0.8rem">
+          <button class="btn" type="button" id="showAll">All</button>
+          <button class="btn btn-ghost" type="button" id="showWaiting">Waiting for partner</button>
+        </div>
         <div id="list"></div>
       </aside>
       <section class="card" id="detail">
@@ -228,6 +232,7 @@
     const CLOSED = ["Buyer Paid","Completed","Lost or Rejected"];
     let selected = null;
     let filter = "";
+    let listMode = "all";
 
     function load() {
       try { return JSON.parse(localStorage.getItem(KEY) || "[]"); }
@@ -305,12 +310,21 @@
       const q = filter.trim().toUpperCase();
       const qDigits = filter.replace(/\D/g, "");
       const items = leads().filter((l) => {
+        if (listMode === "waiting" && !(l.keepOrAssign === "assign" && !l.assignmentPaidAt)) return false;
         if (!q) return true;
         const blob = (l.id + " " + (l.trackCode || "") + " " + l.name + " " + l.phone + " " + l.year + " " + l.make + " " + l.model).toUpperCase();
         return blob.indexOf(q) !== -1 || (qDigits && String(l.phone).replace(/\D/g, "").indexOf(qDigits) !== -1);
       });
+      const waitN = leads().filter(function (l) { return l.keepOrAssign === "assign" && !l.assignmentPaidAt; }).length;
+      const waitBtn = document.getElementById("showWaiting");
+      const allBtn = document.getElementById("showAll");
+      if (waitBtn) waitBtn.textContent = "Waiting for partner (" + waitN + ")";
+      if (allBtn) allBtn.className = listMode === "all" ? "btn" : "btn btn-ghost";
+      if (waitBtn) waitBtn.className = listMode === "waiting" ? "btn" : "btn btn-ghost";
       if (!items.length) {
-        box.innerHTML = "<p class='muted'>No offers match.</p>";
+        box.innerHTML = listMode === "waiting"
+          ? "<p class='muted'>No cars waiting for a partner. Assign a lead first, then it shows here.</p>"
+          : "<p class='muted'>No offers match.</p>";
         return;
       }
       box.innerHTML = items.map((l) =>
@@ -868,6 +882,10 @@
     };
     document.getElementById("deskSearch").addEventListener("input", function (e) {
       filter = e.target.value;
+      renderList();
+    });
+    document.getElementById("showAll").onclick = function () { listMode = "all"; renderList(); };
+    document.getElementById("showWaiting").onclick = function () { listMode = "waiting"; renderList(); };
       renderList();
     });
     window.addEventListener("storage", (e) => { if (e.key === KEY) render(); });
