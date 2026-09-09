@@ -199,7 +199,10 @@
       id = String(id || "").toUpperCase();
       return loadPartners().find(function (p) { return p.id.toUpperCase() === id; }) || null;
     }
-    function partnerLabel(p) { return p.id + " · " + p.company + (p.verified ? "" : " (unverified)"); }
+    function partnerLoginNote(p) {
+      const link = deskHref(p);
+      return "Recarra LLC partner desk\nCode: " + p.id + "\nPIN: " + p.pin + "\nLogin: " + link + "\n\nDo not share this PIN. Seller contact stays locked until Recarra is paid.";
+    }
     function jobsForPartner(partner) {
       return leads().filter(function (l) {
         return l.keepOrAssign === "assign" && (l.assignedTo === partner.id || l.assignedTo === partner.company);
@@ -524,6 +527,9 @@
           "<span class='muted'>" + escapeHtml(p.name) + " · " + escapeHtml(p.phone) + " · PIN " + escapeHtml(p.pin) + " · " + jobs + " cars</span>" +
           "<div class='row'>" +
           "<button class='btn' type='button' data-desk='" + p.id + "'>Copy login link</button>" +
+          "<button class='btn btn-ghost' type='button' data-pin='" + p.id + "'>Copy PIN</button>" +
+          "<a class='btn btn-ghost' href='sms:" + String(p.phone).replace(/\D/g, "") + "?body=" + encodeURIComponent(partnerLoginNote(p)) + "'>Text login</a>" +
+          "<a class='btn btn-ghost' href='mailto:" + encodeURIComponent(p.email || "") + "?subject=" + encodeURIComponent("Recarra partner login " + p.id) + "&body=" + encodeURIComponent(partnerLoginNote(p)) + "'>Email login</a>" +
           "<button class='btn btn-ghost' type='button' data-toggle='" + p.id + "'>" + (p.verified ? "Unverify" : "Verify") + "</button>" +
           "</div></div>";
       }).join("");
@@ -534,6 +540,15 @@
           copyText(deskHref(p));
           addLog("desk_link", "Partner login link copied for " + p.id, { partnerId: p.id });
           alert("Login link copied. They use " + p.id + " and PIN " + p.pin + " at Partners.");
+        };
+      });
+      box.querySelectorAll("[data-pin]").forEach(function (btn) {
+        btn.onclick = function () {
+          const p = findPartner(btn.getAttribute("data-pin"));
+          if (!p) return;
+          copyText(p.pin);
+          addLog("pin_copied", "PIN copied for " + p.id, { partnerId: p.id });
+          alert("PIN " + p.pin + " copied. Text or email it only to " + p.company + ".");
         };
       });
       box.querySelectorAll("[data-toggle]").forEach(function (btn) {
