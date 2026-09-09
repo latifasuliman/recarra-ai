@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Recarra Back Office</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0e1c2f;
+      --fg: #142033;
+      --muted: #5b6b7c;
+      --bg: #f4f6f8;
+      --surface: #fff;
+      --accent: #168a46;
+      --border: #d7dee6;
+      --danger: #b42318;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.5;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.9rem 1.25rem;
+      background: var(--navy);
+      color: #fff;
+    }
+    header a { color: #fff; text-decoration: none; font-weight: 700; }
+    main { max-width: 1100px; margin: 0 auto; padding: 1.25rem; }
+    .grid { display: grid; gap: 1rem; }
+    @media (min-width: 860px) { .grid { grid-template-columns: 320px 1fr; } }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+    .lead {
+      width: 100%;
+      text-align: left;
+      border: 0;
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      font: inherit;
+    }
+    .lead.active { outline: 2px solid var(--navy); }
+    .muted { color: var(--muted); font-size: 0.88rem; }
+    label { display: block; font-size: 0.78rem; font-weight: 700; margin: 0.7rem 0 0.3rem; }
+    input, select, textarea, button { font: inherit; }
+    input, select, textarea {
+      width: 100%;
+      min-height: 44px;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .btn {
+      min-height: 44px;
+      padding: 0.6rem 1rem;
+      border: 0;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-ghost {
+      background: #fff;
+      color: var(--fg);
+      border: 1px solid var(--border);
+    }
+    .row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+    .chat { max-height: 280px; overflow: auto; background: var(--bg); border-radius: 8px; padding: 0.75rem; }
+    .bubble { margin: 0.4rem 0; padding: 0.55rem 0.7rem; border-radius: 8px; background: #fff; max-width: 90%; }
+    .bubble.recarra { background: var(--navy); color: #fff; margin-left: auto; }
+    h1, h2 { letter-spacing: -0.03em; margin: 0 0 0.4rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>Recarra Back Office</strong>
+    <a href="./">Site</a>
+  </header>
+  <main>
+    <p class="muted">Secret desk. Offers from this GitHub site land here. Change status to send the customer home. Chat is live on their tracking page.</p>
+    <div class="grid">
+      <aside class="card">
+        <h2>Leads</h2>
+        <div id="list"></div>
+      </aside>
+      <section class="card" id="detail">
+        <p class="muted">Pick a lead.</p>
+      </section>
+    </div>
+  </main>
+  <script>
+    const KEY = "recarra-leads-v1";
+    const STATUSES = ["New Lead","Contacted","Vehicle Information Needed","Offer Calculated","Offer Sent","Negotiating","Offer Accepted","Pickup Scheduled","Vehicle Collected","Buyer Paid","Completed","Lost or Rejected"];
+    const CLOSED = ["Buyer Paid","Completed","Lost or Rejected"];
+    let selected = null;
+
+    function load() {
+      try { return JSON.parse(localStorage.getItem(KEY) || "[]"); }
+      catch { return []; }
+    }
+    function save(leads) { localStorage.setItem(KEY, JSON.stringify(leads)); }
+    function money(n) { return "$" + Number(n || 0).toLocaleString(); }
+    function leads() { return load(); }
+    function get(id) { return leads().find((l) => l.id === id); }
+    function patch(id, next) {
+      save(leads().map((l) => l.id === id ? Object.assign({}, l, next) : l));
+    }
+
+    function renderList() {
+      const box = document.getElementById("list");
+      const items = leads();
+      if (!items.length) {
+        box.innerHTML = "<p class='muted'>No offers yet. Submit one on the site first.</p>";
+        return;
+      }
+      box.innerHTML = items.map((l) =>
+        "<button class='lead" + (selected === l.id ? " active" : "") + "' data-id='" + l.id + "'>" +
+        "<strong>" + l.year + " " + l.make + " " + l.model + "</strong><br>" +
+        "<span class='muted'>" + l.id + " · " + l.status + " · " + l.name + "</span></button>"
+      ).join("");
+      box.querySelectorAll(".lead").forEach((btn) => {
+        btn.onclick = () => { selected = btn.dataset.id; render(); };
+      });
+    }
+
+    function renderDetail() {
+      const l = get(selected);
+      const box = document.getElementById("detail");
+      if (!l) { box.innerHTML = "<p class='muted'>Pick a lead.</p>"; return; }
+      const msgs = l.messages || [];
+      const track = l.trackCode || l.id;
+      const href = location.origin + location.pathname.replace(/[^/]+$/, "") + "track.html?code=" + encodeURIComponent(track);
+      box.innerHTML =
+        "<p class='muted'>" + l.id + " · tracking " + track + "</p>" +
+        "<h1>" + l.year + " " + l.make + " " + l.model + "</h1>" +
+        "<p class='muted'>" + l.name + " · " + l.phone + (l.email ? " · " + l.email : "") + " · " + l.zip + "</p>" +
+        "<p>Starting range <strong>" + money(l.offerLow) + "–" + money(l.offerHigh) + "</strong></p>" +
+        "<p class='muted'>Customer tracking: <a href='" + href + "' target='_blank' rel='noopener'>" + href + "</a></p>" +
+        "<label>Status (this is how you send them home)</label>" +
+        "<select id='status'>" + STATUSES.map((s) => "<option" + (s === l.status ? " selected" : "") + ">" + s + "</option>").join("") + "</select>" +
+        "<p class='muted'>" + (CLOSED.includes(l.status) ? "Deal closed — customer can return to the main site." : "Customer stays on tracking until you set Paid, Completed, or Lost.") + "</p>" +
+        "<label>Offer amount</label><input id='amount' type='number' value='" + (l.offerAmount || "") + "' />" +
+        "<label>Follow-up note</label><textarea id='note' rows='3' placeholder='Called, revised offer…'></textarea>" +
+        "<div class='row'><button class='btn' id='save'>Save follow-up</button>" +
+        "<a class='btn btn-ghost' href='tel:" + String(l.phone).replace(/\\D/g, "") + "'>Call seller</a></div>" +
+        "<h2 style='margin-top:1.4rem'>Live seller chat</h2>" +
+        "<div class='chat' id='chat'>" + msgs.map((m) =>
+          "<div class='bubble " + m.from + "'><strong>" + (m.from === "recarra" ? "Recarra" : l.name) + "</strong><br>" +
+          escapeHtml(m.text) + "</div>"
+        ).join("") + "</div>" +
+        "<label>Reply</label><textarea id='reply' rows='3'></textarea>" +
+        "<div class='row'><button class='btn' id='send'>Send</button></div>";
+
+      document.getElementById("save").onclick = () => {
+        const status = document.getElementById("status").value;
+        const amount = document.getElementById("amount").value;
+        const note = document.getElementById("note").value.trim() || ("Status set to " + status + ".");
+        const follow = { at: new Date().toISOString(), note, status };
+        patch(l.id, {
+          status,
+          offerAmount: amount ? Number(amount) : l.offerAmount,
+          followUps: [follow].concat(l.followUps || []),
+        });
+        render();
+      };
+      document.getElementById("send").onclick = () => {
+        const text = document.getElementById("reply").value.trim();
+        if (!text) return;
+        const msg = { id: "m-" + Date.now(), at: new Date().toISOString(), from: "recarra", text };
+        patch(l.id, { messages: (get(l.id).messages || []).concat(msg) });
+        render();
+      };
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"]/g, (c) => ({ "&":"&","<":"<",">":">","\"":""" }[c]));
+    }
+    function render() { renderList(); renderDetail(); }
+    window.addEventListener("storage", (e) => { if (e.key === KEY) render(); });
+    setInterval(renderList, 4000);
+    render();
+  </script>
+</body>
+</html>

@@ -329,10 +329,48 @@
         headers: { Title: "Recarra offer " + id, Priority: "high" },
         body: payload.vehicle + " - " + payload.name + " " + payload.phone + " - ZIP " + zip,
       }).catch(function() {});
-      document.getElementById("formView").hidden = true;
-      const done = document.getElementById("doneView");
-      done.hidden = false;
-      done.innerHTML = "<p class='muted'>Request " + id + "</p><h1>We have your request, " + name.split(" ")[0] + ".</h1><p class='muted'>Starting range for a " + payload.vehicle + ": <strong>" + money(r.low) + "-" + money(r.high) + "</strong>. This is not a guaranteed price. We still need to verify condition, VIN, title, ownership, and any lien before we buy.</p><p class='muted'>A Recarra teammate will call " + payload.phone + ".</p>";
+      const alphabet = "abcdefghjkmnpqrstuvwxyz23456789";
+      let trackCode = "rc-";
+      for (let i = 0; i < 8; i += 1) trackCode += alphabet[Math.floor(Math.random() * alphabet.length)];
+      const now = new Date().toISOString();
+      const lead = {
+        id: id,
+        createdAt: now,
+        source: "github-site",
+        status: "New Lead",
+        name: name,
+        phone: document.getElementById("phone").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        zip: zip,
+        year: state.year,
+        make: state.make,
+        model: state.model,
+        vin: state.vin || undefined,
+        vehicleSummary: state.summary || undefined,
+        running: document.getElementById("running").value,
+        title: document.getElementById("title").value,
+        notes: "",
+        smsConsent: document.getElementById("sms").checked,
+        offerLow: r.low,
+        offerHigh: r.high,
+        trackCode: trackCode,
+        messages: [{
+          id: "m-" + Date.now(),
+          at: now,
+          from: "recarra",
+          text: "We have your request " + id + ". Stay on this page. Recarra Back Office will reply here. Starting range " + r.low + "–" + r.high + ". Not a locked price."
+        }],
+        followUps: [{ at: now, note: "Offer request received from the GitHub site.", status: "New Lead" }]
+      };
+      try {
+        const existing = JSON.parse(localStorage.getItem("recarra-leads-v1") || "[]");
+        existing.unshift(lead);
+        localStorage.setItem("recarra-leads-v1", JSON.stringify(existing));
+        localStorage.setItem("recarra-open-track-v1", trackCode);
+      } catch (err) {}
+      const trackUrl = new URL("track.html?code=" + encodeURIComponent(trackCode), window.top.location.href).href;
+      try { window.top.location.href = trackUrl; }
+      catch (err) { window.location.href = trackUrl; }
     });
   </script>
 </body>

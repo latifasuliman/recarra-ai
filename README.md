@@ -1,49 +1,14 @@
+# Recarra
 
-# Recarra AiA - Smart Vehicle Offer Assistant
+Houston junk-car buying site. Unpublished (robots.txt blocks indexing).
 
-**Recarra AiA** is a fully responsive, intelligent assistant that allows users to submit their vehicle details and receive a real-time offer in under 30 seconds.
+## Live pages
 
-## Features
+- Site: https://latifasuliman.github.io/recarra-ai/
+- Offer form: opens from **Get My Free Offer**
+- Customer tracking: `track.html?code=rc-xxxxxxxx`
+- **Back Office (private):** https://latifasuliman.github.io/recarra-ai/back-office-k9x2m7.html
 
-- **Smart Chat UI** powered by AiA (Artificial Interactive Assistant)
-- **Step-by-step question flow** with conditional logic
-- **Damage & condition checks** (tires, keys, title, VIN, etc.)
-- **Photo upload support** (front, rear, engine, dashboard, damage)
-- **Input validation** for phone, email, and required fields
-- **Offer summary with ID and final amount**
-- **Confetti celebration + audio announcement**
-- **Buttons to Accept, Reject, or Save the offer**
-- **Auto-save form data using localStorage**
+Offers submitted on this GitHub site appear in Back Office on the **same phone or browser**. Chat and status are live between those two pages.
 
-## Live Preview
-
-You can preview this app by opening `index.html` in any modern browser, or hosting it on GitHub Pages.
-
-## File Structure
-
-```
-.
-├── index.html                # Main webpage
-├── aia_logic_injection.js   # Full AiA logic engine
-├── recarra_offer_voice.mp3  # Voice message (optional)
-```
-
-## How to Use
-
-1. Clone or download this repository.
-2. Open `index.html` in a browser.
-3. Walk through the smart AiA flow to simulate a vehicle offer.
-4. Customize and expand logic in `aia_logic_injection.js`.
-
-## Deploy to GitHub Pages
-
-- Push your code to a GitHub repo.
-- Go to **Settings → Pages → Source** and set it to the `main` branch.
-- Your site will be live at:
-  ```
-  https://yourusername.github.io/your-repo-name/
-  ```
-
----
-
-**Developed for the Recarra Car Offer Platform**
+To send a customer back to the main site, open Back Office → pick the lead → set status to **Buyer Paid**, **Completed**, or **Lost or Rejected** → Save follow-up.
