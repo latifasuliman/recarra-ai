@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Recarra LLC Offer Letter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0e1c2f;
+      --green: #168a46;
+      --fg: #142033;
+      --muted: #5b6b7c;
+      --line: #d7dee6;
+      --paper: #fbfaf6;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+      background: #e8edf2;
+      color: var(--fg);
+      line-height: 1.55;
+    }
+    .bar {
+      background: var(--navy);
+      color: #fff;
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .bar a { color: #fff; text-decoration: none; font-weight: 700; }
+    .actions { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 1rem 1.25rem; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 44px; padding: 0.6rem 1rem; border: 0; border-radius: 8px;
+      background: var(--green); color: #fff; font: inherit; font-weight: 700; cursor: pointer; text-decoration: none;
+    }
+    .btn-ghost { background: #fff; color: var(--fg); border: 1px solid var(--line); }
+    .btn-decline { background: #fff; color: #b42318; border: 1px solid #f0c9c5; }
+    .sheet {
+      max-width: 740px;
+      margin: 0 auto 3rem;
+      background: var(--paper);
+      border: 1px solid #e3ddd0;
+      box-shadow: 0 18px 50px rgba(14,28,47,.12);
+    }
+    .letterhead {
+      background: var(--navy);
+      color: #fff;
+      padding: 1.6rem 1.8rem 1.4rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: flex-end;
+    }
+    .brand { font-family: Fraunces, Georgia, serif; font-size: 1.85rem; letter-spacing: -0.03em; line-height: 1; }
+    .llc { display: block; margin-top: 0.35rem; font-family: "Plus Jakarta Sans", sans-serif; font-size: 0.72rem; letter-spacing: .16em; text-transform: uppercase; color: #9fb0c3; }
+    .head-meta { text-align: right; font-size: 0.82rem; color: rgba(255,255,255,.78); }
+    .rule { height: 6px; background: var(--green); }
+    .body { padding: 1.6rem 1.8rem 2rem; }
+    .kicker { font-size: 0.72rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--green); }
+    .doc-title { font-family: Fraunces, Georgia, serif; font-size: 2rem; margin: 0.25rem 0 1rem; letter-spacing: -0.03em; }
+    .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.4rem; font-size: 0.92rem; }
+    .label { display: block; font-size: 0.7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.15rem; }
+    .cash {
+      margin: 1.1rem 0;
+      padding: 1rem 1.1rem;
+      background: #e8f6ee;
+      border: 1px solid #b7e0c6;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .cash b {
+      display: block;
+      color: var(--green);
+      font-family: Fraunces, Georgia, serif;
+      font-size: clamp(2rem, 6vw, 3.1rem);
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+    ol { padding-left: 1.2rem; color: #334155; }
+    .sign { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+    .sign-line { margin-top: 2.2rem; border-top: 1px solid var(--fg); padding-top: 0.4rem; font-size: 0.88rem; }
+    .foot { margin-top: 1.6rem; font-size: 0.78rem; color: var(--muted); }
+    .empty { padding: 3rem 1.5rem; text-align: center; }
+    @media print {
+      body { background: #fff; }
+      .bar, .actions { display: none; }
+      .sheet { box-shadow: none; border: 0; margin: 0; max-width: none; }
+    }
+    @media (max-width: 640px) {
+      .meta, .sign, .letterhead { grid-template-columns: 1fr; display: grid; }
+      .head-meta { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <a href="./">Recarra</a>
+    <span>Official offer letter</span>
+  </div>
+  <div class="actions" id="toolbar"></div>
+  <div id="app"></div>
+  <script>
+    const KEY = "recarra-leads-v1";
+    const HOLD_MS = 7 * 24 * 60 * 60 * 1000;
+    function load() {
+      try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { return []; }
+    }
+    function save(leads) { localStorage.setItem(KEY, JSON.stringify(leads)); }
+    function money(n) {
+      return "$" + Number(n || 0).toLocaleString("en-US", { minimumFractionDigits: 0 });
+    }
+    function query() {
+      const p = new URLSearchParams(location.search);
+      return p.get("code") || p.get("q") || localStorage.getItem("recarra-open-track-v1") || "";
+    }
+    function find() {
+      const raw = query().trim();
+      const digits = raw.replace(/\D/g, "");
+      const upper = raw.toUpperCase().replace(/\s+/g, "");
+      const rc = upper.indexOf("RC") === 0 ? "RC-" + upper.replace(/^RC-?/, "") : (digits.length === 4 ? "RC-" + digits : upper);
+      return load().find(function (l) {
+        const id = String(l.id || "").toUpperCase();
+        const code = String(l.trackCode || "").toUpperCase();
+        return id === rc || code === rc || id === upper || code === upper;
+      }) || (digits.length >= 7 ? load().find(function (l) {
+        return String(l.phone || "").replace(/\D/g, "").endsWith(digits);
+      }) : null);
+    }
+    function escapeHtml(s) {
+      var el = document.createElement("span");
+      el.textContent = String(s == null ? "" : s);
+      return el.innerHTML;
+    }
+    function fmt(d) {
+      return new Date(d).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+    }
+    function patch(id, next) {
+      save(load().map(function (l) { return l.id === id ? Object.assign({}, l, next) : l; }));
+    }
+    function draw() {
+      var l = find();
+      var app = document.getElementById("app");
+      var toolbar = document.getElementById("toolbar");
+      if (!l) {
+        toolbar.innerHTML = "";
+        app.innerHTML = "<div class='empty'><h1>We could not open that letter.</h1><p>Use your offer number on the same phone you submitted with.</p><p><a class='btn' href='track.html'>Find my offer</a></p></div>";
+        return;
+      }
+      var offerNo = l.trackCode || l.id;
+      var sent = l.offerSentAt || l.createdAt;
+      var exp = l.offerSentAt ? new Date(new Date(l.offerSentAt).getTime() + HOLD_MS) : null;
+      var expired = exp && Date.now() > exp.getTime();
+      var amount = l.offerAmount;
+      var waiting = amount && (l.status === "Offer Sent" || l.status === "Negotiating") && !expired;
+      toolbar.innerHTML =
+        "<button class='btn' type='button' id='print'>Print / save PDF</button>" +
+        "<a class='btn btn-ghost' href='track.html?code=" + encodeURIComponent(offerNo) + "'>Back to tracking</a>";
+      if (waiting) {
+        toolbar.innerHTML +=
+          "<button class='btn' id='accept' type='button'>Accept offer</button>" +
+          "<button class='btn btn-decline' id='decline' type='button'>Decline</button>";
+      }
+      var amountBlock = amount
+        ? "<div class='cash'><span class='label'>Recarra LLC offers</span><b>" + money(amount) + "</b><span>U.S. dollars, subject to inspection</span></div>"
+        : "<div class='cash'><span class='label'>Offer in review</span><b style='font-size:1.4rem;color:var(--navy)'>Pending Recarra review</b><span>This letter becomes final when Recarra sends a dollar amount.</span></div>";
+      app.innerHTML =
+        "<article class='sheet'>" +
+        "<header class='letterhead'><div><span class='brand'>Recarra</span><span class='llc'>Recarra LLC · Houston, Texas</span></div>" +
+        "<div class='head-meta'>Cash for cars<br>(346) 274-0071<br>offers@recarra.com<br>Recarra.com</div></header>" +
+        "<div class='rule'></div>" +
+        "<div class='body'>" +
+        "<p class='kicker'>Official offer letter</p>" +
+        "<h1 class='doc-title'>Vehicle purchase offer</h1>" +
+        "<div class='meta'>" +
+        "<div><span class='label'>Offer number</span><strong>" + escapeHtml(offerNo) + "</strong></div>" +
+        "<div><span class='label'>Letter date</span>" + fmt(sent) + "</div>" +
+        "<div><span class='label'>Prepared for</span>" + escapeHtml(l.name) + "<br>" + escapeHtml(l.phone) + (l.email ? "<br>" + escapeHtml(l.email) : "") + "<br>ZIP " + escapeHtml(l.zip) + "</div>" +
+        "<div><span class='label'>Valid through</span>" + (exp ? fmt(exp) : "Starts when Recarra sends the dollar amount") + (expired ? "<br><strong>Expired</strong>" : " · 7 days") + "</div>" +
+        "</div>" +
+        "<p><span class='label'>Vehicle</span><strong>" + escapeHtml(l.year + " " + l.make + " " + l.model) + "</strong>" +
+        (l.vin ? "<br>VIN " + escapeHtml(l.vin) : "<br>VIN to be verified at inspection") +
+        (l.vehicleSummary ? "<br>" + escapeHtml(l.vehicleSummary) : "") + "</p>" +
+        amountBlock +
+        "<p>Recarra LLC offers to purchase the vehicle described above from the person named on this letter, on the following terms:</p>" +
+        "<ol>" +
+        "<li>The dollar amount is an offer to discuss and hold for 7 days if the car, VIN, and title match what you reported.</li>" +
+        "<li>This is not a payday and not a guaranteed purchase. Payment is arranged only after Recarra inspects the vehicle and verifies identity, VIN, title, ownership, and any lien.</li>" +
+        "<li>If the car or paperwork does not match, Recarra may revise or withdraw the offer.</li>" +
+        "<li>Accepting this letter means you want to proceed to pickup scheduling. Recarra LLC is not obligated to buy until verification is complete.</li>" +
+        "</ol>" +
+        "<div class='sign'>" +
+        "<div class='sign-line'><strong>Recarra LLC</strong><br>Greater Houston, Texas<br>Authorized offer desk</div>" +
+        "<div class='sign-line'><strong>" + escapeHtml(l.name) + "</strong><br>" + (l.status === "Offer Accepted" ? "Accepted " + fmt(l.acceptedAt || sent) : (l.status === "Lost or Rejected" ? "Declined" : "Customer signature / Accept on Recarra")) + "</div>" +
+        "</div>" +
+        "<p class='foot'>Recarra LLC · (346) 274-0071 · offers@recarra.com · Monday–Saturday, 8 a.m.–6 p.m. Keep offer number " + escapeHtml(offerNo) + " to find this letter on Recarra.com. Do not send other people’s information.</p>" +
+        "</div></article>";
+      document.getElementById("print").onclick = function () { window.print(); };
+      var accept = document.getElementById("accept");
+      var decline = document.getElementById("decline");
+      if (accept) accept.onclick = function () { decide("Offer Accepted"); };
+      if (decline) decline.onclick = function () {
+        if (!window.confirm("Decline this Recarra LLC offer?")) return;
+        decide("Lost or Rejected");
+      };
+    }
+    function decide(status) {
+      var l = find();
+      if (!l) return;
+      var now = new Date().toISOString();
+      var text = status === "Offer Accepted"
+        ? "I accept Recarra LLC offer " + (l.trackCode || l.id) + " of " + money(l.offerAmount) + "."
+        : "I decline Recarra LLC offer " + (l.trackCode || l.id) + ".";
+      var recarra = status === "Offer Accepted"
+        ? "Offer accepted. We will confirm pickup next. Payment is after we verify VIN, title, and identity."
+        : "Offer declined. This letter is closed.";
+      patch(l.id, {
+        status: status,
+        acceptedAt: status === "Offer Accepted" ? now : l.acceptedAt,
+        followUps: [{ at: now, note: text, status: status }].concat(l.followUps || []),
+        messages: (l.messages || []).concat([
+          { id: "m-" + Date.now(), at: now, from: "customer", text: text },
+          { id: "m-" + (Date.now() + 1), at: now, from: "recarra", text: recarra }
+        ])
+      });
+      draw();
+    }
+    draw();
+  </script>
+</body>
+</html>

@@ -154,13 +154,16 @@
       if (!l) { box.innerHTML = "<p class='muted'>Pick a lead.</p>"; return; }
       const msgs = l.messages || [];
       const track = l.trackCode || l.id;
-      const href = location.origin + location.pathname.replace(/[^/]+$/, "") + "track.html?code=" + encodeURIComponent(track);
+      const root = location.origin + location.pathname.replace(/[^/]+$/, "");
+      const href = root + "track.html?code=" + encodeURIComponent(track);
+      const letterHref = root + "letter.html?code=" + encodeURIComponent(track);
       box.innerHTML =
         "<p class='muted'>" + (l.trackCode || l.id) + "</p>" +
         "<h1>" + l.year + " " + l.make + " " + l.model + "</h1>" +
         "<p class='muted'>" + l.name + " · " + l.phone + (l.email ? " · " + l.email : "") + " · " + l.zip + "</p>" +
         "<p>Starting range <strong>" + money(l.offerLow) + "–" + money(l.offerHigh) + "</strong></p>" +
         "<p class='muted'>Customer tracking: <a href='" + href + "' target='_blank' rel='noopener'>" + href + "</a></p>" +
+        "<p class='muted'>Offer letter: <a href='" + letterHref + "' target='_blank' rel='noopener'>" + letterHref + "</a></p>" +
         "<label>Status (this is how you send them home)</label>" +
         "<select id='status'>" + STATUSES.map((s) => "<option" + (s === l.status ? " selected" : "") + ">" + s + "</option>").join("") + "</select>" +
         "<p class='muted'>" + (CLOSED.includes(l.status) ? "Deal closed — customer can return to the main site." : "Customer stays on tracking until you set Paid, Completed, or Lost.") + "</p>" +
@@ -171,6 +174,7 @@
         "<button class='btn' id='sendOffer'>Send offer</button>" +
         "<button class='btn btn-ghost' id='save' type='button'>Save follow-up only</button>" +
         (l.email ? "<a class='btn btn-ghost' id='mailLetter' href='#'>Email offer letter</a>" : "") +
+        "<a class='btn btn-ghost' href='" + letterHref + "' target='_blank' rel='noopener'>View letter</a>" +
         "<a class='btn btn-ghost' href='tel:" + String(l.phone).replace(/\D/g, "") + "'>Call seller</a></div>" +
         "<p class='muted' id='mailStatus'></p>" +
         "<h2 style='margin-top:1.4rem'>Live seller chat</h2>" +
@@ -210,7 +214,7 @@
           followUps: [{ at: now, note: extra || ("Offer sent $" + amount + "."), status: "Offer Sent" }].concat(current.followUps || []),
           messages: (current.messages || []).concat([{ id: "m-" + Date.now(), at: now, from: "recarra", text: text }])
         });
-        sendOfferEmail(get(l.id), amount, href);
+        sendOfferEmail(get(l.id), amount, href, letterHref);
         render();
       };
       const mailBtn = document.getElementById("mailLetter");
@@ -219,7 +223,7 @@
           ev.preventDefault();
           const amount = Number(document.getElementById("amount").value) || l.offerAmount;
           if (!amount) { alert("Type the offer amount first."); return; }
-          window.location.href = mailtoOffer(l, amount, href);
+          window.location.href = mailtoOffer(l, amount, href, letterHref);
         };
       }
       document.getElementById("send").onclick = () => {
@@ -231,31 +235,37 @@
       };
     }
 
-    function mailtoOffer(lead, amount, trackHref) {
+    function mailtoOffer(lead, amount, trackHref, letterHref) {
       const vehicle = lead.year + " " + lead.make + " " + lead.model;
-      const subject = "Recarra offer letter — " + vehicle;
+      const no = lead.trackCode || lead.id;
+      const subject = "Recarra LLC offer letter " + no + " — " + vehicle;
       const body =
         "Hi " + lead.name + ",\n\n" +
-        "Recarra offer for your " + vehicle + ": $" + Number(amount).toLocaleString() + ".\n\n" +
+        "Recarra LLC offer letter " + no + " for your " + vehicle + ": $" + Number(amount).toLocaleString() + ".\n\n" +
         "This holds 7 days if the car, VIN, and title match.\n" +
-        "Accepting is not a payday yet. We still inspect and verify identity before payment.\n\n" +
-        "Accept or decline here:\n" + trackHref + "\n\n" +
-        "Recarra\n(346) 274-0071\noffers@recarra.com\n";
+        "Accepting is not a payday. We still inspect and verify identity before payment.\n\n" +
+        "Official letter:\n" + letterHref + "\n\n" +
+        "Accept or decline:\n" + trackHref + "\n\n" +
+        "Recarra LLC\nGreater Houston, Texas\n(346) 274-0071\noffers@recarra.com\n";
       return "mailto:" + encodeURIComponent(lead.email) + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
     }
-    function sendOfferEmail(lead, amount, trackHref) {
+    function sendOfferEmail(lead, amount, trackHref, letterHref) {
       const status = document.getElementById("mailStatus");
       const vehicle = lead.year + " " + lead.make + " " + lead.model;
+      const no = lead.trackCode || lead.id;
       const payload = {
-        _subject: "Recarra offer letter — " + vehicle,
+        _subject: "Recarra LLC offer letter " + no + " — " + vehicle,
         _template: "box",
         _captcha: "false",
+        company: "Recarra LLC",
+        offer_number: no,
         name: lead.name,
         vehicle: vehicle,
         offer: "$" + Number(amount).toLocaleString(),
         holds: "7 days if the car, VIN, and title match",
+        offer_letter: letterHref,
         tracking_link: trackHref,
-        note: "Accept or decline on the tracking page. Payment is after we inspect and verify. Not a locked payday.",
+        note: "Open the Recarra LLC offer letter, then Accept or Decline. Payment is after we inspect and verify. Not a locked payday.",
         recarra_phone: "(346) 274-0071"
       };
       const posts = [

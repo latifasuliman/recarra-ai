@@ -164,18 +164,22 @@
       var letter = "";
       if (l.offerAmount && waiting) {
         letter =
-          "<div class='card' id='letter'>" +
-          "<p class='cash-label'>Offer letter</p>" +
-          "<p>Recarra will pay <strong class='cash' style='display:inline;font-size:1.35rem;padding:0;background:transparent'>" + money(l.offerAmount) + "</strong> for this " + escapeHtml(l.year + " " + l.make + " " + l.model) + " if the car, VIN, and title match.</p>" +
-          "<p class='muted'>Holds 7 days. Accepting is not a payday yet — we still inspect and verify identity before payment.</p>" +
-          "<div class='row'><button class='btn' id='accept' type='button'>Accept offer</button>" +
+          "<div class='card' id='letter' style='border-color:#0e1c2f'>" +
+          "<p class='cash-label'>Recarra LLC offer letter</p>" +
+          "<p style='font-family:Georgia,serif;font-size:1.1rem;margin:0.2rem 0 0.6rem'>Vehicle purchase offer · " + escapeHtml(offerNo) + "</p>" +
+          "<p>Recarra LLC offers <strong class='cash' style='display:inline;font-size:1.35rem;padding:0;background:transparent'>" + money(l.offerAmount) + "</strong> for this " + escapeHtml(l.year + " " + l.make + " " + l.model) + " if the car, VIN, and title match.</p>" +
+          "<p class='muted'>Official letter from Recarra LLC, Houston, Texas. Holds 7 days. Accepting is not a payday — we still inspect and verify identity before payment.</p>" +
+          "<div class='row'><a class='btn' href='letter.html?code=" + encodeURIComponent(offerNo) + "'>Open offer letter</a>" +
+          "<button class='btn' id='accept' type='button'>Accept offer</button>" +
           "<button class='btn btn-decline' id='decline' type='button'>Decline offer</button></div></div>";
       } else if (expired && l.offerAmount) {
-        letter = "<div class='card'><p><strong>This 7-day offer expired.</strong></p><p class='muted'>Request a new one if you still want to sell the car.</p></div>";
+        letter = "<div class='card'><p><strong>This 7-day Recarra LLC offer expired.</strong></p><p class='muted'>Request a new one if you still want to sell the car.</p><p class='row'><a class='btn btn-ghost' href='letter.html?code=" + encodeURIComponent(offerNo) + "'>View expired letter</a></p></div>";
       } else if (l.status === "Offer Accepted") {
-        letter = "<div class='card'><p><strong>You accepted " + money(l.offerAmount) + ".</strong></p><p class='muted'>Next we schedule pickup. Payment is after we verify the vehicle, title, and identity.</p></div>";
+        letter = "<div class='card'><p><strong>You accepted Recarra LLC offer " + money(l.offerAmount) + ".</strong></p><p class='muted'>Next we schedule pickup. Payment is after we verify the vehicle, title, and identity.</p><p class='row'><a class='btn' href='letter.html?code=" + encodeURIComponent(offerNo) + "'>View offer letter</a></p></div>";
       } else if (l.status === "Lost or Rejected") {
-        letter = "<div class='card'><p><strong>You declined this offer.</strong></p><p class='muted'>No problem. You can submit a different car anytime.</p></div>";
+        letter = "<div class='card'><p><strong>You declined this Recarra LLC offer.</strong></p><p class='muted'>No problem. You can submit a different car anytime.</p></div>";
+      } else {
+        letter = "<div class='card'><p class='muted'>Your Recarra LLC offer letter appears here after we send a dollar amount. Offer number <strong>" + escapeHtml(offerNo) + "</strong>.</p></div>";
       }
       var chat = msgs.map(function (m) {
         return "<div class='bubble " + m.from + "'><strong>" + (m.from === "recarra" ? "Recarra" : escapeHtml(l.name)) + "</strong><br>" + escapeHtml(m.text) + "</div>";
