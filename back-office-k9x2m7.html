@@ -188,14 +188,26 @@
     </div>
     </div>
     <div id="tab-partners" hidden>
+      <div class="card" style="margin-bottom:1rem">
+        <h2>Auto-dispatch</h2>
+        <p class="muted">One yard per car. Never a blast to all 59. Seller phone stays locked. Exclusive hours, then Recarra rolls to the next matching yard.</p>
+        <p><label><input type="checkbox" id="dOn" /> Turn auto-dispatch on</label></p>
+        <label>Default assignment fee ($)</label><input id="dFee" inputmode="numeric" value="150" />
+        <label>Keep if high offer is at least ($)</label><input id="dKeep" inputmode="numeric" value="0" />
+        <label>Exclusive hours</label><input id="dHrs" inputmode="numeric" value="24" />
+        <div class="row"><button class="btn" type="button" id="saveDispatch">Save dispatch rules</button></div>
+        <p class="muted" id="dMsg"></p>
+      </div>
       <div class="grid">
         <aside class="card">
           <h2>Add partner</h2>
-          <p class="muted">Verified partners can receive assigned cars. Unverified names cannot log in.</p>
+          <p class="muted">Verified partners can log in and receive assigned cars. Unverified names cannot log in.</p>
           <label>Company</label><input id="pCompany" placeholder="Ace Towing" />
           <label>Contact name</label><input id="pName" placeholder="Luis" />
           <label>Phone</label><input id="pPhone" placeholder="(713) 555-0100" />
           <label>Email</label><input id="pEmail" placeholder="ops@acetow.com" />
+          <label>Zips / cities they cover</label><input id="pZips" placeholder="77072, Alief, Katy" />
+          <label>Default assignment fee ($)</label><input id="pFee" inputmode="numeric" placeholder="150" />
           <label>Notes</label><textarea id="pNotes" rows="2" placeholder="Pays same day, Houston south…"></textarea>
           <div class="row"><button class="btn" type="button" id="addPartner">Save verified partner</button></div>
         </aside>
@@ -228,6 +240,7 @@
     const KEY = "recarra-leads-v1";
     const PARTNERS_KEY = "recarra-partners-v1";
     const LOG_KEY = "recarra-partner-log-v1";
+    const DISPATCH_KEY = "recarra-dispatch-v1";
     const STATUSES = ["New Lead","Contacted","Vehicle Information Needed","Offer Calculated","Offer Sent","Negotiating","Offer Accepted","Pickup Scheduled","Vehicle Collected","Buyer Paid","Completed","Lost or Rejected"];
     const CLOSED = ["Buyer Paid","Completed","Lost or Rejected"];
     let selected = null;
@@ -258,6 +271,99 @@
       extra = extra || {};
       const row = { id: "pl-" + Date.now(), at: new Date().toISOString(), type: type, note: note, partnerId: extra.partnerId || "", offerNo: extra.offerNo || "" };
       localStorage.setItem(LOG_KEY, JSON.stringify([row].concat(loadLog()).slice(0, 400)));
+    }
+    function loadDispatch() {
+      try { return Object.assign({ enabled: false, defaultFee: 150, keepMin: 0, exclusiveHours: 24, lastPartnerId: "" }, JSON.parse(localStorage.getItem(DISPATCH_KEY) || "{}")); }
+      catch (e) { return { enabled: false, defaultFee: 150, keepMin: 0, exclusiveHours: 24, lastPartnerId: "" }; }
+    }
+    function saveDispatch(s) { localStorage.setItem(DISPATCH_KEY, JSON.stringify(s)); }
+    function fillDispatchForm() {
+      const s = loadDispatch();
+      const on = document.getElementById("dOn");
+      if (!on) return;
+      on.checked = !!s.enabled;
+      document.getElementById("dFee").value = s.defaultFee;
+      document.getElementById("dKeep").value = s.keepMin;
+      document.getElementById("dHrs").value = s.exclusiveHours;
+    }
+    function partnerCovers(p, lead) {
+      const raw = String(p.zips || "").toLowerCase();
+      if (!raw.trim()) return true;
+      const hay = [lead.zip, lead.city, lead.address].join(" ").toLowerCase();
+      return raw.split(/[,;]+/).some(function (z) { z = z.trim(); return z && hay.indexOf(z) !== -1; });
+    }
+    function pickPartner(lead, lastId, skipId) {
+      const pool = loadPartners().filter(function (p) {
+        return p.verified && p.active !== false && p.id !== skipId && partnerCovers(p, lead);
+      });
+      if (!pool.length) return null;
+      let idx = -1;
+      pool.forEach(function (p, i) { if (p.id === lastId) idx = i; });
+      return pool[(idx + 1) % pool.length];
+    }
+    function pingPartner(partner, lead, fee) {
+      if (!partner.email || partner.email.indexOf("@") < 0) return;
+      const no = lead.trackCode || lead.id;
+      fetch("https://formsubmit.co/ajax/" + encodeURIComponent(partner.email), {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          _subject: "Recarra exclusive " + no + " — " + lead.year + " " + lead.make + " " + lead.model,
+          message: [lead.year + " " + lead.make + " " + lead.model, "Area: " + (lead.city || lead.zip || "Houston"), "Fee due Recarra: $" + fee, "Seller phone locked until Recarra is paid. Do not contact the seller. Do not forward.", "Offer " + no].join("\n")
+        })
+      }).catch(function () {});
+    }
+    function recarraDispatch(lead) {
+      const s = loadDispatch();
+      if (!s.enabled || lead.keepOrAssign || !lead.partnerConsent) return lead;
+      if (s.keepMin > 0 && Number(lead.offerHigh || 0) >= s.keepMin) {
+        lead.keepOrAssign = "keep";
+        addLog("auto_keep", "Kept " + (lead.trackCode || lead.id), { offerNo: lead.trackCode || lead.id });
+        return lead;
+      }
+      const partner = pickPartner(lead, s.lastPartnerId);
+      if (!partner) return lead;
+      const fee = Number(partner.defaultFee || s.defaultFee) || 0;
+      lead.keepOrAssign = "assign";
+      lead.assignedTo = partner.id;
+      lead.assignedToName = partner.company;
+      lead.assignmentFee = fee;
+      lead.assignedAt = new Date().toISOString();
+      lead.exclusiveUntil = new Date(Date.now() + (s.exclusiveHours || 24) * 3600000).toISOString();
+      s.lastPartnerId = partner.id;
+      saveDispatch(s);
+      addLog("auto_assign", "Auto-assigned " + (lead.trackCode || lead.id) + " to " + partner.company, { partnerId: partner.id, offerNo: lead.trackCode || lead.id });
+      pingPartner(partner, lead, fee);
+      return lead;
+    }
+    function runDispatchCatchup() {
+      const s = loadDispatch();
+      if (!s.enabled) return;
+      const now = Date.now();
+      leads().forEach(function (lead) {
+        if (!lead.keepOrAssign && lead.partnerConsent) {
+          const next = recarraDispatch(Object.assign({}, lead));
+          if (next.keepOrAssign) patch(lead.id, next);
+          return;
+        }
+        if (lead.keepOrAssign !== "assign" || lead.assignmentPaidAt || !lead.exclusiveUntil) return;
+        if (new Date(lead.exclusiveUntil).getTime() > now) return;
+        const nextP = pickPartner(lead, s.lastPartnerId, lead.assignedTo);
+        if (!nextP) return;
+        const fee = Number(nextP.defaultFee || s.defaultFee) || 0;
+        const until = new Date(Date.now() + (s.exclusiveHours || 24) * 3600000).toISOString();
+        s.lastPartnerId = nextP.id;
+        saveDispatch(s);
+        patch(lead.id, {
+          assignedTo: nextP.id,
+          assignedToName: nextP.company,
+          assignmentFee: fee,
+          assignedAt: new Date().toISOString(),
+          exclusiveUntil: until
+        });
+        addLog("auto_roll", "Rolled " + (lead.trackCode || lead.id) + " to " + nextP.company, { partnerId: nextP.id, offerNo: lead.trackCode || lead.id });
+        pingPartner(nextP, lead, fee);
+      });
     }
     function newPartnerId() {
       const used = {};
@@ -738,7 +844,7 @@
         return "<div class='lead' style='cursor:default'>" +
           "<strong>" + escapeHtml(p.id) + "</strong> · " + escapeHtml(p.company) + " " +
           "<span class='badge" + (p.verified ? "" : " off") + "'>" + (p.verified ? "Verified" : "Off") + "</span><br>" +
-          "<span class='muted'>" + escapeHtml(p.name) + " · " + escapeHtml(p.phone) + " · PIN " + escapeHtml(p.pin) + " · " + jobs + " cars</span>" +
+          "<span class='muted'>" + escapeHtml(p.name) + " · " + escapeHtml(p.phone) + " · PIN " + escapeHtml(p.pin) + " · " + jobs + " cars · " + escapeHtml(p.zips || "citywide") + (p.active === false ? " · paused" : "") + "</span>" +
           "<div class='row'>" +
           "<button class='btn' type='button' data-desk='" + p.id + "'>Copy login link</button>" +
           "<button class='btn btn-ghost' type='button' data-pin='" + p.id + "'>Copy PIN</button>" +
@@ -817,10 +923,19 @@
         "<p><strong>Desk net " + money(fees - paid - tow - spend) + "</strong></p>" +
         "<p class='muted'>Texas dealer rules still apply. This is a desk, not a license.</p>";
     }
-    function render() { renderList(); renderDetail(); renderPartners(); renderLog(); renderMoney(); }
+    function render() { fillDispatchForm(); runDispatchCatchup(); renderList(); renderDetail(); renderPartners(); renderLog(); renderMoney(); }
     document.querySelectorAll(".tab").forEach(function (btn) {
       btn.onclick = function () { showTab(btn.getAttribute("data-tab")); };
     });
+    document.getElementById("saveDispatch").onclick = function () {
+      const s = loadDispatch();
+      s.enabled = document.getElementById("dOn").checked;
+      s.defaultFee = Number(document.getElementById("dFee").value) || 0;
+      s.keepMin = Number(document.getElementById("dKeep").value) || 0;
+      s.exclusiveHours = Math.max(1, Number(document.getElementById("dHrs").value) || 24);
+      saveDispatch(s);
+      document.getElementById("dMsg").textContent = s.enabled ? "Auto-dispatch is on." : "Auto-dispatch is off.";
+    };
     document.getElementById("addPartner").onclick = function () {
       const company = document.getElementById("pCompany").value.trim();
       const name = document.getElementById("pName").value.trim();
@@ -838,6 +953,9 @@
         pin: String(1000 + Math.floor(Math.random() * 9000)),
         verified: true,
         notes: document.getElementById("pNotes").value.trim(),
+        zips: document.getElementById("pZips").value.trim(),
+        defaultFee: Number(document.getElementById("pFee").value) || 0,
+        active: true,
         createdAt: new Date().toISOString()
       };
       savePartners([partner].concat(loadPartners()));
@@ -846,13 +964,15 @@
       document.getElementById("pName").value = "";
       document.getElementById("pPhone").value = "";
       document.getElementById("pEmail").value = "";
+      document.getElementById("pZips").value = "";
+      document.getElementById("pFee").value = "";
       document.getElementById("pNotes").value = "";
       renderPartners();
       alert("Verified. Code " + partner.id + " PIN " + partner.pin + ". Copy their login link.");
     };
     document.getElementById("dlDesk").onclick = function () {
       const bag = { v: 1, recarra: "desk", exportedAt: new Date().toISOString() };
-      ["recarra-leads-v1","recarra-partners-v1","recarra-partner-log-v1","recarra-ad-spend-v1","recarra-open-track-v1"].forEach(function (k) {
+      ["recarra-leads-v1","recarra-partners-v1","recarra-partner-log-v1","recarra-ad-spend-v1","recarra-open-track-v1","recarra-dispatch-v1"].forEach(function (k) {
         const raw = localStorage.getItem(k);
         if (!raw) return;
         try { bag[k] = JSON.parse(raw); } catch (e) { bag[k] = raw; }
@@ -870,7 +990,7 @@
         try {
           const bag = JSON.parse(String(reader.result));
           if (bag.recarra !== "desk") throw new Error("bad");
-          ["recarra-leads-v1","recarra-partners-v1","recarra-partner-log-v1","recarra-ad-spend-v1","recarra-open-track-v1"].forEach(function (k) {
+          ["recarra-leads-v1","recarra-partners-v1","recarra-partner-log-v1","recarra-ad-spend-v1","recarra-open-track-v1","recarra-dispatch-v1"].forEach(function (k) {
             if (bag[k] == null) return;
             localStorage.setItem(k, typeof bag[k] === "string" ? bag[k] : JSON.stringify(bag[k]));
           });
