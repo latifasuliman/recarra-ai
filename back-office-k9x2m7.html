@@ -34,7 +34,15 @@
       background: var(--navy);
       color: #fff;
     }
-    header a { color: #fff; text-decoration: none; font-weight: 700; }
+    #gate {
+      position: fixed; inset: 0; z-index: 80;
+      background: var(--navy);
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.25rem;
+    }
+    #gate.ok { display: none; }
+    #gate .card { width: min(24rem, 100%); }
+    body.locked main, body.locked header { visibility: hidden; }
     main { max-width: 1100px; margin: 0 auto; padding: 1.25rem; }
     .grid { display: grid; gap: 1rem; }
     @media (min-width: 860px) { .grid { grid-template-columns: 320px 1fr; } }
@@ -158,10 +166,24 @@
     }
   </style>
 </head>
-<body>
+<body class="locked">
+  <div id="gate">
+    <form class="card" id="gateForm">
+      <p style="font-weight:700;margin:0">Recarra Back Office</p>
+      <p class="muted">Desk PIN. Partners use their own login. This is not the public site.</p>
+      <label>PIN</label>
+      <input id="gatePin" inputmode="numeric" autocomplete="one-time-code" autofocus />
+      <p class="muted" id="gateErr" style="color:var(--danger)" hidden></p>
+      <div class="row"><button class="btn" type="submit">Unlock desk</button></div>
+    </form>
+  </div>
   <header>
     <strong>Recarra Back Office</strong>
-    <a href="./">Site</a>
+    <div class="row" style="margin:0">
+      <button class="btn btn-ghost" type="button" id="lockDesk" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.3)">Lock</button>
+      <button class="btn btn-ghost" type="button" id="changePinBtn" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.3)">Change PIN</button>
+      <a href="./">Site</a>
+    </div>
   </header>
   <main>
     <p class="muted">Secret desk. Offers land here. Partners never see a seller’s phone until you mark the assignment fee paid.</p>
@@ -237,6 +259,48 @@
     </div>
   </main>
   <script>
+    const HASH_KEY = "recarra-desk-pin-v1";
+    const SESSION_KEY = "recarra-desk-open";
+    const FACTORY_HASH = "cmVjYXJyYS1kZXNrfDY5MTc=";
+    function hashPin(pin) {
+      return btoa(unescape(encodeURIComponent("recarra-desk|" + String(pin).trim())));
+    }
+    function storedHash() { return localStorage.getItem(HASH_KEY) || FACTORY_HASH; }
+    function isOpen() { return sessionStorage.getItem(SESSION_KEY) === "1"; }
+    function openDesk() {
+      document.getElementById("gate").className = "ok";
+      document.body.classList.remove("locked");
+    }
+    if (isOpen()) openDesk();
+    document.getElementById("gateForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const pin = document.getElementById("gatePin").value;
+      const err = document.getElementById("gateErr");
+      if (hashPin(pin) !== storedHash()) {
+        err.hidden = false;
+        err.textContent = "That PIN is not the Recarra desk PIN.";
+        return;
+      }
+      sessionStorage.setItem(SESSION_KEY, "1");
+      err.hidden = true;
+      openDesk();
+      render();
+    });
+    document.getElementById("lockDesk").onclick = function () {
+      sessionStorage.removeItem(SESSION_KEY);
+      location.reload();
+    };
+    document.getElementById("changePinBtn").onclick = function () {
+      const cur = prompt("Current desk PIN");
+      if (cur == null) return;
+      if (hashPin(cur) !== storedHash()) { alert("Current PIN does not match."); return; }
+      const next = prompt("New PIN (4–8 digits)");
+      if (next == null) return;
+      if (!/^\d{4,8}$/.test(next.trim())) { alert("Use 4 to 8 digits."); return; }
+      localStorage.setItem(HASH_KEY, hashPin(next));
+      alert("Desk PIN changed. Use the new one next unlock.");
+    };
+
     const KEY = "recarra-leads-v1";
     const PARTNERS_KEY = "recarra-partners-v1";
     const LOG_KEY = "recarra-partner-log-v1";
@@ -1006,9 +1070,9 @@
     });
     document.getElementById("showAll").onclick = function () { listMode = "all"; renderList(); };
     document.getElementById("showWaiting").onclick = function () { listMode = "waiting"; renderList(); };
-    window.addEventListener("storage", (e) => { if (e.key === KEY) render(); });
-    setInterval(renderList, 4000);
-    render();
+    window.addEventListener("storage", (e) => { if (e.key === KEY && isOpen()) render(); });
+    setInterval(function () { if (isOpen()) renderList(); }, 4000);
+    if (isOpen()) render();
   </script>
 </body>
 </html>
