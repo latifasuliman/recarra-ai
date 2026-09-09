@@ -37,24 +37,50 @@
       position: sticky;
       top: 0;
       z-index: 20;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.85rem 1.5rem;
       background: var(--navy);
       color: #f4f1ea;
+    }
+    .bar {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.7rem 1.1rem;
+      min-height: 64px;
     }
     .logo {
       font-family: var(--display);
       font-weight: 500;
       letter-spacing: -0.04em;
-      font-size: 1.45rem;
+      font-size: clamp(1.2rem, 2vw, 1.5rem);
       text-decoration: none;
+      flex: 0 0 auto;
     }
-    nav { display: none; gap: 1.4rem; font-size: 0.88rem; font-weight: 500; opacity: 0.88; }
-    @media (min-width: 800px) { nav { display: flex; } }
+    nav {
+      display: none;
+      gap: 1.15rem;
+      font-size: 0.88rem;
+      font-weight: 500;
+      opacity: 0.88;
+      margin-left: auto;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-left: auto;
+      flex: 0 0 auto;
+    }
+    @media (min-width: 960px) {
+      nav { display: flex; }
+      .header-actions { margin-left: 0; }
+    }
     .phone { color: inherit; text-decoration: none; font-weight: 500; font-size: 0.92rem; letter-spacing: 0.01em; }
+    @media (max-width: 700px) { .phone { display: none; } }
+    @media (max-width: 480px) {
+      .header-actions .btn { min-height: 40px; padding: 0.5rem 0.8rem; font-size: 0.82rem; }
+    }
     .btn {
       display: inline-flex;
       align-items: center;
@@ -78,14 +104,26 @@
     .hero {
       background: var(--navy);
       color: #f4f1ea;
-      padding: clamp(3rem, 8vw, 5.5rem) 1.5rem 3.25rem;
+      padding: clamp(2rem, 5vw, 4.5rem) 1.1rem 2.75rem;
+    }
+    .hero-inner, .wrap { width: min(1120px, 100%); margin: 0 auto; }
+    .hero-inner {
+      display: grid;
+      gap: 2rem;
+    }
+    @media (min-width: 960px) {
+      .hero-inner {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+        gap: 3rem;
+        align-items: start;
+      }
     }
     .story {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1.5rem;
-      max-width: 36rem;
-      margin: 2.4rem 0 0;
+      gap: clamp(1rem, 2vw, 1.5rem);
+      width: 100%;
+      margin: 0;
     }
     .story article {
       background: color-mix(in oklab, #f4f1ea 6%, transparent);
@@ -93,22 +131,31 @@
       border-radius: 20px;
       overflow: hidden;
     }
-    .story video { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: #081018; }
+    .story video {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+      background: #081018;
+    }
     .story .cap { padding: 1.05rem 1.1rem 1.2rem; }
     .story .cap strong { display: block; font-family: var(--display); font-weight: 500; font-size: 1.15rem; }
     .story .cap span { display: block; color: color-mix(in oklab, #f4f1ea 70%, transparent); font-size: 0.9rem; margin-top: 0.3rem; }
-    .hero-inner, .wrap { max-width: 1120px; margin: 0 auto; }
     .hero h1 {
       margin: 0;
       font-family: var(--display);
       font-weight: 500;
-      font-size: clamp(2.2rem, 5.5vw, 4.1rem);
+      font-size: clamp(2rem, 4.6vw, 3.6rem);
       letter-spacing: -0.04em;
       line-height: 1.08;
       max-width: 13ch;
     }
-    .hero p { max-width: 36rem; color: color-mix(in oklab, #f4f1ea 78%, transparent); font-size: 1.05rem; }
-    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.75rem; }
+    .hero p { max-width: 36rem; color: color-mix(in oklab, #f4f1ea 78%, transparent); font-size: clamp(0.95rem, 1.4vw, 1.08rem); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.5rem; }
+    .path-kicker { margin-top: 0; }
+    @media (max-width: 959px) {
+      .path-kicker { margin-top: 0.5rem; }
+    }
     section { padding: clamp(3rem, 6vw, 5rem) 1.5rem; }
     h2 {
       margin: 0 0 0.65rem;
@@ -184,18 +231,23 @@
 </head>
 <body>
   <header>
-    <a class="logo" href="./">Recarra</a>
-    <nav>
-      <a href="#find">Find my offer</a>
-      <a href="#how">How It Works</a>
-      <a href="#vehicles">Vehicles We Buy</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <a class="phone" href="tel:+13462740071">(346) 274-0071</a>
-    <a class="btn" href="aia_offer_form_enhanced_ux_boosted.html">Get My Free Offer</a>
+    <div class="bar">
+      <a class="logo" href="./">Recarra</a>
+      <nav>
+        <a href="#find">Find my offer</a>
+        <a href="#how">How It Works</a>
+        <a href="#vehicles">Vehicles We Buy</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <a class="phone" href="tel:+13462740071">(346) 274-0071</a>
+        <a class="btn" href="aia_offer_form_enhanced_ux_boosted.html">Get My Free Offer</a>
+      </div>
+    </div>
   </header>
   <section class="hero">
     <div class="hero-inner">
+      <div class="hero-copy">
       <p class="n">Recarra LLC · Houston</p>
       <h1>Sell your junk car for cash in Houston</h1>
       <p>Tell us the year, make, and model — or paste the VIN. We look the car up, send a starting offer, and pick it up after we verify title and identity. Offers are not guaranteed.</p>
@@ -204,8 +256,10 @@
         <a class="btn btn-ghost" href="#find">Find my offer</a>
         <a class="btn btn-ghost" href="tel:+13462740071">Call (346) 274-0071</a>
       </div>
-      <p class="n" style="margin-top:2.1rem">Customer path — Recarra buys</p>
-      <h2 style="color:#fff;margin:0.35rem 0 0">From the form to cash in your hand.</h2>
+      </div>
+      <div>
+      <p class="n path-kicker">Customer path — Recarra buys</p>
+      <h2 style="color:#f4f1ea;margin:0.35rem 0 1rem">From the form to cash in your hand.</h2>
       <div class="story">
         <article>
           <video src="videos/01-you-send.mp4" muted playsinline autoplay loop preload="metadata"></video>
@@ -223,6 +277,7 @@
           <video src="videos/04-you-get-paid.mp4" muted playsinline autoplay loop preload="metadata"></video>
           <div class="cap"><strong>4 · You get paid</strong><span>Cash, Zelle, or check. Deal closed. Recarra bought it.</span></div>
         </article>
+      </div>
       </div>
     </div>
   </section>
