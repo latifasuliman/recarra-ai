@@ -353,6 +353,48 @@
         img.src = url;
       });
     }
+    function recarraDispatch(lead) {
+      var s = { enabled: false, defaultFee: 150, keepMin: 0, exclusiveHours: 24, lastPartnerId: "" };
+      try { s = Object.assign(s, JSON.parse(localStorage.getItem("recarra-dispatch-v1") || "{}")); } catch (e) {}
+      if (!s.enabled || lead.keepOrAssign || !lead.partnerConsent) return lead;
+      var partners = [];
+      try { partners = JSON.parse(localStorage.getItem("recarra-partners-v1") || "[]"); } catch (e) {}
+      function covers(p) {
+        var raw = String(p.zips || "").toLowerCase();
+        if (!raw.trim()) return true;
+        var hay = [lead.zip, lead.city, lead.address].join(" ").toLowerCase();
+        return raw.split(/[,;]+/).some(function (z) { z = z.trim(); return z && hay.indexOf(z) !== -1; });
+      }
+      if (s.keepMin > 0 && Number(lead.offerHigh || 0) >= s.keepMin) {
+        lead.keepOrAssign = "keep";
+        return lead;
+      }
+      var pool = partners.filter(function (p) { return p.verified && p.active !== false && covers(p); });
+      if (!pool.length) return lead;
+      var idx = -1;
+      pool.forEach(function (p, i) { if (p.id === s.lastPartnerId) idx = i; });
+      var partner = pool[(idx + 1) % pool.length];
+      var fee = Number(partner.defaultFee || s.defaultFee) || 0;
+      lead.keepOrAssign = "assign";
+      lead.assignedTo = partner.id;
+      lead.assignedToName = partner.company;
+      lead.assignmentFee = fee;
+      lead.assignedAt = new Date().toISOString();
+      lead.exclusiveUntil = new Date(Date.now() + (s.exclusiveHours || 24) * 3600000).toISOString();
+      s.lastPartnerId = partner.id;
+      localStorage.setItem("recarra-dispatch-v1", JSON.stringify(s));
+      if (partner.email && partner.email.indexOf("@") !== -1) {
+        fetch("https://formsubmit.co/ajax/" + encodeURIComponent(partner.email), {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({
+            _subject: "Recarra exclusive " + (lead.trackCode || lead.id),
+            message: lead.year + " " + lead.make + " " + lead.model + "\n" + (lead.city || lead.zip || "Houston") + "\nFee $" + fee + "\nSeller phone locked. Do not contact the seller."
+          })
+        }).catch(function () {});
+      }
+      return lead;
+    }
     function estimate() {
       const age = new Date().getFullYear() - Number(state.year || 2008);
       let mid = age <= 6 ? 2400 : age <= 10 ? 1500 : age <= 16 ? 850 : age <= 24 ? 450 : 275;
@@ -693,6 +735,7 @@
         followUps: [{ at: now, note: "Offer request received from the GitHub site.", status: "New Lead" }]
       };
       try {
+        lead = recarraDispatch(lead);
         const existing = JSON.parse(localStorage.getItem("recarra-leads-v1") || "[]");
         existing.unshift(lead);
         localStorage.setItem("recarra-leads-v1", JSON.stringify(existing));
