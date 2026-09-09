@@ -74,7 +74,31 @@
     .hero {
       background: var(--navy);
       color: #fff;
-      padding: 3.5rem 1.25rem 4rem;
+      padding: 3.5rem 1.25rem 2.5rem;
+    }
+    .story {
+      display: flex;
+      gap: 0.75rem;
+      overflow-x: auto;
+      margin-top: 2rem;
+      padding-bottom: 0.4rem;
+      scroll-snap-type: x mandatory;
+    }
+    .story article {
+      flex: 0 0 240px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 12px;
+      overflow: hidden;
+      scroll-snap-align: start;
+    }
+    .story video { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: #081018; }
+    .story .cap { padding: 0.75rem 0.85rem 0.95rem; }
+    .story .cap strong { display: block; font-size: 0.95rem; }
+    .story .cap span { display: block; color: rgba(255,255,255,.7); font-size: 0.82rem; margin-top: 0.2rem; }
+    @media (min-width: 900px) {
+      .story { display: grid; grid-template-columns: repeat(4, 1fr); overflow: visible; }
+      .story article { flex: none; }
     }
     .hero-inner, .wrap { max-width: 1100px; margin: 0 auto; }
     .hero h1 {
@@ -172,6 +196,26 @@
         <a class="btn" href="aia_offer_form_enhanced_ux_boosted.html">Get My Free Offer</a>
         <a class="btn btn-ghost" href="#find">Find my offer</a>
         <a class="btn btn-ghost" href="tel:+13462740071">Call (346) 274-0071</a>
+      </div>
+      <p class="n" style="margin-top:2.1rem">Customer path — Recarra buys</p>
+      <h2 style="color:#fff;margin:0.35rem 0 0">From the form to cash in your hand.</h2>
+      <div class="story">
+        <article>
+          <video src="videos/01-you-send.mp4" muted playsinline autoplay loop preload="metadata"></video>
+          <div class="cap"><strong>1 · You send the car</strong><span>Year, make, model or VIN. Starting range as you type.</span></div>
+        </article>
+        <article>
+          <video src="videos/02-we-call.mp4" muted playsinline autoplay loop preload="metadata"></video>
+          <div class="cap"><strong>2 · Recarra calls</strong><span>We send a 7-day offer. Not a locked payday yet.</span></div>
+        </article>
+        <article>
+          <video src="videos/03-we-pickup.mp4" muted playsinline autoplay loop preload="metadata"></video>
+          <div class="cap"><strong>3 · We pick it up</strong><span>Driveway tow after we verify title, VIN, and identity.</span></div>
+        </article>
+        <article>
+          <video src="videos/04-you-get-paid.mp4" muted playsinline autoplay loop preload="metadata"></video>
+          <div class="cap"><strong>4 · You get paid</strong><span>Cash, Zelle, or check. Deal closed. Recarra bought it.</span></div>
+        </article>
       </div>
     </div>
   </section>
