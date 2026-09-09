@@ -101,6 +101,15 @@
       padding: 1.25rem;
     }
     .n { font-size: 0.75rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+    .find-box { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1rem; }
+    .find-box input {
+      flex: 1 1 220px;
+      min-height: 48px;
+      padding: 0.7rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font: inherit;
+    }
     footer {
       background: var(--navy);
       color: rgba(255,255,255,.75);
@@ -146,6 +155,7 @@
   <header>
     <a class="logo" href="./">Recarra</a>
     <nav>
+      <a href="#find">Find my offer</a>
       <a href="#how">How It Works</a>
       <a href="#vehicles">Vehicles We Buy</a>
       <a href="#contact">Contact</a>
@@ -160,8 +170,21 @@
       <p>Tell us the year, make, and model — or paste the VIN. We look the car up, send a starting offer, and pick it up after we verify title and identity. Offers are not guaranteed.</p>
       <div class="hero-actions">
         <a class="btn" href="aia_offer_form_enhanced_ux_boosted.html">Get My Free Offer</a>
+        <a class="btn btn-ghost" href="#find">Find my offer</a>
         <a class="btn btn-ghost" href="tel:+13462740071">Call (346) 274-0071</a>
       </div>
+    </div>
+  </section>
+  <section id="find">
+    <div class="wrap">
+      <p class="n">Already have an offer?</p>
+      <h2>Find my 7-day offer</h2>
+      <p class="muted">Enter your offer number (RC-4821) or the phone you used. Offers hold 7 days after Recarra sends them.</p>
+      <form class="find-box" id="findForm">
+        <input id="findQ" autocomplete="tel" placeholder="RC-4821 or your phone" />
+        <button class="btn" type="submit">Find my offer</button>
+      </form>
+      <p id="findErr" class="muted" style="color:#b42318;margin-top:0.6rem;" hidden></p>
     </div>
   </section>
   <section id="how">
@@ -217,6 +240,14 @@
   </footer>
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
+    document.getElementById("findForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const q = document.getElementById("findQ").value.trim();
+      const err = document.getElementById("findErr");
+      err.hidden = true;
+      if (!q) { err.textContent = "Type your offer number or phone."; err.hidden = false; return; }
+      window.location.href = "track.html?q=" + encodeURIComponent(q);
+    });
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.getRegistrations().then(function (regs) {
         regs.forEach(function (reg) { reg.unregister(); });

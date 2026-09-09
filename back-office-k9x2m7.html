@@ -98,6 +98,7 @@
     <div class="grid">
       <aside class="card">
         <h2>Leads</h2>
+        <input id="deskSearch" placeholder="Search RC-4821 or phone" style="margin:0.4rem 0 0.8rem" />
         <div id="list"></div>
       </aside>
       <section class="card" id="detail">
@@ -110,6 +111,7 @@
     const STATUSES = ["New Lead","Contacted","Vehicle Information Needed","Offer Calculated","Offer Sent","Negotiating","Offer Accepted","Pickup Scheduled","Vehicle Collected","Buyer Paid","Completed","Lost or Rejected"];
     const CLOSED = ["Buyer Paid","Completed","Lost or Rejected"];
     let selected = null;
+    let filter = "";
 
     function load() {
       try { return JSON.parse(localStorage.getItem(KEY) || "[]"); }
@@ -125,15 +127,21 @@
 
     function renderList() {
       const box = document.getElementById("list");
-      const items = leads();
+      const q = filter.trim().toUpperCase();
+      const qDigits = filter.replace(/\D/g, "");
+      const items = leads().filter((l) => {
+        if (!q) return true;
+        const blob = (l.id + " " + (l.trackCode || "") + " " + l.name + " " + l.phone + " " + l.year + " " + l.make + " " + l.model).toUpperCase();
+        return blob.indexOf(q) !== -1 || (qDigits && String(l.phone).replace(/\D/g, "").indexOf(qDigits) !== -1);
+      });
       if (!items.length) {
-        box.innerHTML = "<p class='muted'>No offers yet. Submit one on the site first.</p>";
+        box.innerHTML = "<p class='muted'>No offers match.</p>";
         return;
       }
       box.innerHTML = items.map((l) =>
         "<button class='lead" + (selected === l.id ? " active" : "") + "' data-id='" + l.id + "'>" +
-        "<strong>" + l.year + " " + l.make + " " + l.model + "</strong><br>" +
-        "<span class='muted'>" + l.id + " · " + l.status + " · " + l.name + "</span></button>"
+        "<strong>" + (l.trackCode || l.id) + "</strong> · " + l.year + " " + l.make + " " + l.model + "<br>" +
+        "<span class='muted'>" + l.status + " · " + l.name + "</span></button>"
       ).join("");
       box.querySelectorAll(".lead").forEach((btn) => {
         btn.onclick = () => { selected = btn.dataset.id; render(); };
@@ -148,7 +156,7 @@
       const track = l.trackCode || l.id;
       const href = location.origin + location.pathname.replace(/[^/]+$/, "") + "track.html?code=" + encodeURIComponent(track);
       box.innerHTML =
-        "<p class='muted'>" + l.id + " · tracking " + track + "</p>" +
+        "<p class='muted'>" + (l.trackCode || l.id) + "</p>" +
         "<h1>" + l.year + " " + l.make + " " + l.model + "</h1>" +
         "<p class='muted'>" + l.name + " · " + l.phone + (l.email ? " · " + l.email : "") + " · " + l.zip + "</p>" +
         "<p>Starting range <strong>" + money(l.offerLow) + "–" + money(l.offerHigh) + "</strong></p>" +
@@ -275,6 +283,10 @@
       return el.innerHTML;
     }
     function render() { renderList(); renderDetail(); }
+    document.getElementById("deskSearch").addEventListener("input", function (e) {
+      filter = e.target.value;
+      renderList();
+    });
     window.addEventListener("storage", (e) => { if (e.key === KEY) render(); });
     setInterval(renderList, 4000);
     render();

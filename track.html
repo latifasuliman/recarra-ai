@@ -38,6 +38,11 @@
       line-height: 1.2;
     }
     .cash-label { margin: 0.4rem 0 0.15rem; font-size: 0.8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .offer-no { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.04em; }
+    .hold { font-weight: 700; color: #168a46; }
+    .hold.expired { color: #b42318; }
+    .find-box { display:flex; flex-wrap:wrap; gap:0.6rem; margin-top:1rem; }
+    .find-box input { flex:1 1 180px; min-height:44px; padding:0.6rem 0.75rem; border:1px solid var(--border); border-radius:8px; font:inherit; }
   </style>
 </head>
 <body>
@@ -68,14 +73,44 @@
     }
     function save(leads) { localStorage.setItem(KEY, JSON.stringify(leads)); }
     function money(n) { return "$" + Number(n || 0).toLocaleString(); }
-    function code() { return new URLSearchParams(location.search).get("code") || localStorage.getItem("recarra-open-track-v1") || ""; }
+    function query() {
+      const p = new URLSearchParams(location.search);
+      return p.get("code") || p.get("q") || localStorage.getItem("recarra-open-track-v1") || "";
+    }
+    function findLeadByQuery(raw, items) {
+      raw = String(raw || "").trim();
+      if (!raw) return null;
+      const digits = raw.replace(/\D/g, "");
+      const upper = raw.toUpperCase().replace(/\s+/g, "");
+      const rc = upper.indexOf("RC") === 0
+        ? "RC-" + upper.replace(/^RC-?/, "")
+        : (digits.length === 4 ? "RC-" + digits : upper);
+      const exact = items.find(function (l) {
+        const id = String(l.id || "").toUpperCase();
+        const code = String(l.trackCode || "").toUpperCase();
+        return id === rc || code === rc || id === upper || code === upper;
+      });
+      if (exact) return exact;
+      if (digits.length === 4) {
+        const suffix = items.filter(function (l) {
+          return String(l.id || "").endsWith(digits) || String(l.trackCode || "").endsWith(digits);
+        });
+        if (suffix.length === 1) return suffix[0];
+      }
+      if (digits.length >= 7) {
+        const byPhone = items.filter(function (l) {
+          return String(l.phone || "").replace(/\D/g, "").endsWith(digits);
+        });
+        if (byPhone.length) return byPhone[0];
+      }
+      return null;
+    }
     function find() {
-      const needle = code().toLowerCase();
-      const items = load();
-      if (!needle) return items[0] || null;
-      return items.find(function (l) {
-        return String(l.trackCode || "").toLowerCase() === needle || String(l.id || "").toLowerCase() === needle;
-      }) || null;
+      return findLeadByQuery(query(), load());
+    }
+    function expiresAt(l) {
+      if (!l.offerSentAt) return null;
+      return new Date(new Date(l.offerSentAt).getTime() + 7 * 24 * 60 * 60 * 1000);
     }
     function escapeHtml(s) {
       var el = document.createElement("span");
@@ -92,15 +127,40 @@
       lastStamp = stamp;
       var app = document.getElementById("app");
       if (!l) {
-        app.innerHTML = "<h1>Your live offer will show here.</h1><p class='muted'>If you just submitted, wait one second and refresh. Use the same phone you used for the form.</p><p class='row'><a class='btn' href='aia_offer_form_enhanced_ux_boosted.html'>Submit an offer</a></p>";
+        app.innerHTML =
+          "<p class='n' style='font-size:0.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#168a46'>Find my offer</p>" +
+          "<h1>Look up your 7-day offer</h1>" +
+          "<p class='muted'>Type your offer number (RC-4821) or the phone you used on the form.</p>" +
+          "<form class='find-box' id='lookup'><input id='q' placeholder='RC-4821 or your phone' value='" + escapeHtml(query()) + "' /><button class='btn' type='submit'>Find my offer</button></form>" +
+          (query() ? "<p class='muted' style='color:#b42318;margin-top:0.7rem'>No offer matched. Use the same phone you submitted with.</p>" : "") +
+          "<p class='row'><a class='btn btn-ghost' href='aia_offer_form_enhanced_ux_boosted.html'>Submit a new car</a></p>";
+        document.getElementById("lookup").onsubmit = function (ev) {
+          ev.preventDefault();
+          var next = document.getElementById("q").value.trim();
+          location.href = "track.html?q=" + encodeURIComponent(next);
+        };
         return;
+      }
+      var offerNo = l.trackCode || l.id;
+      try { localStorage.setItem("recarra-open-track-v1", offerNo); } catch (err) {}
+      var exp = expiresAt(l);
+      var expired = exp && Date.now() > exp.getTime();
+      var hold = "";
+      if (exp) {
+        hold = "<p class='hold" + (expired ? " expired" : "") + "'>" +
+          (expired
+            ? "This 7-day offer expired on " + exp.toLocaleDateString() + ". Submit a new request."
+            : "Holds until " + exp.toLocaleDateString() + " (7 days from when Recarra sent it).") +
+          "</p>";
+      } else {
+        hold = "<p class='muted'>The 7-day clock starts when Recarra sends your offer.</p>";
       }
       var closed = CLOSED.indexOf(l.status) !== -1;
       var href = location.href;
       var msgs = l.messages || [];
       var range = money(l.offerAmount || l.offerLow) + (l.offerAmount ? "" : "–" + money(l.offerHigh));
       var cashLabel = l.offerAmount ? "Your Recarra offer" : "Starting range";
-      var waiting = l.offerAmount && (l.status === "Offer Sent" || l.status === "Negotiating");
+      var waiting = l.offerAmount && (l.status === "Offer Sent" || l.status === "Negotiating") && !expired;
       var letter = "";
       if (l.offerAmount && waiting) {
         letter =
@@ -110,6 +170,8 @@
           "<p class='muted'>Holds 7 days. Accepting is not a payday yet — we still inspect and verify identity before payment.</p>" +
           "<div class='row'><button class='btn' id='accept' type='button'>Accept offer</button>" +
           "<button class='btn btn-decline' id='decline' type='button'>Decline offer</button></div></div>";
+      } else if (expired && l.offerAmount) {
+        letter = "<div class='card'><p><strong>This 7-day offer expired.</strong></p><p class='muted'>Request a new one if you still want to sell the car.</p></div>";
       } else if (l.status === "Offer Accepted") {
         letter = "<div class='card'><p><strong>You accepted " + money(l.offerAmount) + ".</strong></p><p class='muted'>Next we schedule pickup. Payment is after we verify the vehicle, title, and identity.</p></div>";
       } else if (l.status === "Lost or Rejected") {
@@ -122,9 +184,11 @@
         ? "<a class='btn' href='./'>Back to Recarra</a><a class='btn btn-ghost' href='aia_offer_form_enhanced_ux_boosted.html'>Submit a new car</a>"
         : "<a class='btn btn-ghost' href='aia_offer_form_enhanced_ux_boosted.html'>Submit a different car</a>";
       app.innerHTML =
-        "<p class='muted'>Live offer · " + escapeHtml(l.id) + "</p>" +
+        "<p class='muted'>Live offer</p>" +
+        "<p class='offer-no'>Offer " + escapeHtml(offerNo) + "</p>" +
         "<h1>" + escapeHtml(l.year + " " + l.make + " " + l.model) + "</h1>" +
         "<p>" + escapeHtml(COPY[l.status] || l.status) + "</p>" +
+        hold +
         "<p class='cash-label'>" + cashLabel + "</p>" +
         "<p class='cash'>" + range + "</p>" +
         letter +

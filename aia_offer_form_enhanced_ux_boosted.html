@@ -341,7 +341,21 @@
       if (!/^\d{5}$/.test(zip)) { error.textContent = "Use a 5-digit Houston-area zip."; error.hidden = false; return; }
       if (!state.year || !state.make || !state.model) { error.textContent = "Type the year, make, and model - or paste the VIN."; error.hidden = false; return; }
       const r = estimate();
-      const id = "RC-" + new Date().getFullYear() + "-" + (1000 + Math.floor(Math.random() * 9000));
+      function newOfferNo() {
+        const used = {};
+        try {
+          JSON.parse(localStorage.getItem("recarra-leads-v1") || "[]").forEach(function (item) {
+            used[String(item.id || "").toUpperCase()] = true;
+            used[String(item.trackCode || "").toUpperCase()] = true;
+          });
+        } catch (err) {}
+        for (let i = 0; i < 40; i += 1) {
+          const next = "RC-" + (1000 + Math.floor(Math.random() * 9000));
+          if (!used[next]) return next;
+        }
+        return "RC-" + (1000 + (Date.now() % 9000));
+      }
+      const id = newOfferNo();
       const payload = {
         _subject: "Recarra offer " + id,
         _template: "table",
@@ -368,11 +382,9 @@
       fetch("https://ntfy.sh/recarra-offers-9f3k2m7x4q8b", {
         method: "POST",
         headers: { Title: "Recarra offer " + id, Priority: "high" },
-        body: payload.vehicle + " - " + payload.name + " " + payload.phone + " - ZIP " + zip,
+        body: payload.vehicle + " - " + payload.name + " " + payload.phone + " - ZIP " + zip + " - " + id,
       }).catch(function() {});
-      const alphabet = "abcdefghjkmnpqrstuvwxyz23456789";
-      let trackCode = "rc-";
-      for (let i = 0; i < 8; i += 1) trackCode += alphabet[Math.floor(Math.random() * alphabet.length)];
+      const trackCode = id;
       const now = new Date().toISOString();
       const lead = {
         id: id,
@@ -399,7 +411,7 @@
           id: "m-" + Date.now(),
           at: now,
           from: "recarra",
-          text: "We have your request " + id + ". Stay on this page. Recarra Back Office will reply here. Starting range " + r.low + "–" + r.high + ". Not a locked price."
+          text: "Your offer number is " + id + ". Save it. Find this 7-day offer on Recarra with that number or your phone. Starting range " + r.low + "–" + r.high + ". Not a locked price."
         }],
         followUps: [{ at: now, note: "Offer request received from the GitHub site.", status: "New Lead" }]
       };
