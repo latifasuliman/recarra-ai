@@ -24,6 +24,19 @@
     .bubble { padding:0.55rem 0.7rem; border-radius:8px; background:#fff; border:1px solid var(--border); max-width:90%; }
     .bubble.recarra { background:var(--navy); color:#fff; border:0; margin-left:auto; }
     .row { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:1rem; }
+    .cash {
+      display: inline-block;
+      margin: 0.15rem 0 0.6rem;
+      padding: 0.55rem 0.85rem;
+      border-radius: 10px;
+      background: #e8f6ee;
+      color: #168a46;
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+    }
+    .cash-label { margin: 0.4rem 0 0.15rem; font-size: 0.8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
   </style>
 </head>
 <body>
@@ -85,6 +98,7 @@
       var href = location.href;
       var msgs = l.messages || [];
       var range = money(l.offerAmount || l.offerLow) + (l.offerAmount ? "" : "–" + money(l.offerHigh));
+      var cashLabel = l.offerAmount ? "Your Recarra offer" : "Starting range";
       var chat = msgs.map(function (m) {
         return "<div class='bubble " + m.from + "'><strong>" + (m.from === "recarra" ? "Recarra" : escapeHtml(l.name)) + "</strong><br>" + escapeHtml(m.text) + "</div>";
       }).join("");
@@ -95,7 +109,8 @@
         "<p class='muted'>Live offer · " + escapeHtml(l.id) + "</p>" +
         "<h1>" + escapeHtml(l.year + " " + l.make + " " + l.model) + "</h1>" +
         "<p>" + escapeHtml(COPY[l.status] || l.status) + "</p>" +
-        "<p><strong>" + range + "</strong></p>" +
+        "<p class='cash-label'>" + cashLabel + "</p>" +
+        "<p class='cash'>" + range + "</p>" +
         "<div class='card'><p><strong>Chat with Recarra</strong></p><div class='chat' id='chat'>" + chat + "</div>" +
         "<label for='msg'>Message</label><textarea id='msg' rows='3' placeholder='Ask about pickup, title, or the number…'></textarea>" +
         "<div class='row'><button class='btn' id='send' type='button'>Send</button></div></div>" +
