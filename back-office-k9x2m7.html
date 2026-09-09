@@ -190,7 +190,9 @@
     }
 
     function escapeHtml(s) {
-      return String(s).replace(/[&<>"]/g, (c) => ({ "&":"&","<":"<",">":">","\"":""" }[c]));
+      var el = document.createElement("span");
+      el.textContent = String(s);
+      return el.innerHTML;
     }
     function render() { renderList(); renderDetail(); }
     window.addEventListener("storage", (e) => { if (e.key === KEY) render(); });

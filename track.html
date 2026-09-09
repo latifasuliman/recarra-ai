@@ -15,82 +15,113 @@
     .wrap { max-width:640px; margin:0 auto; padding:1.5rem 1.25rem 3rem; }
     .card { background:#fff; border:1px solid var(--border); border-radius:12px; padding:1.1rem; margin-top:1rem; }
     .muted { color:var(--muted); }
+    h1 { letter-spacing:-0.03em; margin:0.2rem 0 0.6rem; }
     .btn { display:inline-flex; min-height:44px; align-items:center; padding:0.6rem 1rem; border:0; border-radius:8px; background:var(--accent); color:#fff; font-weight:700; text-decoration:none; cursor:pointer; font:inherit; }
     .btn-ghost { background:#fff; color:var(--fg); border:1px solid var(--border); }
     label { display:block; font-size:0.78rem; font-weight:700; margin:0.7rem 0 0.3rem; }
-    input, textarea { width:100%; min-height:44px; padding:0.6rem 0.75rem; border:1px solid var(--border); border-radius:8px; font:inherit; }
-    .chat { max-height:280px; overflow:auto; }
-    .bubble { margin:0.4rem 0; padding:0.55rem 0.7rem; border-radius:8px; background:#f4f6f8; max-width:90%; }
-    .bubble.recarra { background:var(--navy); color:#fff; margin-left:auto; }
+    textarea { width:100%; min-height:88px; padding:0.6rem 0.75rem; border:1px solid var(--border); border-radius:8px; font:inherit; }
+    .chat { max-height:280px; overflow:auto; display:flex; flex-direction:column; gap:0.45rem; }
+    .bubble { padding:0.55rem 0.7rem; border-radius:8px; background:#fff; border:1px solid var(--border); max-width:90%; }
+    .bubble.recarra { background:var(--navy); color:#fff; border:0; margin-left:auto; }
     .row { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:1rem; }
   </style>
 </head>
 <body>
   <header><a href="./">Recarra</a></header>
-  <div class="wrap" id="app"></div>
+  <div class="wrap" id="app">
+    <p class="muted">Loading your live offer…</p>
+  </div>
   <script>
     const KEY = "recarra-leads-v1";
-    const CLOSED = ["Buyer Paid","Completed","Lost or Rejected"];
+    const CLOSED = ["Buyer Paid", "Completed", "Lost or Rejected"];
     const COPY = {
       "New Lead": "We have your request. A teammate is reviewing it.",
-      "Contacted": "Recarra has reached out. Reply here if we missed you.",
+      Contacted: "Recarra has reached out. Reply here if we missed you.",
       "Vehicle Information Needed": "We need a bit more on the car or title.",
       "Offer Calculated": "We are pricing the car from what you sent.",
       "Offer Sent": "An offer is on this file. It holds 7 days if the car matches.",
-      "Negotiating": "We are working the number with you.",
+      Negotiating: "We are working the number with you.",
       "Offer Accepted": "You accepted. We will confirm pickup next.",
       "Pickup Scheduled": "Pickup is on the calendar.",
       "Vehicle Collected": "The truck has the car. Payment follows verification.",
       "Buyer Paid": "Paid. This file is closing.",
-      "Completed": "This deal is closed.",
-      "Lost or Rejected": "This request is closed. You can start a new car anytime.",
+      Completed: "This deal is closed.",
+      "Lost or Rejected": "This request is closed. You can start a new car anytime."
     };
-    function load() { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch { return []; } }
+    function load() {
+      try { return JSON.parse(localStorage.getItem(KEY) || "[]"); }
+      catch (err) { return []; }
+    }
     function save(leads) { localStorage.setItem(KEY, JSON.stringify(leads)); }
     function money(n) { return "$" + Number(n || 0).toLocaleString(); }
-    function code() { return new URLSearchParams(location.search).get("code") || ""; }
+    function code() { return new URLSearchParams(location.search).get("code") || localStorage.getItem("recarra-open-track-v1") || ""; }
     function find() {
       const needle = code().toLowerCase();
-      return load().find((l) => (l.trackCode || "").toLowerCase() === needle || (l.id || "").toLowerCase() === needle);
+      const items = load();
+      if (!needle) return items[0] || null;
+      return items.find(function (l) {
+        return String(l.trackCode || "").toLowerCase() === needle || String(l.id || "").toLowerCase() === needle;
+      }) || null;
     }
     function escapeHtml(s) {
-      return String(s).replace(/[&<>"]/g, (c) => ({ "&":"&","<":"<",">":">","\"":""" }[c]));
+      var el = document.createElement("span");
+      el.textContent = String(s);
+      return el.innerHTML;
     }
-    function draw() {
-      const app = document.getElementById("app");
-      const l = find();
+    var lastStamp = "";
+    function draw(force) {
+      var typing = document.activeElement && document.activeElement.id === "msg";
+      var l = find();
+      var stamp = l ? (l.status + "|" + (l.messages || []).length + "|" + (l.offerAmount || "") + "|" + (l.phone || "")) : "none";
+      if (!force && typing && stamp === lastStamp) return;
+      if (!force && stamp === lastStamp && document.getElementById("chat")) return;
+      lastStamp = stamp;
+      var app = document.getElementById("app");
       if (!l) {
-        app.innerHTML = "<h1>We could not find that link.</h1><p class='muted'>Use the address Recarra sent, on the same phone/browser you used to submit.</p><p><a class='btn' href='./'>Back to Recarra</a></p>";
+        app.innerHTML = "<h1>Your live offer will show here.</h1><p class='muted'>If you just submitted, wait one second and refresh. Use the same phone you used for the form.</p><p class='row'><a class='btn' href='aia_offer_form_enhanced_ux_boosted.html'>Submit an offer</a></p>";
         return;
       }
-      const closed = CLOSED.includes(l.status);
-      const href = location.href;
-      const msgs = l.messages || [];
+      var closed = CLOSED.indexOf(l.status) !== -1;
+      var href = location.href;
+      var msgs = l.messages || [];
+      var range = money(l.offerAmount || l.offerLow) + (l.offerAmount ? "" : "–" + money(l.offerHigh));
+      var chat = msgs.map(function (m) {
+        return "<div class='bubble " + m.from + "'><strong>" + (m.from === "recarra" ? "Recarra" : escapeHtml(l.name)) + "</strong><br>" + escapeHtml(m.text) + "</div>";
+      }).join("");
+      var actions = closed
+        ? "<a class='btn' href='./'>Back to Recarra</a><a class='btn btn-ghost' href='aia_offer_form_enhanced_ux_boosted.html'>Submit a new car</a>"
+        : "<a class='btn btn-ghost' href='aia_offer_form_enhanced_ux_boosted.html'>Submit a different car</a>";
       app.innerHTML =
-        "<p class='muted'>Live offer · " + l.id + "</p>" +
-        "<h1>" + l.year + " " + l.make + " " + l.model + "</h1>" +
-        "<p>" + (COPY[l.status] || l.status) + "</p>" +
-        "<p><strong>" + money(l.offerAmount || l.offerLow) + (l.offerAmount ? "" : "–" + money(l.offerHigh)) + "</strong></p>" +
-        "<div class='card'><p><strong>Your tracking address</strong></p><p class='muted' style='word-break:break-all'>" + href + "</p>" +
-        "<button class='btn btn-ghost' id='copy'>Copy link</button></div>" +
-        "<div class='card'><p><strong>Chat with Recarra</strong></p><div class='chat' id='chat'>" +
-        msgs.map((m) => "<div class='bubble " + m.from + "'><strong>" + (m.from === "recarra" ? "Recarra" : l.name) + "</strong><br>" + escapeHtml(m.text) + "</div>").join("") +
-        "</div><label>Message</label><textarea id='msg' rows='3'></textarea><div class='row'><button class='btn' id='send'>Send</button></div></div>" +
-        "<div class='row'>" + (closed
-          ? "<a class='btn' href='./'>Back to Recarra</a><a class='btn btn-ghost' href='./'>Submit a new car</a>"
-          : "<a class='btn btn-ghost' href='./'>Submit a different car</a>") + "</div>";
-      document.getElementById("copy").onclick = () => navigator.clipboard.writeText(href);
-      document.getElementById("send").onclick = () => {
-        const text = document.getElementById("msg").value.trim();
+        "<p class='muted'>Live offer · " + escapeHtml(l.id) + "</p>" +
+        "<h1>" + escapeHtml(l.year + " " + l.make + " " + l.model) + "</h1>" +
+        "<p>" + escapeHtml(COPY[l.status] || l.status) + "</p>" +
+        "<p><strong>" + range + "</strong></p>" +
+        "<div class='card'><p><strong>Chat with Recarra</strong></p><div class='chat' id='chat'>" + chat + "</div>" +
+        "<label for='msg'>Message</label><textarea id='msg' rows='3' placeholder='Ask about pickup, title, or the number…'></textarea>" +
+        "<div class='row'><button class='btn' id='send' type='button'>Send</button></div></div>" +
+        "<div class='card'><p><strong>Your tracking address</strong></p><p class='muted' style='word-break:break-all'>" + escapeHtml(href) + "</p>" +
+        "<button class='btn btn-ghost' id='copy' type='button'>Copy link</button></div>" +
+        "<div class='row'>" + actions + "</div>";
+      var box = document.getElementById("chat");
+      if (box) box.scrollTop = box.scrollHeight;
+      document.getElementById("copy").onclick = function () {
+        if (navigator.clipboard) navigator.clipboard.writeText(href);
+      };
+      document.getElementById("send").onclick = function () {
+        var text = document.getElementById("msg").value.trim();
         if (!text) return;
-        const msg = { id: "m-" + Date.now(), at: new Date().toISOString(), from: "customer", text };
-        save(load().map((item) => item.id === l.id ? Object.assign({}, item, { messages: (item.messages || []).concat(msg) }) : item));
-        draw();
+        var msg = { id: "m-" + Date.now(), at: new Date().toISOString(), from: "customer", text: text };
+        save(load().map(function (item) {
+          if (item.id !== l.id) return item;
+          return Object.assign({}, item, { messages: (item.messages || []).concat([msg]) });
+        }));
+        lastStamp = "";
+        draw(true);
       };
     }
-    window.addEventListener("storage", draw);
-    setInterval(draw, 3000);
-    draw();
+    window.addEventListener("storage", function () { lastStamp = ""; draw(true); });
+    setInterval(function () { draw(false); }, 2000);
+    draw(true);
   </script>
 </body>
 </html>

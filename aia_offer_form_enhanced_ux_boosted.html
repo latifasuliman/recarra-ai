@@ -368,9 +368,8 @@
         localStorage.setItem("recarra-leads-v1", JSON.stringify(existing));
         localStorage.setItem("recarra-open-track-v1", trackCode);
       } catch (err) {}
-      const trackUrl = new URL("track.html?code=" + encodeURIComponent(trackCode), window.top.location.href).href;
-      try { window.top.location.href = trackUrl; }
-      catch (err) { window.location.href = trackUrl; }
+      const trackUrl = new URL("track.html?code=" + encodeURIComponent(trackCode), window.location.href).href;
+      window.location.replace(trackUrl);
     });
   </script>
 </body>

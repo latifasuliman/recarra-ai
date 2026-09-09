@@ -151,7 +151,7 @@
       <a href="#contact">Contact</a>
     </nav>
     <a class="phone" href="tel:+13462740071">(346) 274-0071</a>
-    <button class="btn" type="button" onclick="openDrawer()">Get My Free Offer</button>
+    <a class="btn" href="aia_offer_form_enhanced_ux_boosted.html">Get My Free Offer</a>
   </header>
   <section class="hero">
     <div class="hero-inner">
@@ -159,7 +159,7 @@
       <h1>Sell your junk car for cash in Houston</h1>
       <p>Tell us the year, make, and model — or paste the VIN. We look the car up, send a starting offer, and pick it up after we verify title and identity. Offers are not guaranteed.</p>
       <div class="hero-actions">
-        <button class="btn" type="button" onclick="openDrawer()">Get My Free Offer</button>
+        <a class="btn" href="aia_offer_form_enhanced_ux_boosted.html">Get My Free Offer</a>
         <a class="btn btn-ghost" href="tel:+13462740071">Call (346) 274-0071</a>
       </div>
     </div>
@@ -197,7 +197,7 @@
         <article class="card"><h3>Non-running</h3><p class="muted">No start, no drive, or a car that has not moved in months. We bring the truck.</p></article>
         <article class="card"><h3>With or without a title</h3><p class="muted">A clear title is simplest. Liens and missing titles are handled after we verify ownership.</p></article>
       </div>
-      <p style="margin-top:1.5rem;"><button class="btn" type="button" onclick="openDrawer()">Check my car</button></p>
+      <p style="margin-top:1.5rem;"><a class="btn" href="aia_offer_form_enhanced_ux_boosted.html">Check my car</a></p>
     </div>
   </section>
   <section id="contact">
@@ -206,7 +206,7 @@
       <p class="muted">Monday–Saturday, 8 a.m.–6 p.m. Greater Houston, Texas.</p>
       <p><a href="tel:+13462740071">(346) 274-0071</a><br />
       <a href="mailto:offers@recarra.com">offers@recarra.com</a></p>
-      <button class="btn" type="button" onclick="openDrawer()">Get My Free Offer</button>
+      <a class="btn" href="aia_offer_form_enhanced_ux_boosted.html">Get My Free Offer</a>
     </div>
   </section>
   <footer>
@@ -215,16 +215,8 @@
       <p>Do not submit other people’s information.</p>
     </div>
   </footer>
-  <div id="drawer">
-    <div class="sheet">
-      <button id="closeDrawer" type="button" onclick="closeDrawer()" aria-label="Close">×</button>
-      <iframe title="Get an offer" src="aia_offer_form_enhanced_ux_boosted.html"></iframe>
-    </div>
-  </div>
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
-    function openDrawer() { document.getElementById("drawer").classList.add("open"); }
-    function closeDrawer() { document.getElementById("drawer").classList.remove("open"); }
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.getRegistrations().then(function (regs) {
         regs.forEach(function (reg) { reg.unregister(); });
