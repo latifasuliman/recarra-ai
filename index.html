@@ -81,29 +81,22 @@
       padding: clamp(3rem, 8vw, 5.5rem) 1.5rem 3.25rem;
     }
     .story {
-      display: flex;
-      gap: 0.85rem;
-      overflow-x: auto;
-      margin-top: 2.4rem;
-      padding-bottom: 0.3rem;
-      scroll-snap-type: x mandatory;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      max-width: 36rem;
+      margin: 2.4rem 0 0;
     }
     .story article {
-      flex: 0 0 230px;
       background: color-mix(in oklab, #f4f1ea 6%, transparent);
       border: 1px solid color-mix(in oklab, #f4f1ea 12%, transparent);
-      border-radius: 16px;
+      border-radius: 20px;
       overflow: hidden;
-      scroll-snap-align: start;
     }
     .story video { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: #081018; }
-    .story .cap { padding: 0.85rem 0.95rem 1.05rem; }
-    .story .cap strong { display: block; font-family: var(--display); font-weight: 500; font-size: 1.02rem; }
-    .story .cap span { display: block; color: color-mix(in oklab, #f4f1ea 70%, transparent); font-size: 0.82rem; margin-top: 0.25rem; }
-    @media (min-width: 900px) {
-      .story { display: grid; grid-template-columns: repeat(4, 1fr); overflow: visible; }
-      .story article { flex: none; }
-    }
+    .story .cap { padding: 1.05rem 1.1rem 1.2rem; }
+    .story .cap strong { display: block; font-family: var(--display); font-weight: 500; font-size: 1.15rem; }
+    .story .cap span { display: block; color: color-mix(in oklab, #f4f1ea 70%, transparent); font-size: 0.9rem; margin-top: 0.3rem; }
     .hero-inner, .wrap { max-width: 1120px; margin: 0 auto; }
     .hero h1 {
       margin: 0;
