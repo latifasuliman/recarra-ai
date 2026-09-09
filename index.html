@@ -238,7 +238,7 @@
     }
     .hours { display: none; }
     .cities { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1.15rem; }
-    .cities span {
+    .cities button {
       display: inline-flex;
       align-items: center;
       min-height: 40px;
@@ -246,8 +246,39 @@
       border: 1px solid var(--border);
       border-radius: 999px;
       background: var(--surface);
+      font: inherit;
       font-size: 0.9rem;
+      cursor: pointer;
+      color: var(--fg);
     }
+    .cities button:hover, .cities button.on {
+      background: var(--navy);
+      color: #f4f1ea;
+      border-color: var(--navy);
+    }
+    .city-stage {
+      position: relative;
+      margin-top: 1.2rem;
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--navy);
+    }
+    .city-stage video {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+    }
+    .city-copy {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      padding: 3.5rem 1.15rem 1.15rem;
+      background: linear-gradient(to top, rgba(14,28,47,.92), rgba(14,28,47,.2) 70%, transparent);
+      color: #f4f1ea;
+    }
+    .city-copy .n { color: var(--accent); margin: 0; }
+    .city-copy strong { display: block; font-family: var(--display); font-weight: 500; font-size: clamp(1.25rem, 2.4vw, 1.8rem); margin-top: 0.2rem; }
+    .city-copy p { margin: 0.2rem 0 0; color: color-mix(in oklab, #f4f1ea 80%, transparent); }
     .quote { margin: 0; }
     .quote p { margin: 0; color: var(--fg); }
     .quote footer { margin-top: 0.85rem; font-size: 0.9rem; color: var(--muted); }
@@ -390,17 +421,15 @@
     <div class="wrap">
       <p class="n">We pick up</p>
       <h2>Greater Houston</h2>
-      <p class="muted">Harris, Fort Bend, Brazoria, and nearby. If you are farther out, ask — we will tell you if the truck will not come.</p>
-      <div class="cities">
-        <span>Houston</span>
-        <span>Alief</span>
-        <span>Katy</span>
-        <span>Sugar Land</span>
-        <span>Pasadena</span>
-        <span>Pearland</span>
-        <span>Spring Branch</span>
-        <span>Spring</span>
-        <span>Cinco Ranch</span>
+      <p class="muted">Hover a city — or tap it on a phone — to see a car Recarra bought there. Silent clip. Amount on screen.</p>
+      <div class="cities" id="cityChips"></div>
+      <div class="city-stage" id="cityStage">
+        <video id="cityVid" muted loop playsinline autoplay></video>
+        <div class="city-copy">
+          <p class="n" id="cityName"></p>
+          <strong id="cityCar"></strong>
+          <p id="cityPaid"></p>
+        </div>
       </div>
     </div>
   </section>
@@ -477,6 +506,47 @@
   </footer>
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
+    (function cityBuys() {
+      const buys = [
+        { city: "Houston", car: "2011 Nissan Altima", paid: "Paid $375 after pickup and verify.", video: "videos/buys/houston.mp4", poster: "images/buys/altima.jpg" },
+        { city: "Alief", car: "2013 Honda Civic", paid: "Paid $450 after pickup and verify.", video: "videos/buys/alief.mp4", poster: "images/buys/civic.jpg" },
+        { city: "Katy", car: "2009 Honda Pilot", paid: "Paid $625 after pickup and verify.", video: "videos/buys/katy.mp4", poster: "images/buys/pilot.jpg" },
+        { city: "Sugar Land", car: "2007 Toyota Camry", paid: "Paid $500 after pickup and verify.", video: "videos/buys/sugar-land.mp4", poster: "images/buys/camry.jpg" },
+        { city: "Pasadena", car: "2008 Ford F-150", paid: "Paid $950 after pickup and verify.", video: "videos/buys/pasadena.mp4", poster: "images/buys/f150.jpg" },
+        { city: "Pearland", car: "2012 Toyota Sienna", paid: "Paid $575 after pickup and verify.", video: "videos/buys/pearland.mp4", poster: "images/buys/sienna.jpg" },
+        { city: "Spring Branch", car: "2006 Chevrolet Impala", paid: "Paid $325 after pickup and verify.", video: "videos/buys/spring-branch.mp4", poster: "images/buys/impala.jpg" },
+        { city: "Spring", car: "2010 Ford Explorer", paid: "Paid $700 after pickup and verify.", video: "videos/buys/spring.mp4", poster: "images/buys/explorer.jpg" },
+        { city: "Cinco Ranch", car: "2014 Honda Accord", paid: "Paid $550 after pickup and verify.", video: "videos/buys/cinco-ranch.mp4", poster: "images/buys/accord.jpg" }
+      ];
+      const chips = document.getElementById("cityChips");
+      const vid = document.getElementById("cityVid");
+      const name = document.getElementById("cityName");
+      const car = document.getElementById("cityCar");
+      const paid = document.getElementById("cityPaid");
+      function show(item, btn) {
+        chips.querySelectorAll("button").forEach(function (el) { el.className = ""; });
+        if (btn) btn.className = "on";
+        name.textContent = item.city;
+        car.textContent = item.car;
+        paid.textContent = item.paid;
+        vid.poster = item.poster;
+        if (vid.getAttribute("src") !== item.video) {
+          vid.src = item.video;
+        }
+        vid.muted = true;
+        vid.play().catch(function () {});
+      }
+      buys.forEach(function (item, i) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = item.city;
+        btn.addEventListener("mouseenter", function () { show(item, btn); });
+        btn.addEventListener("focus", function () { show(item, btn); });
+        btn.addEventListener("click", function () { show(item, btn); });
+        chips.appendChild(btn);
+        if (i === 0) show(item, btn);
+      });
+    })();
     (function recentPlayer() {
       const buys = [
         { src: "images/buys/civic.jpg", title: "2013 Honda Civic", note: "Alief · Paid $450 after pickup and verify." },
