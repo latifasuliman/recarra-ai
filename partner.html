@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Recarra LLC partner sheet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --navy:#0e1c2f; --green:#168a46; --fg:#142033; --muted:#5b6b7c; --line:#d7dee6; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:"Plus Jakarta Sans",system-ui,sans-serif; background:#e8edf2; color:var(--fg); line-height:1.45; }
+    .bar { background:var(--navy); color:#fff; padding:0.8rem 1.2rem; display:flex; justify-content:space-between; }
+    .bar a { color:#fff; font-weight:700; text-decoration:none; }
+    .actions { display:flex; gap:0.5rem; flex-wrap:wrap; padding:0.85rem 1.2rem; }
+    .btn { min-height:44px; padding:0.55rem 1rem; border:0; border-radius:8px; background:var(--green); color:#fff; font:inherit; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; }
+    .btn-ghost { background:#fff; color:var(--fg); border:1px solid var(--line); }
+    .sheet { max-width:740px; margin:0 auto 2rem; background:#fbfaf6; border:1px solid #e3ddd0; }
+    .head { background:var(--navy); color:#fff; padding:1rem 1.3rem; display:flex; justify-content:space-between; gap:1rem; }
+    .brand { font-family:Fraunces,Georgia,serif; font-size:1.6rem; }
+    .llc { display:block; font-size:0.7rem; letter-spacing:.16em; text-transform:uppercase; color:#9fb0c3; margin-top:0.2rem; }
+    .tag { display:block; margin-top:0.15rem; color:#d7e8d9; font-weight:600; font-size:0.85rem; }
+    .right { text-align:right; font-size:0.82rem; color:rgba(255,255,255,.8); }
+    .right strong { display:block; color:#fff; }
+    .rule { height:5px; background:var(--green); }
+    .body { padding:1.1rem 1.3rem 1.2rem; }
+    .kicker { font-size:0.7rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--green); }
+    h1 { font-family:Fraunces,Georgia,serif; font-size:1.55rem; margin:0.15rem 0 0.8rem; letter-spacing:-0.03em; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:0.65rem 1rem; }
+    .label { display:block; font-size:0.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+    .cash { margin:0.8rem 0; padding:0.7rem; background:#e8f6ee; border:1px solid #b7e0c6; border-radius:10px; text-align:center; }
+    .cash b { display:block; color:var(--green); font-family:Fraunces,Georgia,serif; font-size:1.8rem; }
+    .lock { background:#f4f6f8; border:1px dashed var(--line); border-radius:10px; padding:0.8rem; margin:0.7rem 0; }
+    .open { background:#e8f6ee; border:1px solid #b7e0c6; border-radius:10px; padding:0.8rem; margin:0.7rem 0; }
+    .terms { font-size:0.82rem; color:#334155; padding-left:1.1rem; }
+    .empty { padding:3rem 1.2rem; text-align:center; }
+    @media print {
+      @page { size: letter portrait; margin: 0.4in; }
+      .bar, .actions { display:none !important; }
+      body { background:#fff; }
+      .sheet { border:0; margin:0; max-width:none; }
+      .body { font-size:0.86rem; }
+    }
+    @media (max-width:640px) { .grid, .head { display:grid; grid-template-columns:1fr; } .right { text-align:left; } }
+  </style>
+</head>
+<body>
+  <div class="bar"><a href="./">Recarra</a><span>Partner sheet</span></div>
+  <div class="actions"><button class="btn" type="button" onclick="window.print()">Print / save PDF</button></div>
+  <div id="app"></div>
+  <script>
+    function decodePack() {
+      var raw = (location.hash || "").replace(/^#/, "").trim();
+      if (!raw) return null;
+      try {
+        raw = raw.replace(/-/g, "+").replace(/_/g, "/");
+        while (raw.length % 4) raw += "=";
+        return JSON.parse(decodeURIComponent(escape(atob(raw))));
+      } catch (e) { return null; }
+    }
+    function money(n) {
+      if (n == null || n === "") return "—";
+      return "$" + Number(n).toLocaleString("en-US");
+    }
+    function esc(s) {
+      var el = document.createElement("span");
+      el.textContent = s == null ? "" : String(s);
+      return el.innerHTML;
+    }
+    var p = decodePack();
+    var app = document.getElementById("app");
+    if (!p) {
+      app.innerHTML = "<div class='empty'><h1>No partner sheet in this link.</h1><p>Ask Recarra Back Office to copy the redacted partner link for this offer.</p></div>";
+    } else {
+      var released = !!p.released;
+      var contact = released
+        ? "<div class='open'><span class='label'>Released after assignment fee received</span><strong>" + esc(p.name) + "</strong><br>" + esc(p.phone) + (p.email ? "<br>" + esc(p.email) : "") + (p.vin ? "<br>VIN " + esc(p.vin) : "<br>VIN at inspection") + "</div>"
+        : "<div class='lock'><span class='label'>Seller identity locked</span><strong>Name, phone, VIN, and street are withheld.</strong><p>Recarra LLC releases the file only after the assignment fee is paid. Do not attempt to find or contact the seller.</p></div>";
+      app.innerHTML =
+        "<article class='sheet'><header class='head'><div><span class='brand'>Recarra</span><span class='llc'>Recarra LLC</span><span class='tag'>Cash for cars</span></div>" +
+        "<div class='right'><strong>Contact us</strong>(346) 274-0071<br>offers@recarra.com<br>Recarra.com</div></header><div class='rule'></div><div class='body'>" +
+        "<p class='kicker'>Confidential partner sheet</p>" +
+        "<h1>Offer " + esc(p.no) + "</h1>" +
+        "<div class='grid'>" +
+        "<div><span class='label'>Vehicle</span><strong>" + esc(p.vehicle) + "</strong></div>" +
+        "<div><span class='label'>Area</span>ZIP " + esc(p.zip) + " · Greater Houston</div>" +
+        "<div><span class='label'>Runs</span>" + esc(p.running || "—") + "</div>" +
+        "<div><span class='label'>Title</span>" + esc(p.title || "—") + "</div>" +
+        "<div><span class='label'>Recarra offer to seller</span>" + money(p.offer) + (p.range && p.range[0] ? " <span style='color:#5b6b7c'>(start " + money(p.range[0]) + "–" + money(p.range[1]) + ")</span>" : "") + "</div>" +
+        "<div><span class='label'>Hold through</span>" + esc(p.hold || "7 days from send") + "</div>" +
+        "</div>" +
+        "<div class='cash'><span class='label'>Assignment fee due Recarra LLC</span><b>" + money(p.fee) + "</b><span>Due before seller contact is released" + (p.partner ? " · " + esc(p.partner) : "") + "</span></div>" +
+        contact +
+        "<p><strong>Non-circumvention.</strong> This file is Recarra LLC’s. You may not contact the seller, owner, or title holder except through Recarra. If you close this car without Recarra, you owe Recarra the assignment fee plus $1,000. Exclusive look: 24 hours from receipt unless Recarra agrees in writing.</p>" +
+        "<ol class='terms'>" +
+        "<li>You are buying the deal from Recarra, not the customer list.</li>" +
+        "<li>Seller stays Recarra’s customer until the fee is paid and Recarra releases the file.</li>" +
+        "<li>Offer is still subject to inspection, VIN, title, identity, and lien check.</li>" +
+        "<li>Do not forward this sheet. One partner per car.</li>" +
+        "</ol>" +
+        "<p style='margin-top:1rem;font-size:0.75rem;color:#5b6b7c'>Recarra LLC · Greater Houston, Texas · (346) 274-0071 · offers@recarra.com</p>" +
+        "</div></article>";
+    }
+  </script>
+</body>
+</html>

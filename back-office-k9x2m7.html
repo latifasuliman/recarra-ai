@@ -141,7 +141,7 @@
       box.innerHTML = items.map((l) =>
         "<button class='lead" + (selected === l.id ? " active" : "") + "' data-id='" + l.id + "'>" +
         "<strong>" + (l.trackCode || l.id) + "</strong> · " + l.year + " " + l.make + " " + l.model + "<br>" +
-        "<span class='muted'>" + l.status + " · " + l.name + "</span></button>"
+        "<span class='muted'>" + l.status + (l.keepOrAssign === "assign" ? (l.assignmentPaidAt ? " · ASSIGNED/PAID" : " · ASSIGN") : "") + " · " + l.name + "</span></button>"
       ).join("");
       box.querySelectorAll(".lead").forEach((btn) => {
         btn.onclick = () => { selected = btn.dataset.id; render(); };
@@ -177,6 +177,24 @@
         "<a class='btn btn-ghost' href='" + letterHref + "' target='_blank' rel='noopener'>View letter</a>" +
         "<a class='btn btn-ghost' href='tel:" + String(l.phone).replace(/\D/g, "") + "'>Call seller</a></div>" +
         "<p class='muted' id='mailStatus'></p>" +
+        "<h2 style='margin-top:1.4rem'>Keep or assign</h2>" +
+        "<p class='muted'>Keep = Recarra buys. Assign = send a redacted sheet to one partner. Name, phone, and VIN stay locked until the assignment fee is marked paid.</p>" +
+        "<label>This car</label>" +
+        "<select id='intent'><option value='keep'" + ((l.keepOrAssign || "keep") === "keep" ? " selected" : "") + ">Keep — Recarra buys</option>" +
+        "<option value='assign'" + (l.keepOrAssign === "assign" ? " selected" : "") + ">Assign — let go for a fee</option></select>" +
+        "<label>Partner name</label><input id='partnerName' value='" + escapeHtml(l.assignedTo || "") + "' placeholder='Tower or buyer company' />" +
+        "<label>Assignment fee due Recarra</label><input id='assignFee' type='number' min='0' value='" + (l.assignmentFee || "") + "' placeholder='e.g. 200' />" +
+        "<p class='muted' id='assignStatus'>" +
+          (l.assignmentPaidAt
+            ? "Fee marked paid " + new Date(l.assignmentPaidAt).toLocaleDateString() + ". Full file can be released."
+            : (l.keepOrAssign === "assign" ? "Redacted sheet only until you mark the fee paid." : "Not assigned.")) +
+        "</p>" +
+        "<div class='row'>" +
+        "<button class='btn' id='saveAssign' type='button'>Save keep / assign</button>" +
+        "<button class='btn btn-ghost' id='copyRedacted' type='button'>Copy redacted partner link</button>" +
+        "<button class='btn btn-ghost' id='copyFull' type='button'>Mark fee paid + copy full file</button>" +
+        "<a class='btn btn-ghost' id='openPartner' href='#' target='_blank' rel='noopener'>Open partner sheet</a>" +
+        "</div>" +
         "<h2 style='margin-top:1.4rem'>Live seller chat</h2>" +
         "<div class='chat' id='chat'>" + msgs.map((m) =>
           "<div class='bubble " + m.from + "'><strong>" + (m.from === "recarra" ? "Recarra" : l.name) + "</strong><br>" +
@@ -233,6 +251,87 @@
         patch(l.id, { messages: (get(l.id).messages || []).concat(msg) });
         render();
       };
+      document.getElementById("saveAssign").onclick = function () {
+        const intent = document.getElementById("intent").value;
+        const partner = document.getElementById("partnerName").value.trim();
+        const fee = Number(document.getElementById("assignFee").value);
+        if (intent === "assign" && (!partner || !(fee > 0))) {
+          alert("For assign: add partner name and assignment fee.");
+          return;
+        }
+        const now = new Date().toISOString();
+        patch(l.id, {
+          keepOrAssign: intent,
+          assignedTo: intent === "assign" ? partner : "",
+          assignmentFee: intent === "assign" ? fee : 0,
+          assignedAt: intent === "assign" ? now : "",
+          assignmentPaidAt: intent === "keep" ? "" : l.assignmentPaidAt,
+          followUps: [{ at: now, note: intent === "assign" ? ("Assigned to " + partner + " for $" + fee) : "Marked keep — Recarra buys.", status: l.status }].concat(l.followUps || [])
+        });
+        render();
+      };
+      document.getElementById("copyRedacted").onclick = function () {
+        const next = currentAssign(l);
+        if (next.keepOrAssign !== "assign") { alert("Set this car to Assign and save first."); return; }
+        copyText(partnerHref(next, false));
+        document.getElementById("assignStatus").textContent = "Redacted link copied. Partner does not get name, phone, or VIN.";
+      };
+      document.getElementById("copyFull").onclick = function () {
+        const next = currentAssign(l);
+        if (next.keepOrAssign !== "assign") { alert("Set this car to Assign and save first."); return; }
+        const now = new Date().toISOString();
+        patch(l.id, { assignmentPaidAt: now, followUps: [{ at: now, note: "Assignment fee paid. Seller file released to " + (next.assignedTo || "partner") + ".", status: l.status }].concat(get(l.id).followUps || []) });
+        copyText(partnerHref(Object.assign({}, get(l.id), { assignmentPaidAt: now }), true));
+        document.getElementById("assignStatus").textContent = "Fee marked paid. Full file link copied — send only to that partner.";
+      };
+      document.getElementById("openPartner").onclick = function (ev) {
+        ev.preventDefault();
+        const next = currentAssign(l);
+        window.open(partnerHref(next, !!next.assignmentPaidAt), "_blank", "noopener");
+      };
+    }
+
+    function currentAssign(l) {
+      return Object.assign({}, l, {
+        keepOrAssign: document.getElementById("intent").value,
+        assignedTo: document.getElementById("partnerName").value.trim(),
+        assignmentFee: Number(document.getElementById("assignFee").value) || 0
+      });
+    }
+    function encodePack(obj) {
+      return btoa(unescape(encodeURIComponent(JSON.stringify(obj))))
+        .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+    }
+    function partnerHref(lead, released) {
+      const root = location.origin + location.pathname.replace(/[^/]+$/, "");
+      const hold = lead.offerSentAt
+        ? new Date(new Date(lead.offerSentAt).getTime() + 7 * 86400000).toLocaleDateString()
+        : "7 days from send";
+      const pack = {
+        v: 1,
+        no: lead.trackCode || lead.id,
+        vehicle: lead.year + " " + lead.make + " " + lead.model,
+        zip: lead.zip,
+        running: lead.running,
+        title: lead.title,
+        offer: lead.offerAmount || null,
+        range: [lead.offerLow, lead.offerHigh],
+        fee: Number(lead.assignmentFee) || 0,
+        partner: lead.assignedTo || "",
+        hold: hold,
+        released: !!released
+      };
+      if (released) {
+        pack.name = lead.name;
+        pack.phone = lead.phone;
+        pack.email = lead.email || "";
+        pack.vin = lead.vin || "";
+      }
+      return root + "partner.html#" + encodePack(pack);
+    }
+    function copyText(text) {
+      if (navigator.clipboard) navigator.clipboard.writeText(text);
+      else window.prompt("Copy this link", text);
     }
 
     function mailtoOffer(lead, amount, trackHref, letterHref) {
