@@ -225,6 +225,16 @@
     document.getElementById("y").textContent = new Date().getFullYear();
     function openDrawer() { document.getElementById("drawer").classList.add("open"); }
     function closeDrawer() { document.getElementById("drawer").classList.remove("open"); }
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function (regs) {
+        regs.forEach(function (reg) { reg.unregister(); });
+      });
+    }
+    if (window.caches) {
+      caches.keys().then(function (keys) {
+        keys.forEach(function (key) { caches.delete(key); });
+      });
+    }
   </script>
 </body>
 </html>
