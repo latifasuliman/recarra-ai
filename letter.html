@@ -58,8 +58,10 @@
       align-items: flex-end;
     }
     .brand { font-family: Fraunces, Georgia, serif; font-size: 1.85rem; letter-spacing: -0.03em; line-height: 1; }
-    .llc { display: block; margin-top: 0.35rem; font-family: "Plus Jakarta Sans", sans-serif; font-size: 0.72rem; letter-spacing: .16em; text-transform: uppercase; color: #9fb0c3; }
+    .llc { display: block; margin-top: 0.28rem; font-family: "Plus Jakarta Sans", sans-serif; font-size: 0.72rem; letter-spacing: .16em; text-transform: uppercase; color: #9fb0c3; }
+    .tag { display: block; margin-top: 0.2rem; font-size: 0.82rem; color: #d7e8d9; font-weight: 600; }
     .head-meta { text-align: right; font-size: 0.82rem; color: rgba(255,255,255,.78); }
+    .head-meta strong { display: block; color: #fff; margin-bottom: 0.15rem; }
     .rule { height: 6px; background: var(--green); }
     .body { padding: 1.6rem 1.8rem 2rem; }
     .kicker { font-size: 0.72rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--green); }
@@ -88,9 +90,31 @@
     .foot { margin-top: 1.6rem; font-size: 0.78rem; color: var(--muted); }
     .empty { padding: 3rem 1.5rem; text-align: center; }
     @media print {
-      body { background: #fff; }
-      .bar, .actions { display: none; }
-      .sheet { box-shadow: none; border: 0; margin: 0; max-width: none; }
+      @page { size: letter portrait; margin: 0.4in; }
+      html, body { background: #fff !important; margin: 0; }
+      .bar, .actions { display: none !important; }
+      .sheet {
+        box-shadow: none;
+        border: 0;
+        margin: 0;
+        max-width: none;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      .letterhead { padding: 0.65rem 0.85rem 0.55rem; }
+      .brand { font-size: 1.35rem; }
+      .rule { height: 4px; }
+      .body { padding: 0.65rem 0.85rem 0.5rem; font-size: 0.84rem; line-height: 1.35; }
+      .kicker { font-size: 0.64rem; }
+      .doc-title { font-size: 1.35rem; margin: 0.1rem 0 0.45rem; }
+      .meta { gap: 0.35rem 0.8rem; margin-bottom: 0.55rem; font-size: 0.82rem; }
+      .cash { margin: 0.45rem 0; padding: 0.4rem 0.5rem; border-radius: 8px; }
+      .cash b { font-size: 1.65rem; }
+      ol { margin: 0.25rem 0 0.35rem; }
+      li { margin: 0.12rem 0; }
+      .sign { margin-top: 0.45rem; gap: 0.8rem; }
+      .sign-line { margin-top: 0.7rem; }
+      .foot { margin-top: 0.4rem; font-size: 0.68rem; }
     }
     @media (max-width: 640px) {
       .meta, .sign, .letterhead { grid-template-columns: 1fr; display: grid; }
@@ -171,8 +195,8 @@
         : "<div class='cash'><span class='label'>Offer in review</span><b style='font-size:1.4rem;color:var(--navy)'>Pending Recarra review</b><span>This letter becomes final when Recarra sends a dollar amount.</span></div>";
       app.innerHTML =
         "<article class='sheet'>" +
-        "<header class='letterhead'><div><span class='brand'>Recarra</span><span class='llc'>Recarra LLC · Houston, Texas</span></div>" +
-        "<div class='head-meta'>Cash for cars<br>(346) 274-0071<br>offers@recarra.com<br>Recarra.com</div></header>" +
+        "<header class='letterhead'><div><span class='brand'>Recarra</span><span class='llc'>Recarra LLC</span><span class='tag'>Cash for cars</span></div>" +
+        "<div class='head-meta'><strong>Contact us</strong>(346) 274-0071<br>offers@recarra.com<br>Recarra.com</div></header>" +
         "<div class='rule'></div>" +
         "<div class='body'>" +
         "<p class='kicker'>Official offer letter</p>" +
