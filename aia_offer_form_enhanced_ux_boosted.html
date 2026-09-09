@@ -1,234 +1,339 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Recarra | Smart Car Offer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <title>Get an Offer | Recarra</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --navy: #0e1c2f;
+      --fg: #142033;
+      --muted: #5b6b7c;
+      --accent: #168a46;
+      --border: #d7dee6;
+      --bg: #f4f6f8;
+    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background-color: #f7f7f7;
-      color: #111;
+      font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.5;
     }
-
-    .container {
-      max-width: 480px;
-      margin: 2rem auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-
-    .header h1 {
-      color: #d80000;
-      font-size: 1.8rem;
-      margin: 0.5rem 0;
-    }
-
-    .bonus-box {
-      background: #ffeaea;
-      color: #b30000;
-      padding: 0.75rem;
-      font-weight: bold;
-      text-align: center;
-      border-radius: 8px;
-      margin-bottom: 1.5rem;
-      animation: flash 1.2s infinite;
-    }
-
-    @keyframes flash {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.2; }
-    }
-
-    .input-group {
-      margin-bottom: 1.2rem;
-    }
-
-    .input-group label {
-      display: block;
-      margin-bottom: 0.4rem;
-      font-weight: bold;
-    }
-
-    .input-group input, .input-group select, .input-group textarea {
+    .wrap { max-width: 480px; margin: 0 auto; padding: 3.5rem 1.25rem 2rem; }
+    h1 { font-size: 1.45rem; letter-spacing: -0.03em; margin: 0 0 0.35rem; }
+    .muted { color: var(--muted); font-size: 0.92rem; }
+    label { display: block; font-size: 0.8rem; font-weight: 700; margin: 0.9rem 0 0.35rem; }
+    input, select, textarea, button { font: inherit; }
+    input, select, textarea {
       width: 100%;
-      padding: 12px;
-      font-size: 1rem;
-      border: 2px solid #ccc;
+      min-height: 44px;
+      padding: 0.65rem 0.8rem;
+      border: 1px solid var(--border);
       border-radius: 8px;
-      box-sizing: border-box;
+      background: #fff;
     }
-
     .btn {
       width: 100%;
-      padding: 14px;
-      font-size: 1rem;
-      font-weight: bold;
-      color: white;
-      background: linear-gradient(to right, #ff0000, #cc0000);
-      border: none;
-      border-radius: 30px;
+      min-height: 48px;
+      margin-top: 1.1rem;
+      border: 0;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
       cursor: pointer;
-      margin-top: 1.2rem;
     }
-
-    .btn:hover {
-      background: #a00000;
+    .list {
+      list-style: none;
+      margin: 0.25rem 0 0;
+      padding: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      max-height: 220px;
+      overflow: auto;
     }
-
-    .step {
-      display: none;
+    .list button {
+      width: 100%;
+      min-height: 44px;
+      text-align: left;
+      border: 0;
+      background: transparent;
+      padding: 0.7rem 0.8rem;
+      cursor: pointer;
     }
-
-    .step.active {
-      display: block;
+    .list button:hover, .list button.active { background: #e8eef4; }
+    .found {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.9rem;
+      background: #fff;
     }
-
-    .success-message {
-      color: green;
-      text-align: center;
-      font-weight: bold;
-      margin-top: 1rem;
+    .found strong { display: block; }
+    .link {
+      margin-top: 0.4rem;
+      background: none;
+      border: 0;
+      color: var(--accent);
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
     }
+    .check { display: flex; gap: 0.6rem; align-items: flex-start; margin-top: 1rem; font-size: 0.88rem; color: var(--muted); }
+    .check input { width: auto; min-height: 0; margin-top: 0.2rem; }
+    .error { color: #b42318; font-size: 0.9rem; }
+    .ok { background: #fff; border-radius: 12px; padding: 1.25rem; border: 1px solid var(--border); }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>Instant Car Offer</h1>
-      <div class="bonus-box">🎁 $100 Same-Day Pickup Bonus</div>
+  <div class="wrap">
+    <div id="formView">
+      <h1>Get my free offer</h1>
+      <p class="muted">Type the car. We look it up as you go. No payment until we inspect and verify.</p>
+      <form id="offerForm" novalidate>
+        <div id="searchBox">
+          <label for="vehicle">Year, make, model, or VIN</label>
+          <input id="vehicle" autocomplete="off" placeholder="2014 Honda Civic or 17-digit VIN" />
+          <ul id="hits" class="list" hidden></ul>
+          <p id="status" class="muted">Start typing. Matches load as you go.</p>
+        </div>
+        <div id="picked" class="found" hidden>
+          <p class="muted" style="margin:0;">Vehicle</p>
+          <strong id="pickedLabel"></strong>
+          <p id="pickedMeta" class="muted"></p>
+          <button class="link" type="button" id="changeBtn">Change vehicle</button>
+        </div>
+        <label for="running">Does it run?</label>
+        <select id="running">
+          <option value="yes">Yes, it runs</option>
+          <option value="no">No, it does not run</option>
+          <option value="unsure">Not sure</option>
+        </select>
+        <label for="title">Title</label>
+        <select id="title">
+          <option value="in-hand">Title in hand</option>
+          <option value="lien">Loan or lien</option>
+          <option value="none">No title</option>
+          <option value="unsure">Not sure</option>
+        </select>
+        <label for="name">Name</label>
+        <input id="name" autocomplete="name" required />
+        <label for="phone">Phone</label>
+        <input id="phone" type="tel" autocomplete="tel" required />
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="email" />
+        <label for="zip">Zip</label>
+        <input id="zip" inputmode="numeric" autocomplete="postal-code" required />
+        <p id="zipHint" class="muted"></p>
+        <p id="rangeHint" class="muted"></p>
+        <label class="check">
+          <input id="sms" type="checkbox" />
+          <span>Recarra may text me about this offer. Reply STOP to opt out. Consent is not required to get an offer by phone or email.</span>
+        </label>
+        <p id="error" class="error" hidden></p>
+        <button class="btn" type="submit">Get My Free Offer</button>
+        <p class="muted">Submitting does not sell the car. We verify identity, VIN, title, and lien status before any purchase.</p>
+      </form>
     </div>
-    <form id="offerForm">
-      <div class="step active" id="step1">
-        <div class="input-group">
-          <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" placeholder="e.g. 555-123-4567" required />
-        </div>
-        <div class="input-group">
-          <label><input type="checkbox" id="consent" required /> I consent to be contacted for my offer</label>
-        </div>
-        <button type="button" class="btn" onclick="nextStep(2)">Next</button>
-      </div>
-      <div class="step" id="step2">
-        
-<div class="input-group">
-  <label for="carYear">Car Year</label>
-  <input type="number" id="carYear" placeholder="e.g. 2015" required />
-</div>
-<div class="input-group">
-  <label for="carMake">Make</label>
-  <input type="text" id="carMake" placeholder="e.g. Toyota" required />
-</div>
-<div class="input-group">
-  <label for="carModel">Model</label>
-  <input type="text" id="carModel" placeholder="e.g. Camry" required />
-</div>
-<div class="input-group">
-  <label for="carTrim">Trim (Optional)</label>
-  <input type="text" id="carTrim" placeholder="e.g. LE, SE, XLE" />
-</div>
-<div class="input-group">
-  <label for="mileage">Approx. Mileage</label>
-  <input type="number" id="mileage" placeholder="e.g. 120000" required />
-</div>
-<div class="input-group">
-  <label for="condition">Condition (Optional)</label>
-  <input type="text" id="condition" placeholder="e.g. Runs great, minor damage" />
-</div>
-
-<div class="input-group">
-  <label for="frontPic">Front Picture</label>
-  <input type="file" id="frontPic" accept="image/*" required />
-</div>
-<div class="input-group">
-  <label for="passengerPic">Passenger Side</label>
-  <input type="file" id="passengerPic" accept="image/*" required />
-</div>
-<div class="input-group">
-  <label for="rearPic">Rear Picture</label>
-  <input type="file" id="rearPic" accept="image/*" required />
-</div>
-<div class="input-group">
-  <label for="driverPic">Driver Side</label>
-  <input type="file" id="driverPic" accept="image/*" required />
-</div>
-<div class="input-group">
-  <label for="enginePic">Engine Picture</label>
-  <input type="file" id="enginePic" accept="image/*" required />
-</div>
-<div class="input-group">
-  <label for="damagePics">Upload Any Damage Pictures</label>
-  <input type="file" id="damagePics" accept="image/*" multiple />
-</div>
-
-        <div class="input-group">
-          <label for="address">Pickup Address</label>
-          <input type="text" id="address" placeholder="Start typing address..." required />
-        </div>
-        <div class="input-group">
-          <label for="pickupTime">Preferred Pickup Time</label>
-          <select id="pickupTime" required>
-            <option value="">Select one</option>
-            <option value="same_day">Same-Day (+$100)</option>
-            <option value="tomorrow">Tomorrow</option>
-            <option value="flexible">Flexible</option>
-          </select>
-        </div>
-        <div class="input-group">
-          <label for="hasTitle">Do you have the title?</label>
-          <select id="hasTitle" required>
-            <option value="">Select</option>
-            <option>Yes</option>
-            <option>No</option>
-          </select>
-        </div>
-        <div class="input-group">
-          <label for="hasKeys">Do you have the keys?</label>
-          <select id="hasKeys" required>
-            <option value="">Select</option>
-            <option>Yes</option>
-            <option>No</option>
-          </select>
-        </div>
-        <div class="input-group">
-          <label for="carStarts">Does the car start?</label>
-          <select id="carStarts" required>
-            <option value="">Select</option>
-            <option>Yes</option>
-            <option>No</option>
-          </select>
-        </div>
-        <div class="input-group">
-          <label for="selfieBonus">Willing to take a $50 bonus selfie?</label>
-          <select id="selfieBonus" required>
-            <option value="">Select</option>
-            <option>Yes, add $50 bonus</option>
-            <option>No, thanks</option>
-          </select>
-        </div>
-        <button type="button" class="btn" onclick="nextStep(3)">Next</button>
-      </div>
-      <div class="step" id="step3">
-        <p class="success-message">✅ Pickup Confirmed! We'll contact you shortly.</p>
-      </div>
-    </form>
+    <div id="doneView" class="ok" hidden></div>
   </div>
   <script>
-    function nextStep(num) {
-      document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-      document.getElementById('step' + num).classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    const VIN_RE = /^[A-HJ-NPR-Z0-9]{17}$/i;
+    const ALIAS = { chevy: "Chevrolet", vw: "Volkswagen", mercedes: "Mercedes-Benz", benz: "Mercedes-Benz" };
+    const COMMON = {
+      Honda: ["Civic", "Accord", "CR-V", "Odyssey", "Pilot", "Fit"],
+      Toyota: ["Camry", "Corolla", "RAV4", "Highlander", "Tacoma", "Prius"],
+      Ford: ["F-150", "Explorer", "Escape", "Focus", "Fusion", "Mustang"],
+      Chevrolet: ["Silverado", "Malibu", "Impala", "Equinox", "Tahoe", "Cruze"],
+      Nissan: ["Altima", "Sentra", "Rogue", "Maxima", "Pathfinder"],
+      Dodge: ["Charger", "Durango", "Grand Caravan", "Journey"],
+      Jeep: ["Grand Cherokee", "Wrangler", "Cherokee", "Patriot"],
+      Hyundai: ["Elantra", "Sonata", "Santa Fe", "Tucson"],
+      Kia: ["Optima", "Soul", "Forte", "Sportage"],
+    };
+    const state = { year: "", make: "", model: "", vin: "", summary: "" };
+    const vehicle = document.getElementById("vehicle");
+    const hitsEl = document.getElementById("hits");
+    const statusEl = document.getElementById("status");
+    let timer;
+    function titleMake(raw) {
+      const key = raw.toLowerCase();
+      if (ALIAS[key]) return ALIAS[key];
+      return raw.charAt(0).toUpperCase() + raw.slice(1);
     }
+    function money(n) { return "$" + n.toLocaleString(); }
+    function estimate() {
+      const age = new Date().getFullYear() - Number(state.year || 2008);
+      let mid = age <= 6 ? 2400 : age <= 10 ? 1500 : age <= 16 ? 850 : age <= 24 ? 450 : 275;
+      const running = document.getElementById("running").value;
+      const title = document.getElementById("title").value;
+      if (running === "no") mid *= 0.68;
+      if (running === "unsure") mid *= 0.88;
+      if (title === "lien") mid *= 0.82;
+      if (title === "none") mid *= 0.55;
+      const low = Math.max(75, Math.round((mid * 0.78) / 25) * 25);
+      const high = Math.round((mid * 1.18) / 25) * 25;
+      return { low, high };
+    }
+    function showRange() {
+      if (!state.year) { document.getElementById("rangeHint").textContent = ""; return; }
+      const r = estimate();
+      document.getElementById("rangeHint").textContent =
+        "Starting range: " + money(r.low) + "\u2013" + money(r.high) + ". Final offer depends on a real look at the car and title.";
+    }
+    function pick(hit) {
+      state.year = hit.year; state.make = hit.make; state.model = hit.model;
+      state.vin = hit.vin || ""; state.summary = hit.summary || "";
+      document.getElementById("searchBox").hidden = true;
+      document.getElementById("picked").hidden = false;
+      document.getElementById("pickedLabel").textContent = hit.year + " " + hit.make + " " + hit.model;
+      document.getElementById("pickedMeta").textContent = [hit.summary, hit.vin ? "VIN " + hit.vin : ""].filter(Boolean).join(" \u00b7 ");
+      hitsEl.hidden = true;
+      showRange();
+    }
+    async function decodeVin(vin) {
+      const res = await fetch("https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/" + vin + "?format=json");
+      const data = await res.json();
+      const row = data.Results && data.Results[0];
+      if (!row || !row.ModelYear || !row.Make || !row.Model) return null;
+      const liters = Number(row.DisplacementL);
+      return {
+        year: row.ModelYear, make: titleMake(row.Make), model: row.Model, vin: vin.toUpperCase(),
+        summary: [row.BodyClass, Number.isFinite(liters) && liters > 0 ? liters.toFixed(1) + "L" : ""].filter(Boolean).join(" \u00b7 "),
+      };
+    }
+    async function modelsFor(make, year) {
+      const res = await fetch("https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/" + encodeURIComponent(make) + "/modelyear/" + year + "?format=json");
+      const data = await res.json();
+      return (data.Results || []).map(r => r.Model_Name).filter(Boolean);
+    }
+    function localHits(year, make, model) {
+      const brands = Object.keys(COMMON).filter(b => !make || b.toLowerCase().startsWith(make.toLowerCase()));
+      const out = [];
+      brands.slice(0, 4).forEach(brand => {
+        COMMON[brand].filter(m => !model || m.toLowerCase().includes(model.toLowerCase())).slice(0, 4).forEach(m => {
+          out.push({ year: year || "", make: brand, model: m, label: (year ? year + " " : "") + brand + " " + m });
+        });
+      });
+      return out;
+    }
+    async function suggest(q) {
+      const compact = q.replace(/\s/g, "");
+      if (VIN_RE.test(compact)) {
+        statusEl.textContent = "Looking up VIN...";
+        const decoded = await decodeVin(compact);
+        if (decoded) { pick(decoded); statusEl.textContent = "VIN matched."; return []; }
+        statusEl.textContent = "That VIN did not match. Try year, make, and model.";
+        return [];
+      }
+      const parts = q.trim().split(/\s+/);
+      let year = "", rest = [];
+      parts.forEach(p => { if (!year && /^(19[8-9]\d|20[0-2]\d)$/.test(p)) year = p; else rest.push(p); });
+      const make = rest[0] ? titleMake(rest[0]) : "";
+      const model = rest.slice(1).join(" ");
+      let list = localHits(year, make, model);
+      if (year && make.length >= 3) {
+        try {
+          const models = await modelsFor(make, year);
+          const filtered = model ? models.filter(m => m.toLowerCase().includes(model.toLowerCase())) : models;
+          list = filtered.slice(0, 10).map(m => ({ year, make, model: m, label: year + " " + make + " " + m }));
+        } catch (e) {}
+      }
+      statusEl.textContent = list.length ? list.length + " matches" : "Keep typing the model.";
+      return list;
+    }
+    function renderHits(list) {
+      hitsEl.innerHTML = "";
+      if (!list.length) { hitsEl.hidden = true; return; }
+      list.forEach((hit, i) => {
+        const li = document.createElement("li");
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = hit.label;
+        if (i === 0) b.className = "active";
+        b.onclick = () => pick(hit);
+        li.appendChild(b);
+        hitsEl.appendChild(li);
+      });
+      hitsEl.hidden = false;
+    }
+    vehicle.addEventListener("input", () => {
+      clearTimeout(timer);
+      const q = vehicle.value.trim();
+      if (q.length < 2) { renderHits([]); statusEl.textContent = "Start typing. Matches load as you go."; return; }
+      timer = setTimeout(async () => renderHits(await suggest(q)), 220);
+    });
+    document.getElementById("changeBtn").onclick = () => {
+      document.getElementById("picked").hidden = true;
+      document.getElementById("searchBox").hidden = false;
+      vehicle.value = [state.year, state.make, state.model].filter(Boolean).join(" ");
+      vehicle.focus();
+    };
+    document.getElementById("running").onchange = showRange;
+    document.getElementById("title").onchange = showRange;
+    document.getElementById("zip").addEventListener("input", async (e) => {
+      const zip = e.target.value.trim();
+      const hint = document.getElementById("zipHint");
+      if (!/^\d{5}$/.test(zip)) { hint.textContent = ""; return; }
+      try {
+        const res = await fetch("https://api.zippopotam.us/us/" + zip);
+        const data = await res.json();
+        const place = data.places && data.places[0];
+        const pickup = /^(770|772|773|774|775)/.test(zip);
+        hint.textContent = place
+          ? place["place name"] + ", " + place["state abbreviation"] + (pickup ? " - we pick up here." : " - we will confirm if we can pick up.")
+          : "";
+      } catch (err) { hint.textContent = ""; }
+    });
+    document.getElementById("offerForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const error = document.getElementById("error");
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.replace(/\D/g, "");
+      const zip = document.getElementById("zip").value.trim();
+      error.hidden = true;
+      if (name.length < 2) { error.textContent = "Please add your name."; error.hidden = false; return; }
+      if (phone.length < 10) { error.textContent = "Please add a working phone number."; error.hidden = false; return; }
+      if (!/^\d{5}$/.test(zip)) { error.textContent = "Use a 5-digit Houston-area zip."; error.hidden = false; return; }
+      if (!state.year || !state.make || !state.model) { error.textContent = "Type the year, make, and model - or paste the VIN."; error.hidden = false; return; }
+      const r = estimate();
+      const id = "RC-" + new Date().getFullYear() + "-" + (1000 + Math.floor(Math.random() * 9000));
+      const payload = {
+        _subject: "Recarra offer " + id,
+        _template: "table",
+        _captcha: "false",
+        request_id: id,
+        name: name,
+        phone: document.getElementById("phone").value.trim(),
+        customer_email: document.getElementById("email").value.trim() || "not provided",
+        zip: zip,
+        vehicle: state.year + " " + state.make + " " + state.model,
+        vin: state.vin || "not provided",
+        running: document.getElementById("running").value,
+        title: document.getElementById("title").value,
+        range: r.low + "-" + r.high,
+        sms: document.getElementById("sms").checked ? "yes" : "no",
+      };
+      try {
+        await fetch("https://formsubmit.co/ajax/offers@recarra.com", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(payload),
+        });
+      } catch (err) {}
+      fetch("https://ntfy.sh/recarra-offers-9f3k2m7x4q8b", {
+        method: "POST",
+        headers: { Title: "Recarra offer " + id, Priority: "high" },
+        body: payload.vehicle + " - " + payload.name + " " + payload.phone + " - ZIP " + zip,
+      }).catch(function() {});
+      document.getElementById("formView").hidden = true;
+      const done = document.getElementById("doneView");
+      done.hidden = false;
+      done.innerHTML = "<p class='muted'>Request " + id + "</p><h1>We have your request, " + name.split(" ")[0] + ".</h1><p class='muted'>Starting range for a " + payload.vehicle + ": <strong>" + money(r.low) + "-" + money(r.high) + "</strong>. This is not a guaranteed price. We still need to verify condition, VIN, title, ownership, and any lien before we buy.</p><p class='muted'>A Recarra teammate will call " + payload.phone + ".</p>";
+    });
   </script>
 </body>
 </html>
