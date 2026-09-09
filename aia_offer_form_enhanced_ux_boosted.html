@@ -22,8 +22,42 @@
       color: var(--fg);
       line-height: 1.5;
     }
-    .wrap { max-width: 480px; margin: 0 auto; padding: 3.5rem 1.25rem 2rem; }
-    h1 { font-size: 1.45rem; letter-spacing: -0.03em; margin: 0 0 0.35rem; }
+    .top {
+      background: var(--navy);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem 1.15rem;
+    }
+    .top a { color: #fff; font-weight: 700; text-decoration: none; }
+    .wrap {
+      width: min(1080px, 100%);
+      margin: 0 auto;
+      padding: 1rem 0.9rem 2.5rem;
+    }
+    .sheet {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.15rem 1rem 1.4rem;
+    }
+    h1 { font-size: clamp(1.45rem, 3vw, 2.15rem); letter-spacing: -0.03em; margin: 0 0 0.35rem; }
+    .layout { display: grid; gap: 0 1.75rem; }
+    .span { min-width: 0; }
+    .photos { display: grid; gap: 0.35rem 0.85rem; }
+    @media (min-width: 800px) {
+      .wrap { padding: 1.75rem 1.25rem 3rem; }
+      .sheet { padding: 2rem 2.2rem 2.3rem; }
+      .layout { grid-template-columns: 1fr 1fr; align-items: start; }
+      .span { grid-column: 1 / -1; }
+      .photos { grid-template-columns: 1fr 1fr 1fr; }
+      .btn { width: auto; min-width: 240px; padding: 0.75rem 1.4rem; }
+    }
+    @media (max-width: 420px) {
+      .split3 { grid-template-columns: 1fr 3.4rem 5rem; }
+    }
     .muted { color: var(--muted); font-size: 0.92rem; }
     label { display: block; font-size: 0.8rem; font-weight: 700; margin: 0.9rem 0 0.35rem; }
     input, select, textarea, button { font: inherit; }
@@ -148,11 +182,16 @@
   </style>
 </head>
 <body>
+  <header class="top">
+    <a href="./">Recarra</a>
+    <a href="tel:+13462740071">(346) 274-0071</a>
+  </header>
   <div class="wrap">
-    <div id="formView">
+    <div class="sheet" id="formView">
       <h1>Get my free offer</h1>
       <p class="muted">Type the car. We look it up as you go. No payment until we inspect and verify.</p>
-      <form id="offerForm" novalidate>
+      <form id="offerForm" class="layout" novalidate>
+        <div class="col">
         <div id="searchBox">
           <label for="vehicle">Year, make, model, or VIN</label>
           <input id="vehicle" autocomplete="off" placeholder="2014 Honda Civic or 17-digit VIN" />
@@ -178,13 +217,17 @@
           <option value="none">No title</option>
           <option value="unsure">Not sure</option>
         </select>
+        <p id="rangeHint" hidden></p>
+        </div>
+        <div class="col">
         <label for="name">Name</label>
         <input id="name" autocomplete="name" required />
         <label for="phone">Phone</label>
         <input id="phone" type="tel" autocomplete="tel" required />
         <label for="email">Email</label>
         <input id="email" type="email" autocomplete="email" />
-        <div class="box">
+        </div>
+        <div class="span box">
           <h2>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#168a46" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
             Pickup location
@@ -212,6 +255,7 @@
           <textarea id="meet" rows="3" maxlength="240" placeholder="Gate code, apartment #, which side of the house, call when you arrive…"></textarea>
           <p id="addrHint" class="muted">Auto-fill, or type the street — matches load for any US city.</p>
         </div>
+        <div class="span">
         <label for="pickup">Pickup window</label>
         <select id="pickup">
           <option value="soonest">Soonest you can come</option>
@@ -220,13 +264,20 @@
           <option value="week">This week is fine</option>
         </select>
         <p class="muted" style="margin-top:0.8rem">Photos (optional). Front, VIN plate, dash — helps hold the range.</p>
-        <label for="photoFront">Front of car</label>
-        <input id="photoFront" type="file" accept="image/*" />
-        <label for="photoVin">VIN plate</label>
-        <input id="photoVin" type="file" accept="image/*" />
-        <label for="photoDash">Dash / odometer</label>
-        <input id="photoDash" type="file" accept="image/*" />
-        <p id="rangeHint" hidden></p>
+        <div class="photos">
+          <div>
+            <label for="photoFront">Front of car</label>
+            <input id="photoFront" type="file" accept="image/*" />
+          </div>
+          <div>
+            <label for="photoVin">VIN plate</label>
+            <input id="photoVin" type="file" accept="image/*" />
+          </div>
+          <div>
+            <label for="photoDash">Dash / odometer</label>
+            <input id="photoDash" type="file" accept="image/*" />
+          </div>
+        </div>
         <label class="check">
           <input id="sms" type="checkbox" />
           <span>Recarra may text me about this offer. Reply STOP to opt out. Consent is not required to get an offer by phone or email.</span>
@@ -238,6 +289,7 @@
         <p id="error" class="error" hidden></p>
         <button class="btn" type="submit">Get My Free Offer</button>
         <p class="muted">Submitting does not sell the car. We verify identity, VIN, title, and lien before any purchase. Recarra does not sell seller lists. A verified partner only sees your contact after Recarra is paid.</p>
+        </div>
       </form>
     </div>
     <div id="doneView" class="ok" hidden></div>
