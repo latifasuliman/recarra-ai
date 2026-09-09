@@ -197,6 +197,7 @@
     <div class="grid">
       <aside class="card">
         <h2>Leads</h2>
+        <p class="muted" id="leadCount"></p>
         <input id="deskSearch" placeholder="Search RC-4821 or phone" style="margin:0.4rem 0 0.8rem" />
         <div class="row" style="margin:0 0 0.8rem">
           <button class="btn" type="button" id="showAll">All</button>
@@ -491,10 +492,16 @@
       if (waitBtn) waitBtn.textContent = "Waiting for partner (" + waitN + ")";
       if (allBtn) allBtn.className = listMode === "all" ? "btn" : "btn btn-ghost";
       if (waitBtn) waitBtn.className = listMode === "waiting" ? "btn" : "btn btn-ghost";
+      const allN = leads().length;
+      const countEl = document.getElementById("leadCount");
+      if (countEl) countEl.textContent = allN ? (allN + " offers saved in this browser") : "0 offers in this browser";
+      if (allBtn) allBtn.textContent = "All (" + allN + ")";
       if (!items.length) {
-        box.innerHTML = listMode === "waiting"
-          ? "<p class='muted'>No cars waiting for a partner. Assign a lead first, then it shows here.</p>"
-          : "<p class='muted'>No offers match.</p>";
+        box.innerHTML = allN === 0
+          ? "<p class='muted'><strong>This Safari/Chrome has no offers.</strong> Recarra does not store leads on GitHub. Open the same browser you used when the seller submitted — not WhatsApp. If you downloaded a desk file, restore it under Money & backup.</p>"
+          : listMode === "waiting"
+          ? "<p class='muted'>No cars waiting for a partner. Tap All to see every offer in this browser.</p>"
+          : "<p class='muted'>No offers match that search. Tap All and clear the search box.</p>";
         return;
       }
       box.innerHTML = items.map((l) =>
