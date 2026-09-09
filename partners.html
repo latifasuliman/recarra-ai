@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Recarra partner login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --navy:#0e1c2f; --green:#168a46; --fg:#142033; --muted:#5b6b7c; --line:#d7dee6; --bg:#f4f6f8; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:"Plus Jakarta Sans",system-ui,sans-serif; background:var(--bg); color:var(--fg); line-height:1.5; }
+    header { background:var(--navy); color:#fff; padding:0.9rem 1.2rem; display:flex; justify-content:space-between; }
+    header a { color:#fff; font-weight:700; text-decoration:none; }
+    main { max-width:640px; margin:0 auto; padding:1.25rem; }
+    .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:1.1rem; margin-bottom:1rem; }
+    label { display:block; font-size:0.78rem; font-weight:700; margin:0.7rem 0 0.3rem; }
+    input, button { font:inherit; }
+    input { width:100%; min-height:44px; padding:0.6rem 0.75rem; border:1px solid var(--line); border-radius:8px; }
+    .btn { min-height:44px; padding:0.6rem 1rem; border:0; border-radius:8px; background:var(--green); color:#fff; font-weight:700; cursor:pointer; }
+    .btn-ghost { background:#fff; color:var(--fg); border:1px solid var(--line); }
+    .muted { color:var(--muted); font-size:0.9rem; }
+    .row { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.75rem; }
+    .lock { background:#f4f6f8; border:1px dashed var(--line); border-radius:10px; padding:0.8rem; }
+    .open { background:#e8f6ee; border:1px solid #b7e0c6; border-radius:10px; padding:0.8rem; }
+    .err { color:#b42318; }
+  </style>
+</head>
+<body>
+  <header><a href="./">Recarra</a><span>Partner desk</span></header>
+  <main id="app"></main>
+  <script>
+    const PARTNERS_KEY = "recarra-partners-v1";
+    const LEAD_KEY = "recarra-leads-v1";
+    const LOG_KEY = "recarra-partner-log-v1";
+    function decodePack() {
+      var raw = (location.hash || "").replace(/^#/, "").trim();
+      if (!raw) return null;
+      try {
+        raw = raw.replace(/-/g, "+").replace(/_/g, "/");
+        while (raw.length % 4) raw += "=";
+        return JSON.parse(decodeURIComponent(escape(atob(raw))));
+      } catch (e) { return null; }
+    }
+    function pinHash(id, pin) {
+      return btoa(unescape(encodeURIComponent(String(pin) + "|" + String(id))));
+    }
+    function loadPartners() {
+      try { var rows = JSON.parse(localStorage.getItem(PARTNERS_KEY) || "[]"); return Array.isArray(rows) ? rows : []; }
+      catch (e) { return []; }
+    }
+    function loadLeads() {
+      try { var rows = JSON.parse(localStorage.getItem(LEAD_KEY) || "[]"); return Array.isArray(rows) ? rows : []; }
+      catch (e) { return []; }
+    }
+    function addLog(type, note, extra) {
+      extra = extra || {};
+      var row = { id: "pl-" + Date.now(), at: new Date().toISOString(), type: type, note: note, partnerId: extra.partnerId || "", offerNo: extra.offerNo || "" };
+      try {
+        var prev = JSON.parse(localStorage.getItem(LOG_KEY) || "[]");
+        if (!Array.isArray(prev)) prev = [];
+        localStorage.setItem(LOG_KEY, JSON.stringify([row].concat(prev).slice(0, 400)));
+      } catch (e) {}
+    }
+    function money(n) { return n == null || n === "" ? "—" : "$" + Number(n).toLocaleString(); }
+    function esc(s) {
+      var el = document.createElement("span");
+      el.textContent = s == null ? "" : String(s);
+      return el.innerHTML;
+    }
+    function pingRecarra(partner, job, action) {
+      fetch("https://formsubmit.co/ajax/offers@recarra.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          _subject: "Partner " + action + " · " + (job && job.no ? job.no : ""),
+          _captcha: "false",
+          partner: partner.id + " " + partner.company,
+          action: action,
+          offer: job && job.no ? job.no : "",
+          vehicle: job && job.vehicle ? job.vehicle : ""
+        })
+      }).catch(function () {});
+    }
+    function loginView(err) {
+      return "<div class='card'><p class='muted'>Verified Recarra partners only.</p>" +
+        "<h1 style='margin:0.2rem 0 0.6rem'>Partner login</h1>" +
+        "<p class='muted'>Use the code and PIN Recarra sent with your desk link.</p>" +
+        (err ? "<p class='err'>" + esc(err) + "</p>" : "") +
+        "<form id='login'><label>Partner code</label><input id='code' placeholder='VP-4821' autocomplete='username' />" +
+        "<label>PIN</label><input id='pin' placeholder='4 digits' inputmode='numeric' autocomplete='current-password' />" +
+        "<div class='row'><button class='btn' type='submit'>Open my desk</button></div></form></div>";
+    }
+    function deskView(partner, jobs) {
+      var cards = jobs.length ? jobs.map(function (j) {
+        var body = j.released
+          ? "<div class='open'><strong>" + esc(j.name) + "</strong><br>" + esc(j.phone) + (j.vin ? "<br>VIN " + esc(j.vin) : "") + "</div>"
+          : "<div class='lock'>Seller identity locked until Recarra marks your assignment fee paid.</div>";
+        return "<div class='card'><p class='muted'>Offer " + esc(j.no) + "</p><h2 style='margin:0 0 0.4rem'>" + esc(j.vehicle) + "</h2>" +
+          "<p>ZIP " + esc(j.zip) + " · Runs " + esc(j.running || "—") + " · Title " + esc(j.title || "—") + "</p>" +
+          "<p>Recarra offer " + money(j.offer) + " · Your fee to Recarra <strong>" + money(j.fee) + "</strong></p>" +
+          body +
+          "<div class='row'>" +
+          "<button class='btn' type='button' data-act='interested' data-no='" + esc(j.no) + "'>I'm interested</button>" +
+          "<button class='btn btn-ghost' type='button' data-act='pass' data-no='" + esc(j.no) + "'>Pass</button>" +
+          "</div></div>";
+      }).join("") : "<div class='card'><p>No cars on your desk yet. Recarra will assign one and send an updated login link.</p></div>";
+      return "<div class='card'><p class='muted'>Signed in</p><h1 style='margin:0.2rem 0'>" + esc(partner.company) + "</h1>" +
+        "<p class='muted'>" + esc(partner.id) + " · " + esc(partner.name) + "</p>" +
+        "<p>You buy the deal from Recarra LLC — not the customer. Do not contact a seller unless Recarra released this file.</p></div>" + cards;
+    }
+    function jobsFromLeads(partner) {
+      return loadLeads().filter(function (l) {
+        return l.keepOrAssign === "assign" && (l.assignedTo === partner.id || l.assignedTo === partner.company);
+      }).map(function (l) {
+        return {
+          no: l.trackCode || l.id,
+          vehicle: l.year + " " + l.make + " " + l.model,
+          zip: l.zip,
+          running: l.running,
+          title: l.title,
+          offer: l.offerAmount || null,
+          fee: l.assignmentFee || 0,
+          released: !!l.assignmentPaidAt,
+          name: l.assignmentPaidAt ? l.name : "",
+          phone: l.assignmentPaidAt ? l.phone : "",
+          vin: l.assignmentPaidAt ? (l.vin || "") : ""
+        };
+      });
+    }
+    function tryLocal(code, pin) {
+      var p = loadPartners().find(function (row) {
+        return row.verified && row.id.toUpperCase() === code.toUpperCase() && String(row.pin) === String(pin);
+      });
+      return p || null;
+    }
+    var app = document.getElementById("app");
+    var session = null;
+    function draw(err) {
+      if (!session) {
+        app.innerHTML = loginView(err);
+        document.getElementById("login").onsubmit = function (ev) {
+          ev.preventDefault();
+          var code = document.getElementById("code").value.trim();
+          var pin = document.getElementById("pin").value.trim();
+          var pack = decodePack();
+          var partner = null;
+          var jobs = [];
+          if (pack && pack.id && pack.id.toUpperCase() === code.toUpperCase() && pack.pinHash === pinHash(pack.id, pin)) {
+            partner = { id: pack.id, company: pack.company, name: pack.name };
+            jobs = pack.jobs || [];
+          }
+          if (!partner) {
+            partner = tryLocal(code, pin);
+            if (partner) jobs = jobsFromLeads(partner);
+          }
+          if (!partner) { draw("Code or PIN did not match. Use the login link Recarra sent."); return; }
+          session = { partner: partner, jobs: jobs };
+          addLog("partner_login", partner.company + " signed in", { partnerId: partner.id });
+          pingRecarra(partner, null, "login");
+          draw();
+        };
+        return;
+      }
+      app.innerHTML = deskView(session.partner, session.jobs);
+      app.querySelectorAll("[data-act]").forEach(function (btn) {
+        btn.onclick = function () {
+          var no = btn.getAttribute("data-no");
+          var act = btn.getAttribute("data-act");
+          var job = session.jobs.filter(function (j) { return j.no === no; })[0];
+          addLog(act, session.partner.company + " " + act + " on " + no, { partnerId: session.partner.id, offerNo: no });
+          pingRecarra(session.partner, job, act);
+          alert(act === "interested" ? "Recarra was notified. Do not call the seller unless this file is released." : "Passed. Recarra was notified.");
+        };
+      });
+    }
+    draw();
+  </script>
+</body>
+</html>

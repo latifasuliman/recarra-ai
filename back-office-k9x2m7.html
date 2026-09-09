@@ -82,6 +82,20 @@
       border: 1px solid var(--border);
     }
     .row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+    .tabs { display:flex; flex-wrap:wrap; gap:0.4rem; margin: 0 0 1rem; }
+    .tab {
+      min-height: 40px;
+      padding: 0.45rem 0.9rem;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .tab.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .badge { display:inline-block; font-size:0.72rem; font-weight:700; padding:0.1rem 0.4rem; border-radius:999px; background:#e8f6ee; color:var(--accent); }
+    .badge.off { background:#f4f6f8; color:var(--muted); }
     .chat { max-height: 280px; overflow: auto; background: var(--bg); border-radius: 8px; padding: 0.75rem; }
     .bubble { margin: 0.4rem 0; padding: 0.55rem 0.7rem; border-radius: 8px; background: #fff; max-width: 90%; }
     .bubble.recarra { background: var(--navy); color: #fff; margin-left: auto; }
@@ -94,7 +108,13 @@
     <a href="./">Site</a>
   </header>
   <main>
-    <p class="muted">Secret desk. Offers from this GitHub site land here. Change status to send the customer home. Chat is live on their tracking page.</p>
+    <p class="muted">Secret desk. Offers land here. Partners never see a seller’s phone until you mark the assignment fee paid.</p>
+    <div class="tabs">
+      <button class="tab on" type="button" data-tab="leads">Leads</button>
+      <button class="tab" type="button" data-tab="partners">Verified partners</button>
+      <button class="tab" type="button" data-tab="log">Partner log</button>
+    </div>
+    <div id="tab-leads">
     <div class="grid">
       <aside class="card">
         <h2>Leads</h2>
@@ -105,9 +125,37 @@
         <p class="muted">Pick a lead.</p>
       </section>
     </div>
+    </div>
+    <div id="tab-partners" hidden>
+      <div class="grid">
+        <aside class="card">
+          <h2>Add partner</h2>
+          <p class="muted">Verified partners can receive assigned cars. Unverified names cannot log in.</p>
+          <label>Company</label><input id="pCompany" placeholder="Ace Towing" />
+          <label>Contact name</label><input id="pName" placeholder="Luis" />
+          <label>Phone</label><input id="pPhone" placeholder="(713) 555-0100" />
+          <label>Email</label><input id="pEmail" placeholder="ops@acetow.com" />
+          <label>Notes</label><textarea id="pNotes" rows="2" placeholder="Pays same day, Houston south…"></textarea>
+          <div class="row"><button class="btn" type="button" id="addPartner">Save verified partner</button></div>
+        </aside>
+        <section class="card">
+          <h2>Verified partners</h2>
+          <div id="partnerList"></div>
+        </section>
+      </div>
+    </div>
+    <div id="tab-log" hidden>
+      <div class="card">
+        <h2>Partner log</h2>
+        <p class="muted">Every assign, desk link, fee paid, and partner login.</p>
+        <div id="logList"></div>
+      </div>
+    </div>
   </main>
   <script>
     const KEY = "recarra-leads-v1";
+    const PARTNERS_KEY = "recarra-partners-v1";
+    const LOG_KEY = "recarra-partner-log-v1";
     const STATUSES = ["New Lead","Contacted","Vehicle Information Needed","Offer Calculated","Offer Sent","Negotiating","Offer Accepted","Pickup Scheduled","Vehicle Collected","Buyer Paid","Completed","Lost or Rejected"];
     const CLOSED = ["Buyer Paid","Completed","Lost or Rejected"];
     let selected = null;
@@ -123,6 +171,62 @@
     function get(id) { return leads().find((l) => l.id === id); }
     function patch(id, next) {
       save(leads().map((l) => l.id === id ? Object.assign({}, l, next) : l));
+    }
+    function loadPartners() {
+      try { const rows = JSON.parse(localStorage.getItem(PARTNERS_KEY) || "[]"); return Array.isArray(rows) ? rows : []; }
+      catch (e) { return []; }
+    }
+    function savePartners(rows) { localStorage.setItem(PARTNERS_KEY, JSON.stringify(rows)); }
+    function loadLog() {
+      try { const rows = JSON.parse(localStorage.getItem(LOG_KEY) || "[]"); return Array.isArray(rows) ? rows : []; }
+      catch (e) { return []; }
+    }
+    function addLog(type, note, extra) {
+      extra = extra || {};
+      const row = { id: "pl-" + Date.now(), at: new Date().toISOString(), type: type, note: note, partnerId: extra.partnerId || "", offerNo: extra.offerNo || "" };
+      localStorage.setItem(LOG_KEY, JSON.stringify([row].concat(loadLog()).slice(0, 400)));
+    }
+    function newPartnerId() {
+      const used = {};
+      loadPartners().forEach(function (p) { used[p.id] = true; });
+      for (let i = 0; i < 40; i += 1) {
+        const id = "VP-" + (1000 + Math.floor(Math.random() * 9000));
+        if (!used[id]) return id;
+      }
+      return "VP-" + (1000 + (Date.now() % 9000));
+    }
+    function findPartner(id) {
+      id = String(id || "").toUpperCase();
+      return loadPartners().find(function (p) { return p.id.toUpperCase() === id; }) || null;
+    }
+    function partnerLabel(p) { return p.id + " · " + p.company + (p.verified ? "" : " (unverified)"); }
+    function jobsForPartner(partner) {
+      return leads().filter(function (l) {
+        return l.keepOrAssign === "assign" && (l.assignedTo === partner.id || l.assignedTo === partner.company);
+      });
+    }
+    function pinHash(id, pin) {
+      return btoa(unescape(encodeURIComponent(String(pin) + "|" + String(id))));
+    }
+    function deskHref(partner) {
+      const root = location.origin + location.pathname.replace(/[^/]+$/, "");
+      const jobs = jobsForPartner(partner).map(function (l) {
+        return {
+          no: l.trackCode || l.id,
+          vehicle: l.year + " " + l.make + " " + l.model,
+          zip: l.zip,
+          running: l.running,
+          title: l.title,
+          offer: l.offerAmount || null,
+          fee: l.assignmentFee || 0,
+          released: !!l.assignmentPaidAt,
+          name: l.assignmentPaidAt ? l.name : "",
+          phone: l.assignmentPaidAt ? l.phone : "",
+          vin: l.assignmentPaidAt ? (l.vin || "") : ""
+        };
+      });
+      const pack = { id: partner.id, company: partner.company, name: partner.name, pinHash: pinHash(partner.id, partner.pin), jobs: jobs };
+      return root + "partners.html#" + encodePack(pack);
     }
 
     function renderList() {
@@ -182,7 +286,8 @@
         "<label>This car</label>" +
         "<select id='intent'><option value='keep'" + ((l.keepOrAssign || "keep") === "keep" ? " selected" : "") + ">Keep — Recarra buys</option>" +
         "<option value='assign'" + (l.keepOrAssign === "assign" ? " selected" : "") + ">Assign — let go for a fee</option></select>" +
-        "<label>Partner name</label><input id='partnerName' value='" + escapeHtml(l.assignedTo || "") + "' placeholder='Tower or buyer company' />" +
+        "<label>Verified partner</label>" +
+        "<select id='partnerName'>" + partnerOptions(l.assignedTo) + "</select>" +
         "<label>Assignment fee due Recarra</label><input id='assignFee' type='number' min='0' value='" + (l.assignmentFee || "") + "' placeholder='e.g. 200' />" +
         "<p class='muted' id='assignStatus'>" +
           (l.assignmentPaidAt
@@ -193,7 +298,7 @@
         "<button class='btn' id='saveAssign' type='button'>Save keep / assign</button>" +
         "<button class='btn btn-ghost' id='copyRedacted' type='button'>Copy redacted partner link</button>" +
         "<button class='btn btn-ghost' id='copyFull' type='button'>Mark fee paid + copy full file</button>" +
-        "<a class='btn btn-ghost' id='openPartner' href='#' target='_blank' rel='noopener'>Open partner sheet</a>" +
+        "<button class='btn btn-ghost' id='copyDesk' type='button'>Copy partner login link</button>" +
         "</div>" +
         "<h2 style='margin-top:1.4rem'>Live seller chat</h2>" +
         "<div class='chat' id='chat'>" + msgs.map((m) =>
@@ -256,24 +361,28 @@
         const partner = document.getElementById("partnerName").value.trim();
         const fee = Number(document.getElementById("assignFee").value);
         if (intent === "assign" && (!partner || !(fee > 0))) {
-          alert("For assign: add partner name and assignment fee.");
+          alert("For assign: pick a verified partner and add the fee. Add partners on the Verified partners tab.");
           return;
         }
         const now = new Date().toISOString();
+        const pObj = findPartner(partner);
         patch(l.id, {
           keepOrAssign: intent,
           assignedTo: intent === "assign" ? partner : "",
+          assignedToName: intent === "assign" ? (pObj ? pObj.company : partner) : "",
           assignmentFee: intent === "assign" ? fee : 0,
           assignedAt: intent === "assign" ? now : "",
           assignmentPaidAt: intent === "keep" ? "" : l.assignmentPaidAt,
-          followUps: [{ at: now, note: intent === "assign" ? ("Assigned to " + partner + " for $" + fee) : "Marked keep — Recarra buys.", status: l.status }].concat(l.followUps || [])
+          followUps: [{ at: now, note: intent === "assign" ? ("Assigned to " + (pObj ? pObj.company : partner) + " for $" + fee) : "Marked keep — Recarra buys.", status: l.status }].concat(l.followUps || [])
         });
+        addLog(intent === "assign" ? "assigned" : "kept", intent === "assign" ? ("Assigned " + (l.trackCode || l.id) + " to " + partner) : ("Kept " + (l.trackCode || l.id)), { partnerId: partner, offerNo: l.trackCode || l.id });
         render();
       };
       document.getElementById("copyRedacted").onclick = function () {
         const next = currentAssign(l);
         if (next.keepOrAssign !== "assign") { alert("Set this car to Assign and save first."); return; }
         copyText(partnerHref(next, false));
+        addLog("redacted_sent", "Redacted sheet copied for " + (next.trackCode || next.id), { partnerId: next.assignedTo, offerNo: next.trackCode || next.id });
         document.getElementById("assignStatus").textContent = "Redacted link copied. Partner does not get name, phone, or VIN.";
       };
       document.getElementById("copyFull").onclick = function () {
@@ -282,12 +391,16 @@
         const now = new Date().toISOString();
         patch(l.id, { assignmentPaidAt: now, followUps: [{ at: now, note: "Assignment fee paid. Seller file released to " + (next.assignedTo || "partner") + ".", status: l.status }].concat(get(l.id).followUps || []) });
         copyText(partnerHref(Object.assign({}, get(l.id), { assignmentPaidAt: now }), true));
+        addLog("fee_paid", "Assignment fee paid, file released for " + (l.trackCode || l.id), { partnerId: next.assignedTo, offerNo: l.trackCode || l.id });
         document.getElementById("assignStatus").textContent = "Fee marked paid. Full file link copied — send only to that partner.";
       };
-      document.getElementById("openPartner").onclick = function (ev) {
-        ev.preventDefault();
+      document.getElementById("copyDesk").onclick = function () {
         const next = currentAssign(l);
-        window.open(partnerHref(next, !!next.assignmentPaidAt), "_blank", "noopener");
+        const p = findPartner(next.assignedTo);
+        if (!p) { alert("Pick a verified partner first."); return; }
+        copyText(deskHref(p));
+        addLog("desk_link", "Partner login link copied for " + p.id, { partnerId: p.id, offerNo: l.trackCode || l.id });
+        document.getElementById("assignStatus").textContent = "Partner login link copied. They sign in with " + p.id + " and their PIN.";
       };
     }
 
@@ -391,7 +504,104 @@
       el.textContent = String(s);
       return el.innerHTML;
     }
-    function render() { renderList(); renderDetail(); }
+    function partnerOptions(selectedId) {
+      const rows = loadPartners().filter(function (p) { return p.verified; });
+      if (!rows.length) return "<option value=''>Add a verified partner first</option>";
+      return "<option value=''>Select partner</option>" + rows.map(function (p) {
+        return "<option value='" + p.id + "'" + (p.id === selectedId ? " selected" : "") + ">" + partnerLabel(p) + "</option>";
+      }).join("");
+    }
+    function renderPartners() {
+      const box = document.getElementById("partnerList");
+      const rows = loadPartners();
+      if (!box) return;
+      if (!rows.length) { box.innerHTML = "<p class='muted'>No partners yet. Save one on the left.</p>"; return; }
+      box.innerHTML = rows.map(function (p) {
+        const jobs = jobsForPartner(p).length;
+        return "<div class='lead' style='cursor:default'>" +
+          "<strong>" + escapeHtml(p.id) + "</strong> · " + escapeHtml(p.company) + " " +
+          "<span class='badge" + (p.verified ? "" : " off") + "'>" + (p.verified ? "Verified" : "Off") + "</span><br>" +
+          "<span class='muted'>" + escapeHtml(p.name) + " · " + escapeHtml(p.phone) + " · PIN " + escapeHtml(p.pin) + " · " + jobs + " cars</span>" +
+          "<div class='row'>" +
+          "<button class='btn' type='button' data-desk='" + p.id + "'>Copy login link</button>" +
+          "<button class='btn btn-ghost' type='button' data-toggle='" + p.id + "'>" + (p.verified ? "Unverify" : "Verify") + "</button>" +
+          "</div></div>";
+      }).join("");
+      box.querySelectorAll("[data-desk]").forEach(function (btn) {
+        btn.onclick = function () {
+          const p = findPartner(btn.getAttribute("data-desk"));
+          if (!p) return;
+          copyText(deskHref(p));
+          addLog("desk_link", "Partner login link copied for " + p.id, { partnerId: p.id });
+          alert("Login link copied. They use " + p.id + " and PIN " + p.pin + " at Partners.");
+        };
+      });
+      box.querySelectorAll("[data-toggle]").forEach(function (btn) {
+        btn.onclick = function () {
+          const id = btn.getAttribute("data-toggle");
+          savePartners(loadPartners().map(function (p) {
+            if (p.id !== id) return p;
+            p.verified = !p.verified;
+            addLog(p.verified ? "verified" : "unverified", p.company + " " + (p.verified ? "verified" : "unverified"), { partnerId: p.id });
+            return p;
+          }));
+          renderPartners();
+        };
+      });
+    }
+    function renderLog() {
+      const box = document.getElementById("logList");
+      if (!box) return;
+      const rows = loadLog();
+      if (!rows.length) { box.innerHTML = "<p class='muted'>Nothing logged yet.</p>"; return; }
+      box.innerHTML = rows.map(function (r) {
+        return "<p><strong>" + escapeHtml(r.type) + "</strong> · " + new Date(r.at).toLocaleString() + "<br><span class='muted'>" + escapeHtml(r.note) + (r.partnerId ? " · " + r.partnerId : "") + "</span></p>";
+      }).join("");
+    }
+    function showTab(name) {
+      ["leads", "partners", "log"].forEach(function (id) {
+        const el = document.getElementById("tab-" + id);
+        if (el) el.hidden = id !== name;
+      });
+      document.querySelectorAll(".tab").forEach(function (btn) {
+        btn.classList.toggle("on", btn.getAttribute("data-tab") === name);
+      });
+      if (name === "partners") renderPartners();
+      if (name === "log") renderLog();
+    }
+    function render() { renderList(); renderDetail(); renderPartners(); renderLog(); }
+    document.querySelectorAll(".tab").forEach(function (btn) {
+      btn.onclick = function () { showTab(btn.getAttribute("data-tab")); };
+    });
+    document.getElementById("addPartner").onclick = function () {
+      const company = document.getElementById("pCompany").value.trim();
+      const name = document.getElementById("pName").value.trim();
+      const phone = document.getElementById("pPhone").value.trim();
+      if (company.length < 2 || name.length < 2 || phone.replace(/\D/g, "").length < 10) {
+        alert("Company, contact name, and a working phone are required.");
+        return;
+      }
+      const partner = {
+        id: newPartnerId(),
+        company: company,
+        name: name,
+        phone: phone,
+        email: document.getElementById("pEmail").value.trim(),
+        pin: String(1000 + Math.floor(Math.random() * 9000)),
+        verified: true,
+        notes: document.getElementById("pNotes").value.trim(),
+        createdAt: new Date().toISOString()
+      };
+      savePartners([partner].concat(loadPartners()));
+      addLog("partner_added", partner.company + " saved as " + partner.id, { partnerId: partner.id });
+      document.getElementById("pCompany").value = "";
+      document.getElementById("pName").value = "";
+      document.getElementById("pPhone").value = "";
+      document.getElementById("pEmail").value = "";
+      document.getElementById("pNotes").value = "";
+      renderPartners();
+      alert("Verified. Code " + partner.id + " PIN " + partner.pin + ". Copy their login link.");
+    };
     document.getElementById("deskSearch").addEventListener("input", function (e) {
       filter = e.target.value;
       renderList();
