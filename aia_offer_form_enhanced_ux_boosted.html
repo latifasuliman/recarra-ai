@@ -26,14 +26,20 @@
     }
     .top {
       background: var(--navy);
-      color: #fff;
+      color: #f4f1ea;
+    }
+    .top-inner {
+      width: min(1080px, 100%);
+      margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-      padding: 0.85rem 1.15rem;
+      padding: 0.75rem 1.15rem;
+      min-height: 60px;
     }
-    .top a { color: #f4f1ea; font-family: var(--display); font-weight: 500; font-size: 1.35rem; letter-spacing: -0.04em; text-decoration: none; }
+    .top a { color: #f4f1ea; font-family: var(--display); font-weight: 500; font-size: clamp(1.15rem, 2vw, 1.35rem); letter-spacing: -0.04em; text-decoration: none; }
+    .top .call { font-family: "Plus Jakarta Sans", system-ui, sans-serif; font-size: 0.92rem; letter-spacing: 0; }
     .wrap {
       width: min(1080px, 100%);
       margin: 0 auto;
@@ -191,8 +197,10 @@
 </head>
 <body>
   <header class="top">
-    <a href="./">Recarra</a>
-    <a href="tel:+13462740071">(346) 274-0071</a>
+    <div class="top-inner">
+      <a href="./">Recarra</a>
+      <a class="call" href="tel:+13462740071">(346) 274-0071</a>
+    </div>
   </header>
   <div class="wrap">
     <div class="sheet" id="formView">
