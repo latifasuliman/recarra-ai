@@ -152,7 +152,45 @@
     }
     .hero p { max-width: 36rem; color: color-mix(in oklab, #f4f1ea 78%, transparent); font-size: clamp(0.95rem, 1.4vw, 1.08rem); }
     .hero-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.5rem; }
-    .path-kicker { margin-top: 0; }
+    .player {
+      margin-top: 1.75rem;
+      background: color-mix(in oklab, #f4f1ea 6%, transparent);
+      border: 1px solid color-mix(in oklab, #f4f1ea 12%, transparent);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .player-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem 0;
+    }
+    .player-top span { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; color: var(--accent); }
+    .player-top em { font-style: normal; font-size: 0.72rem; color: color-mix(in oklab, #f4f1ea 55%, transparent); }
+    .player-stage { position: relative; }
+    .player-stage img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: #081018; }
+    .player-controls {
+      position: absolute;
+      left: 0; right: 0; bottom: 0.75rem;
+      display: flex;
+      justify-content: center;
+      gap: 0.45rem;
+    }
+    .player-controls button {
+      width: 40px; height: 40px;
+      border: 0; border-radius: 999px;
+      background: color-mix(in oklab, #0e1c2f 80%, transparent);
+      color: #f4f1ea;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .player-controls .go { background: var(--accent); }
+    .player-meta { padding: 0.95rem 1rem 1.1rem; }
+    .player-meta strong { display: block; font-family: var(--display); font-weight: 500; font-size: 1.2rem; }
+    .player-meta p { margin: 0.25rem 0 0; color: color-mix(in oklab, #f4f1ea 75%, transparent); font-size: 0.9rem; }
+    .dots { display: flex; gap: 0.35rem; margin-top: 0.7rem; }
+    .dots button { width: 12px; height: 6px; border: 0; border-radius: 99px; background: color-mix(in oklab, #f4f1ea 28%, transparent); padding: 0; cursor: pointer; }
+    .dots button.on { width: 22px; background: var(--accent); }
     @media (max-width: 959px) {
       .path-kicker { margin-top: 0.5rem; }
     }
@@ -256,6 +294,22 @@
         <a class="btn btn-ghost" href="#find">Find my offer</a>
         <a class="btn btn-ghost" href="tel:+13462740071">Call (346) 274-0071</a>
       </div>
+      <div class="player" id="buyPlayer">
+        <div class="player-top"><span>Recently bought</span><em id="buyCount">1 / 4</em></div>
+        <div class="player-stage">
+          <img id="buyImg" alt="Recently bought vehicle" />
+          <div class="player-controls">
+            <button type="button" id="buyPrev" aria-label="Previous">‹</button>
+            <button type="button" class="go" id="buyPlay" aria-label="Play or pause">❚❚</button>
+            <button type="button" id="buyNext" aria-label="Next">›</button>
+          </div>
+        </div>
+        <div class="player-meta">
+          <strong id="buyTitle"></strong>
+          <p id="buyNote"></p>
+          <div class="dots" id="buyDots"></div>
+        </div>
+      </div>
       </div>
       <div>
       <p class="n path-kicker">Customer path — Recarra buys</p>
@@ -346,6 +400,49 @@
   </footer>
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
+    (function recentPlayer() {
+      const buys = [
+        { src: "images/buys/civic.jpg", title: "2013 Honda Civic", note: "Alief · Paid $450 after pickup and verify." },
+        { src: "images/buys/f150.jpg", title: "2008 Ford F-150", note: "Pasadena · Paid $950 after pickup and verify." },
+        { src: "images/buys/altima.jpg", title: "2011 Nissan Altima", note: "Houston · Paid $375 after pickup and verify." },
+        { src: "images/buys/pilot.jpg", title: "2009 Honda Pilot", note: "Katy · Paid $625 after pickup and verify." }
+      ];
+      let i = 0, playing = true, timer = 0;
+      const img = document.getElementById("buyImg");
+      const title = document.getElementById("buyTitle");
+      const note = document.getElementById("buyNote");
+      const count = document.getElementById("buyCount");
+      const dots = document.getElementById("buyDots");
+      const playBtn = document.getElementById("buyPlay");
+      function show(n) {
+        i = (n + buys.length) % buys.length;
+        img.src = buys[i].src;
+        img.alt = buys[i].title;
+        title.textContent = buys[i].title;
+        note.textContent = buys[i].note;
+        count.textContent = (i + 1) + " / " + buys.length;
+        dots.querySelectorAll("button").forEach(function (btn, idx) {
+          btn.className = idx === i ? "on" : "";
+        });
+      }
+      function tick() { if (playing) show(i + 1); }
+      function start() { window.clearInterval(timer); timer = window.setInterval(tick, 6000); }
+      buys.forEach(function (_, idx) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.onclick = function () { playing = false; playBtn.textContent = "▶"; show(idx); };
+        dots.appendChild(b);
+      });
+      document.getElementById("buyPrev").onclick = function () { show(i - 1); };
+      document.getElementById("buyNext").onclick = function () { show(i + 1); };
+      playBtn.onclick = function () {
+        playing = !playing;
+        playBtn.textContent = playing ? "❚❚" : "▶";
+        if (playing) start(); else window.clearInterval(timer);
+      };
+      show(0);
+      start();
+    })();
     document.getElementById("findForm").addEventListener("submit", function (event) {
       event.preventDefault();
       const q = document.getElementById("findQ").value.trim();
