@@ -183,6 +183,7 @@
       background: #e8f6ee; color: var(--accent); font-weight: 700; cursor: pointer;
     }
   </style>
+<script src="cloud.js"></script>
 </head>
 <body class="locked">
   <div id="gate">
@@ -275,6 +276,7 @@
           <p class="muted">This github.io page cannot hold Recarra cloud. Sign in with Google on the Recarra app (Recarra cloud) so offers follow you. You can still download a desk file into Google Drive as a spare.</p>
           <p class="muted">Folder idea: Google Drive → Recarra LLC → recarra-desk.json</p>
           <div class="row">
+            <p class="muted" style="margin:0 0 0.6rem">Offers stay in Recarra vault on this phone. Download a desk file after busy days so you have a second copy.</p>
             <button class="btn" type="button" id="dlDesk">Download desk file</button>
             <label class="btn btn-ghost" style="display:inline-flex;align-items:center">Restore desk file
               <input id="upDesk" type="file" accept="application/json" hidden />
@@ -350,7 +352,10 @@
       try { return JSON.parse(localStorage.getItem(KEY) || "[]"); }
       catch { return []; }
     }
-    function save(leads) { localStorage.setItem(KEY, JSON.stringify(leads)); }
+    function save(leads) {
+      localStorage.setItem(KEY, JSON.stringify(leads));
+      if (window.recarraVaultWrite) window.recarraVaultWrite(leads);
+    }
     function money(n) { return "$" + Number(n || 0).toLocaleString(); }
     function leads() { return load(); }
     function get(id) { return leads().find((l) => l.id === id); }
@@ -1113,7 +1118,22 @@
     document.getElementById("showWaiting").onclick = function () { listMode = "waiting"; renderList(); };
     window.addEventListener("storage", (e) => { if (e.key === KEY && isOpen()) render(); });
     setInterval(function () { if (isOpen()) renderList(); }, 4000);
-    if (isOpen()) render();
+    function hydrateVaultThenRender() {
+      if (!window.recarraVaultAll) { if (isOpen()) render(); return; }
+      window.recarraVaultAll().then(function (rows) {
+        var local = load();
+        var map = {};
+        local.concat(rows || []).forEach(function (l) {
+          if (l && l.id) map[l.id] = l;
+        });
+        var merged = Object.keys(map).map(function (k) { return map[k]; });
+        merged.sort(function (a, b) { return String(b.createdAt || "").localeCompare(String(a.createdAt || "")); });
+        localStorage.setItem(KEY, JSON.stringify(merged));
+        if (window.recarraVaultWrite) window.recarraVaultWrite(merged);
+        if (isOpen()) render();
+      }).catch(function () { if (isOpen()) render(); });
+    }
+    hydrateVaultThenRender();
   </script>
 </body>
 </html>
