@@ -44,6 +44,7 @@
     .find-box { display:flex; flex-wrap:wrap; gap:0.6rem; margin-top:1rem; }
     .find-box input { flex:1 1 180px; min-height:44px; padding:0.6rem 0.75rem; border:1px solid var(--border); border-radius:8px; font:inherit; }
   </style>
+<script src="cloud.js"></script>
 </head>
 <body>
   <header><a href="./">Recarra</a></header>
@@ -250,6 +251,20 @@
     window.addEventListener("storage", function () { lastStamp = ""; draw(true); });
     setInterval(function () { draw(false); }, 2000);
     draw(true);
-  </script>
+  
+    (function hydrateFromCloud() {
+      var q = (typeof query === "function" ? query() : "");
+      if (!q || !window.recarraFindOffer) return;
+      var local = (typeof load === "function" ? load() : []);
+      if (typeof findLeadByQuery === "function" && findLeadByQuery(q, local)) return;
+      window.recarraFindOffer(q).then(function (lead) {
+        if (!lead || !lead.id) return;
+        var rows = load().filter(function (l) { return l.id !== lead.id; });
+        rows.unshift(lead);
+        save(rows);
+        if (typeof draw === "function") draw(true);
+      });
+    })();
+</script>
 </body>
 </html>
