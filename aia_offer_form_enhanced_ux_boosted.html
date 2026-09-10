@@ -742,11 +742,8 @@
         localStorage.setItem("recarra-leads-v1", JSON.stringify(existing));
         localStorage.setItem("recarra-open-track-v1", trackCode);
       } catch (err) {}
-      const goTrack = function () {
-        window.location.replace("https://recarra.com/track.html?code=" + encodeURIComponent(trackCode));
-      };
-      if (window.recarraSaveOffer) window.recarraSaveOffer(lead).then(goTrack).catch(goTrack);
-      else goTrack();
+      try { if (window.recarraSaveOffer) window.recarraSaveOffer(lead); } catch (err) {}
+      window.location.replace("https://recarra.com/track.html?code=" + encodeURIComponent(trackCode));
     });
   </script>
 </body>
