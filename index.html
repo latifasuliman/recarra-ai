@@ -369,6 +369,7 @@
       cursor: pointer;
     }
   </style>
+<script src="cloud.js"></script>
 </head>
 <body>
   <header>
@@ -677,7 +678,7 @@
       const err = document.getElementById("findErr");
       err.hidden = true;
       if (!q) { err.textContent = "Type your offer number or phone."; err.hidden = false; return; }
-      window.location.href = "track.html?q=" + encodeURIComponent(q);
+      window.location.href = "https://recarra.com/track.html?q=" + encodeURIComponent(q);
     });
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.getRegistrations().then(function (regs) {
