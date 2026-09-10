@@ -37,11 +37,29 @@
     #gate {
       position: fixed; inset: 0; z-index: 80;
       background: var(--navy);
-      display: flex; align-items: center; justify-content: center;
-      padding: 1.25rem;
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 1.25rem 1.25rem 6rem;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
     }
     #gate.ok { display: none; }
-    #gate .card { width: min(24rem, 100%); }
+    #gate .card { width: min(24rem, 100%); margin: auto; }
+    #gatePin {
+      font-size: 18px;
+      letter-spacing: 0.35em;
+      text-align: center;
+      caret-color: transparent;
+    }
+    .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.45rem; margin: 0.7rem 0 0.2rem; }
+    .pad button {
+      min-height: 52px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      font-size: 1.25rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
     body.locked main, body.locked header { visibility: hidden; }
     main { max-width: 1100px; margin: 0 auto; padding: 1.25rem; }
     .grid { display: grid; gap: 1rem; }
@@ -172,7 +190,13 @@
       <p style="font-weight:700;margin:0">Recarra Back Office</p>
       <p class="muted">Desk PIN. Partners use their own login. This is not the public site.</p>
       <label>PIN</label>
-      <input id="gatePin" inputmode="numeric" autocomplete="one-time-code" autofocus />
+      <input id="gatePin" type="tel" inputmode="numeric" pattern="[0-9]*" autocomplete="off" enterkeyhint="done" maxlength="8" readonly />
+      <div class="pad" id="pinPad">
+        <button type="button" data-k="1">1</button><button type="button" data-k="2">2</button><button type="button" data-k="3">3</button>
+        <button type="button" data-k="4">4</button><button type="button" data-k="5">5</button><button type="button" data-k="6">6</button>
+        <button type="button" data-k="7">7</button><button type="button" data-k="8">8</button><button type="button" data-k="9">9</button>
+        <button type="button" data-k="x">⌫</button><button type="button" data-k="0">0</button><button type="button" data-k="ok">OK</button>
+      </div>
       <p class="muted" id="gateErr" style="color:var(--danger)" hidden></p>
       <div class="row"><button class="btn" type="submit">Unlock desk</button></div>
     </form>
@@ -274,6 +298,15 @@
       document.body.classList.remove("locked");
     }
     if (isOpen()) openDesk();
+    document.getElementById("pinPad").addEventListener("click", function (e) {
+      const b = e.target.closest("[data-k]");
+      if (!b) return;
+      const inp = document.getElementById("gatePin");
+      const k = b.getAttribute("data-k");
+      if (k === "x") inp.value = inp.value.slice(0, -1);
+      else if (k === "ok") document.querySelector("#gateForm button.btn").click();
+      else if (inp.value.length < 8) inp.value += k;
+    });
     document.getElementById("gateForm").addEventListener("submit", function (e) {
       e.preventDefault();
       const pin = document.getElementById("gatePin").value;
