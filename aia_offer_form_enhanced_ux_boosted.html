@@ -194,6 +194,7 @@
       font-size: 0.88rem;
     }
   </style>
+<script src="cloud.js"></script>
 </head>
 <body>
   <header class="top">
@@ -741,8 +742,11 @@
         localStorage.setItem("recarra-leads-v1", JSON.stringify(existing));
         localStorage.setItem("recarra-open-track-v1", trackCode);
       } catch (err) {}
-      const trackUrl = new URL("track.html?code=" + encodeURIComponent(trackCode), window.location.href).href;
-      window.location.replace(trackUrl);
+      const goTrack = function () {
+        window.location.replace("https://recarra.com/track.html?code=" + encodeURIComponent(trackCode));
+      };
+      if (window.recarraSaveOffer) window.recarraSaveOffer(lead).then(goTrack).catch(goTrack);
+      else goTrack();
     });
   </script>
 </body>
