@@ -1,32 +1,27 @@
-/* Recarra — one book. recarra.com, www, and github.io post/look up here. */
+/* Recarra — save/look up without blocking the confirmation page. */
 window.RECARRA_SITE = "https://recarra.com";
-window.RECARRA_CLOUD = [
-  "/api/offer",
-  "https://hds-ai4xrnqwtej4-6014-lm503.grok-code-wild.hades-www.grok-sandbox.com/api/offer",
-];
+window.RECARRA_CLOUD = ["/api/offer"];
+
+function recarraFetch(url, opts) {
+  var ctrl = new AbortController();
+  var t = setTimeout(function () { ctrl.abort(); }, 2500);
+  return fetch(url, Object.assign({ signal: ctrl.signal }, opts || {})).finally(function () {
+    clearTimeout(t);
+  });
+}
+
 window.recarraSaveOffer = function (lead) {
-  return Promise.allSettled(
-    window.RECARRA_CLOUD.map(function (url) {
-      return fetch(url, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(lead),
-      });
-    }),
-  );
+  return recarraFetch(window.RECARRA_CLOUD[0], {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(lead),
+  }).catch(function () { return null; });
 };
+
 window.recarraFindOffer = function (q) {
   q = String(q || "").trim();
   if (!q) return Promise.resolve(null);
-  return (function next(i) {
-    if (i >= window.RECARRA_CLOUD.length) return Promise.resolve(null);
-    return fetch(window.RECARRA_CLOUD[i] + "?q=" + encodeURIComponent(q))
-      .then(function (res) {
-        if (!res.ok) return next(i + 1);
-        return res.json();
-      })
-      .catch(function () {
-        return next(i + 1);
-      });
-  })(0);
+  return recarraFetch(window.RECARRA_CLOUD[0] + "?q=" + encodeURIComponent(q))
+    .then(function (res) { return res.ok ? res.json() : null; })
+    .catch(function () { return null; });
 };
